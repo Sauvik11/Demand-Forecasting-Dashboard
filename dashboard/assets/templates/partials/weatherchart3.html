@@ -1,0 +1,24 @@
+<script>
+    weather3_datasets = JSON.parse(`{{weather3_datasets|escapejs}}`)
+    whther3_labels = JSON.parse(`{{whther_labels}}`)
+    var ctz = document.getElementById('weatherchart3').getContext('2d');
+    var chart = new Chart(ctz, {
+        // The type of chart we want to create
+        type: 'line',
+    
+        // The data for our dataset
+        data: {
+            labels: whther3_labels,
+            datasets: weather3_datasets
+        },
+    
+        // Configuration options go here
+        options:  {
+    scales: {
+        y: {
+            beginAtZero: true
+        }
+    }
+}
+    });
+  </script>

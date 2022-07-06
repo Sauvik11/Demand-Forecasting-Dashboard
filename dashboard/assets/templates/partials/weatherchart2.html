@@ -1,0 +1,50 @@
+<!-- <script>
+    // string = JSON.stringify(`{{weather_datasets}}`);
+    weather2_datasets = JSON.parse(`{{weather2_datasets|escapejs}}`)
+    
+    console.log(`weather_datasets`);
+    whther2_labels = JSON.parse(`{{whther_labels}}`)
+    const ctz = document.getElementById('weatherChart2').getContext('2d');
+    const weatherChart2 = new Chart(cty, {
+        type: 'line',
+        data: {
+        labels: whther2_labels,
+        datasets: weather2_datasets ,
+      },
+        
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+    </script> -->
+
+   
+     <script>
+        weather2_datasets = JSON.parse(`{{weather2_datasets|escapejs}}`)
+        whther2_labels = JSON.parse(`{{whther_labels}}`)
+        var ctz = document.getElementById('weatherChart2').getContext('2d');
+        var chart = new Chart(ctz, {
+            // The type of chart we want to create
+            type: 'line',
+        
+            // The data for our dataset
+            data: {
+                labels: whther2_labels,
+                datasets: weather2_datasets
+            },
+        
+            // Configuration options go here
+            options:  {
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+        });
+      </script>
+  

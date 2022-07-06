@@ -1,0 +1,48 @@
+<script>
+// string = JSON.stringify(`{{weather_datasets}}`);
+weather_datasets = JSON.parse(`{{weather_datasets|escapejs}}`)
+
+console.log(`weather_datasets`);
+whther_labels = JSON.parse(`{{whther_labels}}`)
+const cty = document.getElementById('weatherChart1').getContext('2d');
+const weatherChart1 = new Chart(cty, {
+    type: 'line',
+    data: {
+    labels: whther_labels,
+    datasets:weather_datasets,
+  },
+    
+    options:  {
+    maintainAspectRatio: false,
+    responsive: true,
+    legend: {
+      position: "top",
+    },
+    title: {
+      position: "top",
+      display: true,
+    },
+    tooltips: {
+      mode: "index",
+      intersect: false,
+    },
+    hover: {
+      mode: "nearest",
+      intersect: true,
+    },
+    elements: {
+      point: {
+        radius: 0,
+        hoverRadius: 0,
+      },
+    },
+
+    scales: {
+      y: {
+        beginAtZero: true,
+      },
+    },
+  },
+});
+</script>
+ 
