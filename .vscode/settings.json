@@ -1,4 +1,5 @@
 {
     "workbench.preferredDarkColorTheme": "Visual Studio Dark",
-    "window.autoDetectColorScheme": true
+    "window.autoDetectColorScheme": true,
+    "git.ignoreLimitWarning": true
 }
