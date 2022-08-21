@@ -1,0 +1,23 @@
+import json
+from locations.models import *
+
+file = open(r"Geo_Master_city_zone.json")
+content = file.read()
+city_zone_data = json.load(content)
+
+city = City.objects.get(name__iexact=data['city'])
+state_zone = StateZone.objects.get(state__code=data['StateCode'],discom=data['ZoneName'])
+
+for data in city_zone_data:
+    city = City.objects.get(name__iexact=data['city'])
+    state_zone = StateZone.objects.get(state__code=data['StateCode'],discom=data['ZoneName'])
+    city_zone = CityZone.objects.create(city=city,state_zone=state_zone)
+    print("CITY_ZONE",city_zone)
+	
+
+
+
+
+cities populate
+96 weatther + demand
+correlation dates

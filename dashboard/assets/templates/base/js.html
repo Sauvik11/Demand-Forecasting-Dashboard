@@ -1,6 +1,6 @@
 <!-- {% load static %}
 
-<!-- Bootstrap -->
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 
 
@@ -19,12 +19,69 @@
 <!-- script -->
 <script src="{% static 'js/selectField.js' %}"></script>
 
+<!-- Bootstrap datepicker CSS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css"/>
+
+<!-- Bootstrap datepicker JS-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+
+<!-- JavaScript Bundle with Popper -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.js"></script>
+
+<!-- Apex chart js -->
+
+
 
 <!-- multiselect bar-->
 <script>
     $(document).ready(function () {
       $('#id_ftype').select2();
     });
-  </script> -->
+  </script>
+
+<!-- <script type="text/javascript">
+
+
+
+
+$('#startDate').datepicker({
+    format: 'yyyy/mm/dd'
+
+});
+$('#endDate').datepicker({
+    format: 'yyyy/mm/dd'
+
+});
+$('#demandDate').datepicker({
+    format: 'yyyy/mm/dd'
+
+});
+
+let startDate = document.getElementById('startDate')
+let endDate = document.getElementById('endDate')
+let demandDate = document.getElementById('demandDate')
+
+demandDate.addEventListener('change',(e)=>{
+  let startDateVal = e.target.value
+  document.getElementById('demandDateSelected').innerText = demandDateVal
+})
+
+startDate.addEventListener('change',(e)=>{
+  let startDateVal = e.target.value
+  document.getElementById('startDateSelected').innerText = startDateVal
+})
+
+endDate.addEventListener('change',(e)=>{
+  let endDateVal = e.target.value
+  document.getElementById('endDateSelected').innerText = endDateVal
+})  
+
+
+
+</script> -->
+
+
+
+

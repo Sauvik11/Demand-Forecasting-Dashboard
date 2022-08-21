@@ -1,24 +1,99 @@
 <script>
     weather3_datasets = JSON.parse(`{{weather3_datasets|escapejs}}`)
     whther3_labels = JSON.parse(`{{whther_labels}}`)
-    var ctz = document.getElementById('weatherchart3').getContext('2d');
-    var chart = new Chart(ctz, {
-        // The type of chart we want to create
-        type: 'line',
     
-        // The data for our dataset
-        data: {
-            labels: whther3_labels,
-            datasets: weather3_datasets
-        },
-    
-        // Configuration options go here
-        options:  {
+    var weather3_options= {
+    type: 'line',
+    data: {
+    labels: whther_labels,
+    datasets:weather3_datasets,
+  },
+  options:  {
+    maintainAspectRatio: false,
+    responsive: true,
+     legend: {
+  //     verticalAlign: "center",  // "top" , "bottom"
+      position: "top",  // "center" , "right"
+      align:"start" ,
+      labels: {
+          boxWidth: 5
+      }
+     },
+    title: {
+      position: "top",
+      display: true,
+    },
+    tooltips: {
+      mode: "index",
+      intersect: false,
+    },
+    hover: {
+      mode: "nearest",
+      intersect: true,
+    },
+   
+    elements: {
+      point: {
+        radius: 0,
+        hoverRadius: 0,
+      },
+    },
+
     scales: {
-        y: {
-            beginAtZero: true
-        }
-    }
+      y: {
+        beginAtZero: true,
+      },
+    },
+  }
 }
-    });
+
+var modal_weather3_options=   {
+    type: 'line',
+    data: {
+    labels: whther_labels,
+    datasets:weather3_datasets,
+  },
+    
+    options:  {
+    maintainAspectRatio: true,
+    responsive: false,
+     legend: {
+  //     verticalAlign: "center",  // "top" , "bottom"
+       position: "top",  // "center" , "right"
+       align: 'start'
+     },
+    title: {
+      position: "top",
+      display: true,
+    },
+    tooltips: {
+      mode: "index",
+      intersect: false,
+    },
+    hover: {
+      mode: "nearest",
+      intersect: true,
+    },
+   
+    elements: {
+      point: {
+        radius: 0,
+        hoverRadius: 0,
+      },
+    },
+
+    scales: {
+      y: {
+        beginAtZero: true,
+      },
+    },
+  }
+}
+
+
+    
+    var ctx = document.getElementById('weatherchart3').getContext('2d');
+    var weatherchart3 = new Chart(ctx,weather3_options);
+    var modal_ctx = document.getElementById('weather3expand').getContext('2d');
+    var modal_chart3 = new Chart(modal_ctx ,modal_weather3_options);
   </script>

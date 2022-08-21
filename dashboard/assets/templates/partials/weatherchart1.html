@@ -4,8 +4,7 @@ weather_datasets = JSON.parse(`{{weather_datasets|escapejs}}`)
 
 console.log(`weather_datasets`);
 whther_labels = JSON.parse(`{{whther_labels}}`)
-const cty = document.getElementById('weatherChart1').getContext('2d');
-const weatherChart1 = new Chart(cty, {
+var weather_options= {
     type: 'line',
     data: {
     labels: whther_labels,
@@ -15,13 +14,20 @@ const weatherChart1 = new Chart(cty, {
     options:  {
     maintainAspectRatio: false,
     responsive: true,
-    legend: {
-      position: "top",
-    },
+     legend: {
+  //     verticalAlign: "center",  // "top" , "bottom"
+      position: "top",  // "center" , "right"
+      align:"start" ,
+      labels: {
+          boxWidth: 5
+      },
+  //  display:false,
+     },
     title: {
       position: "top",
       display: true,
     },
+    
     tooltips: {
       mode: "index",
       intersect: false,
@@ -30,6 +36,7 @@ const weatherChart1 = new Chart(cty, {
       mode: "nearest",
       intersect: true,
     },
+   
     elements: {
       point: {
         radius: 0,
@@ -42,7 +49,56 @@ const weatherChart1 = new Chart(cty, {
         beginAtZero: true,
       },
     },
+  }
+}
+var modal_weather_options1=   {
+    type: 'line',
+    data: {
+    labels: whther_labels,
+    datasets:weather_datasets,
   },
-});
+    
+    options:  {
+    maintainAspectRatio: true,
+    responsive: false,
+     legend: {
+  //     verticalAlign: "center",  // "top" , "bottom"
+       position: "top",  // "center" , "right"
+       align: 'start'
+     },
+     
+    title: {
+      position: "top",
+      display: true,
+    },
+    tooltips: {
+      mode: "index",
+      intersect: false,
+    },
+    hover: {
+      mode: "nearest",
+      intersect: true,
+    },
+   
+    elements: {
+      point: {
+        radius: 0,
+        hoverRadius: 0,
+      },
+    },
+
+    scales: {
+      y: {
+        beginAtZero: true,
+      },
+    },
+  }
+}
+const cty = document.getElementById('weatherChart1').getContext('2d');
+const weatherChart1 = new Chart(cty, weather_options );
+var modal_cty = document.getElementById('weather1expand').getContext('2d');
+var modal_chart = new Chart(modal_cty ,modal_weather_options1);
 </script>
  
+
+

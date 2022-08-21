@@ -1,0 +1,142 @@
+
+{{ weather_data|json_script:"weather_data" }}
+<script>
+  
+    const weather_data = JSON.parse(document.getElementById('weather_data').textContent);
+    console.log("weather_data",weather_data)
+    const para1data= weather_data[0]
+    const para2data=weather_data[0]
+    const city_names = weather_data.map(w => w.city_name)
+    let unique_city_name = [...new Set(city_names)];
+    const data_keys = Object.keys(weather_data[0])
+    var temp_data_key = data_keys[1];
+    const temp_data_chart = weather_data.map(w=>w[temp_data_key])
+    console.log("temp_data_c",temp_data_chart )
+
+    console.log(city_names)
+    var options = {
+          series: [{
+          name: temp_data_key,
+          data: temp_data_chart,
+        },],
+          chart: {
+          type: "line",
+          height: 350,
+          stacked: false,
+          fillOpacity: .3, 
+        },
+        plotOptions: {
+          bar: {
+      columnWidth: "20%"
+    }
+        },
+        dataLabels: {
+          enabled: false
+        },
+        stroke: {
+    show: true,
+    curve: 'smooth',
+    lineCap: 'butt',
+    colors: "#FF1654",
+    width: 2,
+    dashArray: 0,      
+},
+        xaxis: {
+          categories: city_names ,
+          showDuplicates: true,
+        },
+        yaxis: {
+          axisTicks: {
+        show: true
+      },
+      axisBorder: {
+        show: true,
+        color: "#FF1654"
+      },
+       title: {
+            text: 'temperature'
+          }
+        },
+        fill: {
+          opacity: 1
+        },
+        tooltip: {
+          
+          y: {
+            formatter: function (val) {
+              return "$ " + val + "degrees"
+            }
+          }
+        }
+        };
+
+        var chart = new ApexCharts(document.querySelector("#chartw1"), options);
+        chart.render();
+  
+
+    var modal_weather_optionscity= {
+          series: [{
+          name: temp_data_key,
+          data: temp_data_chart,
+        },],
+          chart: {
+          type: "line",
+          height: 350,
+          stacked: false,
+          fillOpacity: .3, 
+        },
+        plotOptions: {
+          bar: {
+      columnWidth: "20%"
+    }
+        },
+        dataLabels: {
+          enabled: false
+        },
+        stroke: {
+    show: true,
+    curve: 'smooth',
+    lineCap: 'butt',
+    colors: "#FF1654",
+    width: 2,
+    dashArray: 0,      
+},
+        xaxis: {
+          categories: city_names ,
+          showDuplicates: true,
+        },
+        yaxis: {
+          axisTicks: {
+        show: true
+      },
+      axisBorder: {
+        show: true,
+        color: "#FF1654"
+      },
+       title: {
+            text: 'temperature'
+          }
+        },
+        fill: {
+          opacity: 1
+        },
+        tooltip: {
+          
+          y: {
+            formatter: function (val) {
+              return "$ " + val + "degrees"
+            }
+          }
+        }
+        };
+
+        var chart = new ApexCharts(document.querySelector("#chartw1"), options);
+        var chart = new ApexCharts(document.querySelector("#weather1expd"), modal_weather_optionscity);
+        chart.render();
+    
+      
+
+
+
+
+</script>

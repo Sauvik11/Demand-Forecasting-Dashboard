@@ -38,8 +38,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'dashboard',
+    'locations',
     'chartjs',
-    'accounts.apps.AccountsConfig'
+    'accounts.apps.AccountsConfig',
+    'jquery',
+    'bootstrap5'
+
 ]
 
 MIDDLEWARE = [
@@ -80,7 +84,7 @@ DATABASES = {
    'default':{
       'ENGINE':'django.db.backends.postgresql_psycopg2',
       'NAME':'forecast_master_1',
-      'USER':'django',
+      'USER':'postgres',
       'PASSWORD':'1234',
       'HOST':'localhost',
       'PORT':'5432',
@@ -104,7 +108,12 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.redis.RedisCache',
+        'LOCATION': 'redis://127.0.0.1:6379',
+    }
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
