@@ -183,12 +183,11 @@ class Weather(models.Model):
 
 class corr_dates(models.Model):
     loc_ID=models.CharField(max_length=20, null=True, blank=True)
-    Date=models.DateField(max_length=20, null=True, blank=True)
+    Date=models.DateField( null=True, blank=True)
     Rank= models.IntegerField(null=True, blank=True)
     Item_ID= models.CharField(max_length=200, null=True, blank=True)
     Ref_date= models.DateField(max_length=200, null=True, blank=True)
     Correlation= models.FloatField(max_length=200, null=True, blank=True)
-    
     def __str__(self):
         return f"{self.Item_ID}"
 

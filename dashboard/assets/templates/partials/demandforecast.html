@@ -1,8 +1,10 @@
 
 <script type="text/javascript">
   datasets = JSON.parse(`{{datasets|escapejs}}`)
+  console.log ("dataasets", datasets)
+  labels = JSON.parse (`{{labels}}`)
+
   
-  labels = JSON.parse(`{{labels}}`)
   var demanddata= {
     labels: labels,
     datasets:datasets

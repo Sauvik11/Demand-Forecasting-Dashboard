@@ -1,0 +1,66 @@
+
+{% extends './base/base.html' %}
+{% load static%}
+{% block content %}
+
+  
+
+    <!-- Wrapper for slides -->
+    
+
+<form href= "{% url 'login' %}" method="post" class=" form-control form-control-lg" style="background-image: url('https://mercadosemi.in/images/slider/banner3_n.jpg')">
+<h2  class="primary-title" align="center " style="background-color:#b4eaea; color:#004990;">Welcome to Mercados ETRM Dashboards</h2>  
+  
+  {% csrf_token %}
+  <div class="rounded d-flex justify-content-center" >
+      <div class="col-md-4 col-sm-12 shadow-lg p-5 bg-dark">
+          <div class="text-center">
+              <h3 class="text-primary">Sign In</h3>
+          </div>
+          
+              <div class="p-4">
+                  <div class="input-group mb-3">
+                      <span class="input-group-text bg-primary"><i
+                              class="bi bi-person-plus-fill text-white"></i></span>
+                      <input type="text" class="form-control" placeholder="Username">
+                  </div>
+                  <div class="input-group mb-3">
+                      <span class="input-group-text bg-primary"><i
+                              class="bi bi-key-fill text-white"></i></span>
+                      <input type="password" class="form-control" placeholder="password">
+                  </div>
+                  <div class="form-check">
+                      <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                      <label class="form-check-label" for="flexCheckDefault">
+                          Remember Me
+                      </label>
+                  </div>
+                  <button class="btn btn-primary text-center mt-2" type="submit">
+                      Login
+                  </button>
+                  <p class="text-center mt-5">Don't have an account?
+                      <span class="text-primary">Sign Up</span>
+                  </p>
+                  <p class="text-center text-primary">Forgot your password?</p>
+              </div>
+         
+      </div>
+  </div>
+
+
+</form>
+
+
+</div>
+{% endblock %}
+
+
+
+
+<!-- 
+
+<form ="{% url 'login' %}" method="post" class=" form-control form-control-lg">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit"  id="submit">Login</button>
+</form> -->

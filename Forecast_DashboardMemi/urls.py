@@ -18,7 +18,7 @@ from django.urls import path,include
 
 
 from accounts.views import LoginView, RegisterView
-
+app_name= 'accounts'
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('login/', LoginView.as_view(), name='login'),

@@ -1,7 +1,66 @@
-<h1>Login</h1>
 
-<form action="{% url 'login' %}" method="post">
+{% extends './base/base.html' %}
+{% load static%}
+{% block content %}
+<style>
+  body {
+  background-image: url('https://mercadosemi.in/images/slider/banner3_n.jpg');
+}
+.navbar-custom {
+    background-color: lightgreen;
+}
+</style>
+<head>
+<link href='https://fonts.googleapis.com/css?family=Playfair Display' rel='stylesheet'>
+
+</head>
+<nav class="navbar navbar-custom navbar-light bg-transparent topbar mb-2 static-top shadow">
+
+  <!-- Sidebar Toggle (Topbar) -->
+  
+
+
+  <!-- Topbar Navbar -->
+  <ul class="navbar-nav mr-auto">
+    <li class="nav-item " >
+      <a class="nav-link " href="#" id="userDropdown" role="button"
+           align="left" aria-haspopup="true" aria-expanded="false">
+          <span class="mr-2 d-none d-lg-inline text-gray-600 small"></span>
+          <img class="img-profile rounded-circle"
+              src="http://mercadosemi.in/images/Mercados_Logo.png" style="width: auto;background-color: rgb(255, 255, 255); height: 35px;">
+      </a>
+      <!-- Dropdown - User Information -->
+  </li>
+</ul>
+  <ul class="navbar-nav  me-auto">
+      <!-- Nav Item - Messages -->
+      <li class="nav-item " >    
+        <h2  class="primary-title"  style=" color:#b9d5f1; font-family:Playfair Display;" >Welcome to Mercados ETRM Dashboards</h2>  
+          
+      </li>
+
+      <div class="topbar-divider d-none d-sm-block"></div>
+
+      <!-- Nav Item - User Information -->
+      
+
+  </ul>
+
+  
+
+</nav>
+                         
+<body>
+<div class="form-center" style="background: color #b9d5f1;;text-align: center;opacity: 0.75;" >
+
+<h2  class="primary-title" style= "color:#a0c6ec; margin-top:0px;text-align:center;font-family:Playfair Display;">Login</h2>
+<form action="{% url 'login' %}" style="text-align: center;" method="post" class=" form-control form-control-lg">
   {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit" id="submit">Login</button>
+  {{ form }}
+  <button type="submit"  id="submit">Login</button>
 </form>
+
+</div>
+
+</body>
+{% endblock %}
