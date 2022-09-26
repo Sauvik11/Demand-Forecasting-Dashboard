@@ -1,1 +1,1 @@
-web:waitress-serve --listen=127.0.0.1 Forecast_DashboardMemi.wsgi:application
+web: python website/manage.py runserver 0.0.0.0:$PORT
