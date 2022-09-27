@@ -1,1 +1,1 @@
-web: waitress-serve --listen=127.0.0.1 Forecast_DashboardMemi.wsgi:application
+web: waitress-serve --listen=0.0.0.0 Forecast_DashboardMemi.wsgi:application
