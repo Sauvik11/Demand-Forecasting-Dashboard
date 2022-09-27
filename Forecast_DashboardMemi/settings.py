@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-4*)l-$u6w#n3^4f3wi*5_(@jbp&_nleozu#@35n&dl-te(p#=6
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['memidash1.herokuapp.com','127.0.0.1']
+ALLOWED_HOSTS = ['*']
 AUTH_USER_MODEL = 'accounts.CustomUser'
 AUTHENTICATION_BACKENDS = ['accounts.backends.EmailBackend']
 # Application definition
