@@ -61,8 +61,8 @@ from django.contrib.auth import login, logout, authenticate
 # discoms={'Madhya Pradesh': 'MP'}
  
 
-# class ForecastDashboardView(TemplateView):
-#     template_name = 'dashboard/assets/templates/index.html' 
+class ForecastDashboardView(TemplateView):
+    template_name = 'dashboard/assets/templates/index.html' 
 
 
 #     def get_forecast_demand(self, demand,version=1):
