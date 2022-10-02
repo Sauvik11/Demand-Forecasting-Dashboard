@@ -53,12 +53,12 @@ border_colors = [
             'sandybrown', 'goldenrod', 'darkgoldenrod', 'peru', 'chocolate', 'saddlebrown', 'sienna', 'brown', 'maroon',
              'darkgray', 'darkslategray', 'black'
         ]
-# weather_parameters= ['cloud_cover','precip_chance','pressure_mean_sea_level','qpf','qpf_snow',
-#                         'relative_humidity','temperature','temperature_dew_point','temperature_feels_like',
-#                         'temperature_heat_index','temperature_wind_chill','uv_index','visibility','wind_direction',
-#                         'wind_gust','wind_speed','wx_severity']
-# zones= {'Central':'CZ','East':'EZ','West': 'WZ','South':'SZ','North': 'NZ'}
-# discoms={'Madhya Pradesh': 'MP'}
+weather_parameters= ['cloud_cover','precip_chance','pressure_mean_sea_level','qpf','qpf_snow',
+                        'relative_humidity','temperature','temperature_dew_point','temperature_feels_like',
+                        'temperature_heat_index','temperature_wind_chill','uv_index','visibility','wind_direction',
+                        'wind_gust','wind_speed','wx_severity']
+zones= {'Central':'CZ','East':'EZ','West': 'WZ','South':'SZ','North': 'NZ'}
+discoms={'Madhya Pradesh': 'MP'}
  
 
 class ForecastDashboardView(TemplateView):
