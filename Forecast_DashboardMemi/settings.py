@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 
 from pathlib import Path
 import os
+from django.urls import reverse_lazy
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -26,7 +27,7 @@ SECRET_KEY = 'django-insecure-4*)l-$u6w#n3^4f3wi*5_(@jbp&_nleozu#@35n&dl-te(p#=6
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
-AUTH_USER_MODEL = 'accounts.CustomUser'
+AUTH_USER_MODEL = 'auth.User'
 AUTHENTICATION_BACKENDS = ['accounts.backends.EmailBackend']
 # Application definition
 
@@ -40,18 +41,18 @@ INSTALLED_APPS = [
     'dashboard',
     'locations',
     'chartjs',
-    'accounts.apps.AccountsConfig',
+    'accounts',
     'jquery',
     'bootstrap5',
     'django_extensions',
-    
-
+    'debug_toolbar'
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -83,26 +84,26 @@ WSGI_APPLICATION = 'Forecast_DashboardMemi.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-# DATABASES = {
-#    'default':{
-#       'ENGINE':'django.db.backends.postgresql_psycopg2',
-#       'NAME':'forecast_master_1',
-#       'USER':'postgres',
-#       'PASSWORD':'1234',
-#       'HOST':'localhost',
-#       'PORT':'5432',
-#    }
-# }
 DATABASES = {
    'default':{
       'ENGINE':'django.db.backends.postgresql_psycopg2',
-      'NAME':'d68ksim8qb38s2',
-      'USER':'krrpafwavbrdew',
-      'PASSWORD':'136e1f549c30831d6224ddb5aca06c41f97fba6f89e50f43339135173f0ced36',
-      'HOST':'ec2-54-165-184-219.compute-1.amazonaws.com',
+      'NAME':'forecast_master_1',
+      'USER':'postgres',
+      'PASSWORD':'1234',
+      'HOST':'localhost',
       'PORT':'5432',
    }
 }
+# DATABASES = {
+#    'default':{
+#       'ENGINE':'django.db.backends.postgresql_psycopg2',
+#       'NAME':'d68ksim8qb38s2',
+#       'USER':'krrpafwavbrdew',
+#       'PASSWORD':'136e1f549c30831d6224ddb5aca06c41f97fba6f89e50f43339135173f0ced36',
+#       'HOST':'ec2-54-165-184-219.compute-1.amazonaws.com',
+#       'PORT':'5432',
+#    }
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
@@ -139,7 +140,7 @@ USE_I18N = True
 
 USE_TZ = True
 
-
+LOGIN_REDIRECT_URL = reverse_lazy('dashboard:index')
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 

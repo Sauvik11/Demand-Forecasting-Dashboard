@@ -1,12 +1,14 @@
 from django.contrib import admin
 from django.urls import path
 from . import views
-from accounts.views import LoginView, RegisterView,logoutPage
+from accounts.views import LoginView,logoutPage
 
 
 urlpatterns = [
     path('', views.ForecastDashboardView.as_view(), name='index'),
-    path('login', LoginView.as_view(), name='login'),
+    
+    path('signup', LoginView.as_view(), name='signup'),
+    
     # print ("after login"),
-    path('logout', logoutPage, name='logout'),
+    
 ]
