@@ -1,0 +1,20 @@
+import json
+from dashboard.models import corr_dates
+from datetime import datetime
+file = open(r"C:\Sauvik Projects\Forecast _DashboardMemi\Correlation_table.json")
+
+contents = file.read()
+corrdates = json.loads(contents)
+all_corr = []
+for data in corrdates:
+	corr_data = {
+	 'loc_ID':   data['ID'],
+	 'Date': datetime.strptime(str(data['Date']),"%d-%m-%y").date(),
+	 'Rank': data['Rank'],
+	 'Item_ID': data['Item_ID'],
+	 'Ref_date': datetime.strptime(str(data['Ref_date']),"%d-%m-%y").date(),
+	 'Correlation': data['Correlation'],
+	 }
+	all_corr.append(corr_dates(**corr_data))
+
+corr_dates.objects.bulk_create(all_corr)

@@ -1,0 +1,74 @@
+
+<script>
+  datasets = JSON.parse(`{{datasets|escapejs}}`)
+  
+  labels = JSON.parse (`{{labels}}`)
+    
+  var options = {
+  chart: {
+    type: 'line'
+  },
+  series: datasets,
+  xaxis: {
+          categories: labels ,
+          showDuplicates: true,
+          labels: {
+    formatter: function (value){
+      if (value % 4 == 0 ){
+      return  value;
+                        }
+      return ""
+    }
+  }},
+          
+  plotOptions: {
+          bar: {
+      columnWidth: "20%"
+    }},
+        plotOptions: {
+          bar: {
+      columnWidth: "20%"
+    }
+        },
+        dataLabels: {
+          enabled: false
+        },
+        stroke: {
+    width: [1.5, 1.5,1.5,1.5]
+  },
+        yaxis: {
+          axisTicks: {
+        show: true
+      },
+      axisBorder: {
+        show: true,
+        color: "#FF1654"
+      },
+      labels: {
+    formatter: function (value){
+      return  value 
+    }
+  },
+       title: {
+            text: 'Demand'
+          }
+        },
+        fill: {
+          opacity: 1
+        },
+        
+        tooltip: {
+          
+          y: {
+            formatter: function (val) {
+              return  val + "degrees"
+            }
+          }
+        }
+        }
+
+var chart = new ApexCharts(document.querySelector("#chart"), options);
+
+chart.render();
+
+</script>

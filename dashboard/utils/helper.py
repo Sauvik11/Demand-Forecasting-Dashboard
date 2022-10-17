@@ -1,11 +1,11 @@
 def get_min_block_value(demand, current_value):
     min_value = min(current_value + 1, 96)
-    return getattr(demand, f"block_{min_value}")
+    return getattr(demand, f"block{min_value}")
 
 
 def get_max_block_value(demand, current_value):
     max_value = max(current_value - 1, 1)
-    return getattr(demand, f"block_{max_value}")
+    return getattr(demand, f"block{max_value}")
 
 
 def calculate_current_value(current_block, from_block, to_block, from_value, to_value):
@@ -18,7 +18,8 @@ def calculate_current_value(current_block, from_block, to_block, from_value, to_
 
 def add_action(demand, from_block, to_block, from_value, to_value):
     calculated = []
-    block_ranges = dict([(f"block_{i}", i) for i in range(from_block, to_block + 1)])
+    block_ranges = dict([(f"block{i}", i) for i in range(from_block, to_block + 1)])
+    
 
     for block, current_block in block_ranges.items():
         current_block_value = getattr(demand, block)
@@ -31,7 +32,7 @@ def add_action(demand, from_block, to_block, from_value, to_value):
 
 def multiply_action(demand, from_block, to_block, from_value, to_value):
     calculated = []
-    block_ranges = dict([(f"block_{i}", i) for i in range(from_block, to_block + 1)])
+    block_ranges = dict([(f"block{i}", i) for i in range(from_block, to_block + 1)])
     for block, current_block in block_ranges.items():
         current_block_value = getattr(demand, block)
         current_value = calculate_current_value(current_block, from_block, to_block, from_value, to_value)
@@ -43,18 +44,20 @@ def multiply_action(demand, from_block, to_block, from_value, to_value):
 
 def average_action(demand, from_block, to_block, from_value, to_value):
     calculated = []
-    block_ranges = dict([(f"block_{i}", i) for i in range(from_block, to_block + 1)])
+    block_ranges = dict([(f"block{i}", i) for i in range(from_block, to_block + 1)])
     for block, current_block in block_ranges.items():
         current_block_value = getattr(demand, block)
         current_value = calculate_current_value(current_block, from_block, to_block, from_value, to_value)
+        
         block_value = (current_block_value * current_value) + (current_block_value * (1 - current_value))
+        print("block_value",block_value)
         calculated.append((block, block_value))
     return dict(calculated)
 
 
 def shift_left_action(demand, from_block, to_block, from_value, to_value):
     calculated = []
-    block_ranges = dict([(f"block_{i}", i) for i in range(from_block, to_block + 1)])
+    block_ranges = dict([(f"block{i}", i) for i in range(from_block, to_block + 1)])
     for block, current_block in block_ranges.items():
         current_block_value = getattr(demand, block)
         current_value = calculate_current_value(current_block, from_block, to_block, from_value, to_value)
@@ -66,7 +69,7 @@ def shift_left_action(demand, from_block, to_block, from_value, to_value):
 
 def shift_right_action(demand, from_block, to_block, from_value, to_value):
     calculated = []
-    block_ranges = dict([(f"block_{i}", i) for i in range(from_block, to_block + 1)])
+    block_ranges = dict([(f"block{i}", i) for i in range(from_block, to_block + 1)])
     for block, current_block in block_ranges.items():
         current_block_value = getattr(demand, block)
         current_value = calculate_current_value(current_block, from_block, to_block, from_value, to_value)
@@ -78,7 +81,7 @@ def shift_right_action(demand, from_block, to_block, from_value, to_value):
 
 def smooth_action(demand, from_block, to_block, from_value, to_value):
     calculated = []
-    block_ranges = dict([(f"block_{i}", i) for i in range(from_block, to_block + 1)])
+    block_ranges = dict([(f"block{i}", i) for i in range(from_block, to_block + 1)])
     for block, current_block in block_ranges.items():
         current_block_value = getattr(demand, block)
         current_value = calculate_current_value(current_block, from_block, to_block, from_value, to_value)

@@ -1,33 +1,9 @@
-<!-- <script>
-    // string = JSON.stringify(`{{weather_datasets}}`);
-    weather2_datasets = JSON.parse(`{{weather2_datasets|escapejs}}`)
-    
-    console.log(`weather_datasets`);
-    whther2_labels = JSON.parse(`{{whther_labels}}`)
-    const ctz = document.getElementById('weatherChart2').getContext('2d');
-    const weatherChart2 = new Chart(cty, {
-        type: 'line',
-        data: {
-        labels: whther2_labels,
-        datasets: weather2_datasets ,
-      },
-        
-        options: {
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            }
-        }
-    });
-    </script> -->
 
-   
      <script>
         weather2_datasets = JSON.parse(`{{weather2_datasets|escapejs}}`)
         whther2_labels = JSON.parse(`{{whther_labels}}`)
-        var ctz = document.getElementById('weatherChart2').getContext('2d');
-        var chart = new Chart(ctz, {
+       
+        var weather2_options = {
             // The type of chart we want to create
             type: 'line',
         
@@ -39,12 +15,92 @@
         
             // Configuration options go here
             options:  {
-        scales: {
-            y: {
-                beginAtZero: true
-            }
-        }
-    }
-        });
+    maintainAspectRatio: false,
+    responsive: true,
+     legend: {
+  //     verticalAlign: "center",  // "top" , "bottom"
+      position: "top",  // "center" , "right"
+      align:"start" ,
+      labels: {
+          boxWidth: 5
+      }
+     },
+    title: {
+      position: "top",
+      display: true,
+    },
+    tooltips: {
+      mode: "index",
+      intersect: false,
+    },
+    hover: {
+      mode: "nearest",
+      intersect: true,
+    },
+   
+    elements: {
+      point: {
+        radius: 0,
+        hoverRadius: 0,
+      },
+    },
+
+    scales: {
+      y: {
+        beginAtZero: true,
+      },
+    },
+  }
+}
+var modal_weather2_options=   {
+    type: 'line',
+    data: {
+    labels: whther2_labels,
+    datasets: weather2_datasets
+  },
+    
+    options:  {
+    maintainAspectRatio: true,
+    responsive: false,
+     legend: {
+  //     verticalAlign: "center",  // "top" , "bottom"
+       position: "top",  // "center" , "right"
+       align: 'start'
+     },
+    title: {
+      position: "top",
+      display: true,
+    },
+    tooltips: {
+      mode: "index",
+      intersect: false,
+    },
+    hover: {
+      mode: "nearest",
+      intersect: true,
+    },
+   
+    elements: {
+      point: {
+        radius: 0,
+        hoverRadius: 0,
+      },
+    },
+
+    scales: {
+      y: {
+        beginAtZero: true,
+      },
+    },
+  }
+}
+
+
+
+        const ctz = document.getElementById('weatherChart2').getContext('2d');
+        const weatherChart2 = new Chart(ctz, weather2_options );
+        var modal_ctz = document.getElementById('weather2expand').getContext('2d');
+        var modal_chart2 = new Chart(modal_ctz ,modal_weather2_options);
+
       </script>
   

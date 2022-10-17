@@ -3,7 +3,7 @@ from django.db import models
 # Create your models here.
 from django.db import models
 from django.db.models.fields import FloatField
-
+from locations.models import StateZone, State , City
 
 
 class Forecast_Master(models.Model):
@@ -11,6 +11,7 @@ class Forecast_Master(models.Model):
     date = models.DateField(null=True, blank=True)
     forecast_type = models.CharField(max_length=50, null=True)
     forecast_term = models.CharField(max_length=50, null=True)
+    state_zone = models.ForeignKey(StateZone, on_delete=models.CASCADE, null=True)
     loc_ID = models.CharField(max_length=50, null=True)
     block1 = models.FloatField(db_column='1', null=True)
     block2 = models.FloatField(db_column='2', null=True)
@@ -171,8 +172,88 @@ class Weather(models.Model):
     block = models.IntegerField(null=True, blank=True)
 
     state_code = models.CharField(max_length=200, null=True, blank=True)
+    state = models.ForeignKey(State, on_delete=models.CASCADE, null=True)
+    city= models.ForeignKey(City, on_delete=models.SET_NULL, null=True,blank= True)
 
     date_int = models.DateField(null=True, blank=True)
 
     def __str__(self):
         return f"{self.geo_code}"
+
+
+class corr_dates(models.Model):
+    loc_ID=models.CharField(max_length=20, null=True, blank=True)
+    Date=models.DateField( null=True, blank=True)
+    Rank= models.IntegerField(null=True, blank=True)
+    Item_ID= models.CharField(max_length=200, null=True, blank=True)
+    Ref_date= models.DateField(max_length=200, null=True, blank=True)
+    Correlation= models.FloatField(max_length=200, null=True, blank=True)
+    def __str__(self):
+        return f"{self.Item_ID}"
+
+
+class Weather24(models.Model):
+    called_at = models.DateTimeField(null=True, blank=True)
+    latitude = models.CharField(max_length=50, null=True, blank=True)
+    longitude = models.CharField(max_length=50, null=True, blank=True)
+    geo_code = models.CharField(max_length=200, null=True, blank=True)
+    index = models.CharField(max_length=200, null=True, blank=True)
+    cloud_cover = models.FloatField(null=True, blank=True)
+    day_of_week = models.CharField(max_length=200, null=True, blank=True)
+    day_or_night = models.CharField(max_length=200, null=True, blank=True)
+    expiration_time = models.DateTimeField(null=True, blank=True)
+
+    icon_code = models.CharField(max_length=200, null=True, blank=True)
+    icon_code_extend = models.CharField(max_length=200, null=True, blank=True)
+
+    precip_chance = models.FloatField(null=True, blank=True)
+    precip_type = models.CharField(max_length=200, null=True, blank=True)
+    pressure_mean_sea_level = models.FloatField(null=True, blank=True)
+
+    qpf = models.FloatField(null=True, blank=True)
+    qpf_snow = models.FloatField(null=True, blank=True)
+
+    relative_humidity = models.FloatField(null=True, blank=True)
+    temperature = models.FloatField(null=True, blank=True)
+    temperature_dew_point = models.FloatField(null=True, blank=True)
+    temperature_feels_like = models.FloatField(null=True, blank=True)
+    temperature_heat_index = models.FloatField(null=True, blank=True)
+    temperature_wind_chill = models.FloatField(null=True, blank=True)
+
+    uv_description = models.CharField(max_length=200, null=True, blank=True)
+    uv_index = models.FloatField(null=True, blank=True)
+
+    valid_time_local = models.DateTimeField(null=True, blank=True)
+    valid_time_utc = models.DateTimeField(null=True, blank=True)
+
+    visibility = models.FloatField(null=True, blank=True)
+
+    wind_direction = models.FloatField(null=True, blank=True)
+    wind_direction_cardinal = models.CharField(max_length=200, null=True, blank=True)
+    wind_gust = models.FloatField(null=True, blank=True)
+    wind_speed = models.FloatField(null=True, blank=True)
+    wx_phrase_long = models.CharField(max_length=200, null=True, blank=True)
+    wx_phrase_short = models.CharField(max_length=200, null=True, blank=True)
+    wx_severity = models.IntegerField(null=True, blank=True)
+
+    ceiling = models.CharField(max_length=200, null=True, blank=True)
+
+    scattered_cloud_base_height = models.CharField(max_length=200, null=True, blank=True)
+
+    pressure_altimeter = models.CharField(max_length=200, null=True, blank=True)
+    qpf_ice = models.CharField(max_length=200, null=True, blank=True)
+    qualifier_set = models.CharField(max_length=200, null=True, blank=True)
+    date_time = models.DateTimeField(null=True, blank=True)
+    date = models.DateField(null=True, blank=True)
+    time = models.TimeField(null=True, blank=True)
+    block = models.IntegerField(null=True, blank=True)
+
+    state_code = models.CharField(max_length=200, null=True, blank=True)
+    state = models.ForeignKey(State, on_delete=models.CASCADE)
+    date_int = models.DateField(null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.geo_code}"
+
+
+

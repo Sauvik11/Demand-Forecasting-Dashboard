@@ -1,0 +1,29 @@
+<script>
+    DW_datasets = JSON.parse(`{{DW_datasets|escapejs}}`)
+    labels = JSON.parse(`{{labels}}`)
+    var canvas = document.getElementById('myChart').getContext('2d');
+    var myChart_DW = new Chart(canvas, {
+    options: {
+        scales: {
+            yAxes: [
+                {
+                id: 'SG',
+                //type: 'linear',
+                position: 'left',    
+                }, 
+                {
+                id: 'Temp',
+                //type: 'linear',
+                position: 'right',
+                }
+            ]
+        }
+    },
+    type: 'line', //not really needed, over-ridden below
+    data: {
+        labels: labels,
+        datasets:  DW_datasets
+    }
+});
+</script>
+     

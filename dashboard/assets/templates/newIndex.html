@@ -1,0 +1,454 @@
+{% extends './base/base.html' %}
+{% load static %}
+{% block title %}
+  Forecast Dashboard
+{% endblock %}
+{% load getlist %}
+
+{% block content %}
+<style>
+.col {
+ 
+  white-space: nowrap;
+  
+}
+.input-group-append {
+  cursor: pointer;
+
+
+}
+</style>
+<form method="get" class="row row-cols-lg-auto " >
+  <div class="row row-cols-2 row-cols-lg-3">
+    <div class="col-md-3">
+      <div class="row mb-3">
+        <div class="card" style="background-color:#c7e9f7;">
+      <div class="card-body">
+      
+        <div class="row">
+          <div class="col ">
+        <!-- <select class="form-select form-select-sm"  aria-label=".form-select-sm example" style="width:auto;" name="date" id="id_date">
+          <option disabled selected>Date</option>
+            {% for d in date_choices %}
+            {% if request.GET.date and request.GET.date == d|date:'Y-m-d' %}
+            <option value="{{d|date:'Y-m-d'}}" selected="">{{d}}</option>
+             {% else %}
+            <option value="{{d|date:'Y-m-d'}}">{{d}}</option>
+             {% endif %}
+             {% endfor %}
+        </select> -->
+        </div>
+        <div class="col">
+        <select class="form-select form-select-sm" aria-label=".form-select-sm example" style="width:auto;"name="refdate" id="id_date">
+          <option value="" disabled selected >Reference Date</option>
+          {% for d in date_choices %}
+            {% if request.GET.refdate and request.GET.refdate == d|date:'Y-m-d' %}
+            <option value="{{d|date:'Y-m-d'}}" selected="">{{d}}</option>
+             {% else %}
+            <option value="{{d|date:'Y-m-d'}}">{{d}}</option>
+             {% endif %}
+             {% endfor %}
+        </select>
+        </div>
+        <div class="col">
+          <button type="submit" class="btn btn-sm btn-secondary ">Apply</button>
+        </div>
+      </div>
+     
+    </div>
+    </div>
+  </div>
+       <div class="row mb-3">
+      <div class="card">
+        <div class="card-body"> 
+          <canvas id="weatherChart1" width="1000" height="350">
+        </canvas>
+        </div>
+      </div>
+    </div>
+     
+    <div class="row">
+      <div class="col">
+    <select class="form-select form-select-sm" aria-label=".form-select-lg example" name="chart1_weather" id="id_weather1" >
+      
+      <option disabled selected>weather 1</option>
+      
+      {% for w in weather_parameters %}
+      <option value="{{w}}" {% if w in request.GET.chart1_weather %} selected="" {% endif %}>{{w}}</option>
+        {% endfor %}
+     
+    </select>
+    </div>
+    <div class="col">
+    <select class="form-select form-select-sm" aria-label=".form-select-sm example" name="chart1_weather" id="id_weather2" >
+      <option disabled selected>weather 2</option>
+      {% for w in weather_parameters %}
+      <option value="{{w}}" {% if w in request.GET.chart1_weather  %} selected="" {% endif %}>{{w}}</option>
+      {% endfor %}
+    </select>
+    </div>
+    <div class="col">
+      <button type="submit" class="btn btn-sm btn-secondary ">Apply</button>
+    </div>
+  </div>
+    <div class="row mb-3">
+      <div class="card">
+        <div class="card-body">
+          <canvas id="weatherChart2" width="1000" height="350"></canvas>
+        </div>
+      </div>
+    </div>
+    
+    <div class="row">
+      <div class="col">
+    <select class="form-select form-select-sm" aria-label=".form-select-lg example" name="chart2_weather" id="id_weather1" >
+      
+      <option disabled selected>weather 1</option>
+      
+      {% for w in weather_parameters %}
+      <option value="{{w}}" {% if w in request.GET.chart2_weather %} selected="" {% endif %}>{{w}}</option>
+        {% endfor %}
+     
+    </select>
+    </div>
+    <div class="col">
+    <select class="form-select form-select-sm" aria-label=".form-select-sm example" name="chart2_weather" id="id_weather2" >
+      <option disabled selected>weather 2</option>
+      {% for w in weather_parameters %}
+      <option value="{{w}}" {% if w in request.GET.chart2_weather  %} selected="" {% endif %}>{{w}}</option>
+      {% endfor %}
+    </select>
+    </div>
+    <div class="col">
+      <button type="submit" class="btn btn-sm btn-secondary ">Apply</button>
+    </div>
+  </div>
+  
+    <div class="row mb-3">
+      <div class="card">
+        <div class="card-body">
+          <canvas id="weatherchart3" width="1000" height="350"></canvas>
+        </div>
+      </div>
+    </div>
+     
+    <div class="row">
+      <div class="col">
+    <select class="form-select form-select-sm" aria-label=".form-select-lg example" name="chart3_weather" id="id_weather1" >
+      
+      <option disabled selected>weather 1</option>
+      
+      {% for w in weather_parameters %}
+      <option value="{{w}}" {% if w in request.GET.chart3_weather %} selected="" {% endif %}>{{w}}</option>
+        {% endfor %}
+     
+    </select>
+    </div>
+    <div class="col">
+    <select class="form-select form-select-sm" aria-label=".form-select-sm example" name="chart3_weather" id="id_weather2" >
+      <option disabled selected>weather 2</option>
+      {% for w in weather_parameters %}
+      <option value="{{w}}" {% if w in request.GET.chart3_weather  %} selected="" {% endif %}>{{w}}</option>
+      {% endfor %}
+    </select>
+    </div>
+    <div class="col">
+      <button type="submit" class="btn btn-sm btn-secondary ">Apply</button>
+    </div>
+  </div>
+  </div>
+    <div class="col-md-6"> 
+      <div class="row mb-3">
+        <div class="card" style="background-color:#c7e9f7;">
+      <div class="card-body">
+        <div class="row gap-4">
+          <div class="col">
+            <h5>Demand Forecast</h5>
+          </div>
+          <div class="col">
+        <select class="form-select form-select-sm " aria-label=".form-select-lg example"  name="state" id="id_state" >
+          <option disabled selected>States</option>
+          {% for k, v in states.items %}
+          <option value="{{k}}" {% if k == request.GET.state or k == request.GET.chart1_weather_state %} selected="" {% endif %}>{{k}}</option>
+          <p>{{k}}</p>
+          {% endfor %}
+        </select>
+        </div>
+        <div class="col">
+        <select class="form-select form-select-sm" aria-label=".form-select-sm example" name="zones" id="id_zones" style="width:auto;">
+          <option disabled selected>Zones</option>
+          <option value="EZ">East Zone</option>
+          <option value="CZ">Central Zone</option>
+          <option value="WZ">West Zone</option>
+          <option value="NZ">North Zone</option>
+          <option value="SZ">South Zone</option>
+        </select>
+        </div>
+      
+      
+        <div class="col">
+          <select class="form-select form-select-sm " aria-label=".form-select-sm example" name="date" id="id_date" >
+            <option disabled selected>Date</option>
+            {% for d in date_choices %}
+            {% if request.GET.date and request.GET.date == d|date:'Y-m-d' %}
+            <option value="{{d|date:'Y-m-d'}}" selected="">{{d}}</option>
+             {% else %}
+            <option value="{{d|date:'Y-m-d'}}">{{d}}</option>
+             {% endif %}
+             {% endfor %}
+          </select>
+          </div>
+        
+        <div class="col">
+            <div class="input-group">
+              <select class="form-select form-select-sm" multiple="multiple" aria-label=".form-select-sm example" name="ftype" id="id_ftype" style="width:auto;" >
+                <option disabled selected>Select Forecast Type</option>
+                {% for f in all_forecasttypes %}
+                  <option value="{{f}}" {% if f in forecast_types  %} selected="" {% endif %}>{{f}}</option>
+                {% endfor %}
+              </select>
+            </div>
+        </div>
+
+        <div class="col" align="center">
+          <button type="submit" class="btn btn-sm btn-primary ">Get Data</button>
+        </div>
+        <br>
+        
+      </div>
+    </div>
+    </div>
+  </div>
+       <div class="row mb-3" >
+      <div class="card">
+        <div class="card-body">
+          <canvas id="overlay" width="1000" height="450" style="position:absolute;pointer-events:none;"></canvas>
+          <canvas id="forecast" width="1000" height="450"></canvas>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="row mb-3">
+      <div class="card">
+        <div class="card-body">
+          <canvas id="weatherChart" width="1000" height="290"></canvas>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+    <div class="col">
+    <select class="form-select form-select-sm" aria-label=".form-select-sm example">
+      <option selected>Open this select menu</option>
+      <option value="1">One</option>
+      <option value="2">Two</option>
+      <option value="3">Three</option>
+    </select>
+    </div>
+    <div class="col">
+      <button type="submit" class="btn btn-sm btn-secondary ">Apply</button>
+    </div>
+  </div>
+    </div>
+
+    
+    <div class="col-md-3">
+      <div class="row mb-3">
+        <div class="card" style="background-color:#c7e9f7;">
+      <div class="card-body">
+        <div class="row">
+         
+        <div class="col">
+          <button type="submit" class="btn btn-sm btn-success">Submit Forecast</button>
+        </div>
+      </div>
+    </div>
+    </div>
+  </div>
+      <div class="row mb-3">
+      <div class="card">
+        <div class="card-body">
+          <form method="get" class="row row-cols-lg-auto ">
+          <div class="row">
+            <div class="col">
+          <div class="input-group input-group-sm mb-3">
+            <span class="input-group-text" id="inputGroup-sizing-sm">From Block</span>
+            <script type="text/javascript"> 
+              document.getElementById("fromblock").placeholder='{{request.GET.fromBlock}}' ;
+            </script>
+            <input type="text" class="form-control" id="fromblock" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" name="fromBlock" value="{{request.GET.fromBlock|default_if_none:''}}">
+            <span class="input-group-text" id="inputGroup-sizing-sm">To Block</span>
+            <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" name="toBlock" value="{{request.GET.toBlock|default_if_none:''}}">
+            <button class="btn btn-outline-info" type="submit"   id="button-addon1">Filter</button>
+           
+             </div>
+        </div>
+      </div>
+            <div class="row">
+            <div class="col">
+              <div class="input-group input-group-sm mb-3">
+                
+                
+                <!-- <input type="hidden" name="chart1.2_weather" value="{{weather1}}">
+                <input type="hidden" name="chart2.2_weather" value="{{weather2}}"> -->
+                <span class="input-group-text" id="inputGroup-sizing-sm">From value</span>
+                <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm"  name="fromVal" style="width:35px" value="{{request.GET.fromVal|default_if_none:''}}">
+
+                
+                <span class="input-group-text" id="inputGroup-sizing-sm">To value </span>
+                <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" name="toVal" style="width:35px" value="{{request.GET.toVal|default_if_none:''}}">
+                <!-- <button class="btn btn-outline-info"   id="button-addon2"></button> -->
+                <select class="form-select" aria-label="Default select example"  name="Action" style="width:99px">
+                {% for action in actions %}
+                  <option value="{{action}}" {% if action == request.GET.Action %} selected="" {% endif %}>{{action}}</option>
+                {% endfor %}
+                  
+                </select>
+                <button class="btn btn-outline-success" type="submit" id="button-addon1">Preview</button>
+                
+                 </div>
+          </div>
+        </div>
+        <div class="row">
+            <div class="col">
+              <div class="input-group input-group-sm mb-3">
+                
+                <button type="button" class="btn btn-info btn-sm"><i class="fa fa-undo" aria-hidden="true"></i> Undo</button>
+                <button type="button" class="btn btn-outline-danger btn-sm">Clear all</button>
+                
+                
+                 </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</form>
+{% include './partials/weatherchart1.html' %}  
+{% include './partials/weatherchart2.html' %}  
+{% include './partials/weatherchart3.html' %}  
+{% include './partials/demandforecast.html' %}
+{% endblock %}
+
+<!-- Template sidebar -->
+<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+
+  
+  <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+      <div class="sidebar-brand-icon rotate-n-15">
+         
+      </div>
+      <div class="sidebar-brand mx-3">
+        
+          <img src="https://mercadosemi.in/images/Mercados_Logo.png" alt="" width="90" height="40" style="background-color:#4e73df;">
+        
+      </div>
+  </a>
+
+  <!-- Divider -->
+  <hr class="sidebar-divider my-0">
+
+  <!-- Nav Item - Dashboard -->
+  <li class="nav-item active">
+      <a class="nav-link" href="index.html">
+          <i class="fas fa-fw fa-tachometer-alt"></i>
+          <span>Dashboard</span></a>
+  </li>
+
+  <!-- Divider -->
+  <hr class="sidebar-divider">
+
+  <!-- Heading -->
+  <div class="sidebar-heading">
+      Interface
+  </div>
+
+  <!-- Nav Item - Pages Collapse Menu -->
+  <li class="nav-item">
+      <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
+          aria-expanded="true" aria-controls="collapseTwo">
+          <i class="fas fa-fw fa-cog"></i>
+          <span>Components</span>
+      </a>
+      <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+          <div class="bg-white py-2 collapse-inner rounded">
+              <h6 class="collapse-header">Custom Components:</h6>
+              <a class="collapse-item" href="buttons.html">Buttons</a>
+              <a class="collapse-item" href="cards.html">Cards</a>
+          </div>
+      </div>
+  </li>
+
+  <!-- Nav Item - Utilities Collapse Menu -->
+  <li class="nav-item">
+      <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities"
+          aria-expanded="true" aria-controls="collapseUtilities">
+          <i class="fas fa-fw fa-wrench"></i>
+          <span>Utilities</span>
+      </a>
+      <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities"
+          data-parent="#accordionSidebar">
+          <div class="bg-white py-2 collapse-inner rounded">
+              <h6 class="collapse-header">Custom Utilities:</h6>
+              <a class="collapse-item" href="utilities-color.html">Colors</a>
+              <a class="collapse-item" href="utilities-border.html">Borders</a>
+              <a class="collapse-item" href="utilities-animation.html">Animations</a>
+              <a class="collapse-item" href="utilities-other.html">Other</a>
+          </div>
+      </div>
+  </li>
+
+  <!-- Divider -->
+  <hr class="sidebar-divider">
+
+  <!-- Heading -->
+  <div class="sidebar-heading">
+      Addons
+  </div>
+
+  <!-- Nav Item - Pages Collapse Menu -->
+  <li class="nav-item">
+      <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
+          aria-expanded="true" aria-controls="collapsePages">
+          <i class="fas fa-fw fa-folder"></i>
+          <span>Pages</span>
+      </a>
+      <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+          <div class="bg-white py-2 collapse-inner rounded">
+              <h6 class="collapse-header">Login Screens:</h6>
+              <a class="collapse-item" href="login.html">Login</a>
+              <a class="collapse-item" href="register.html">Register</a>
+              <a class="collapse-item" href="forgot-password.html">Forgot Password</a>
+              <div class="collapse-divider"></div>
+              <h6 class="collapse-header">Other Pages:</h6>
+              <a class="collapse-item" href="404.html">404 Page</a>
+              <a class="collapse-item" href="blank.html">Blank Page</a>
+          </div>
+      </div>
+  </li>
+
+  <!-- Nav Item - Charts -->
+  <li class="nav-item">
+      <a class="nav-link" href="charts.html">
+          <i class="fas fa-fw fa-chart-area"></i>
+          <span>Charts</span></a>
+  </li>
+
+  <!-- Nav Item - Tables -->
+  <li class="nav-item">
+      <a class="nav-link" href="tables.html">
+          <i class="fas fa-fw fa-table"></i>
+          <span>Tables</span></a>
+  </li>
+
+  <!-- Divider -->
+  <hr class="sidebar-divider d-none d-md-block">
+
+  <!-- Sidebar Toggler (Sidebar) -->
+  <div class="text-center d-none d-md-inline">
+      <button class="rounded-circle border-0" id="sidebarToggle"></button>
+  </div>
+
+ 
+</ul> -->

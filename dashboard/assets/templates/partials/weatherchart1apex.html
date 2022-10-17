@@ -1,0 +1,204 @@
+
+{{ weather_data_one|json_script:"weather_data_one" }}
+<script>
+  
+    const weather_data = JSON.parse(document.getElementById('weather_data_one').textContent);
+    // console.log("weather_data",weather_data[2])
+    var dataKeys_para1 = Object.keys(weather_data[0][0])
+    var dataval_para1 = Object.values(weather_data[0][0])
+    console.log("dataKeys_para1",dataKeys_para1)
+    console.log("dataval_para1",dataval_para1)
+    var dataKeys_para2 = Object.keys(weather_data[1][0])
+    var dataval_para2 = Object.values(weather_data[1][0])
+
+    var dataKeys_para3 = Object.keys(weather_data[2][0])
+    var dataval_para3 = Object.values(weather_data[2][0])
+    console.log("dataKeys_para3",dataKeys_para3)
+    console.log("dataval_para3",dataval_para3)
+    var dataKeys_para4 = Object.keys(weather_data[3][0])
+    var dataval_para4 = Object.values(weather_data[3][0])
+
+    console.log("dataKeys",dataKeys_para4)
+    console.log("datavalues",dataval_para4)
+   
+
+    var chartHeadings = weather_data[0].map(w => `${w.city_name}_${w.block}`)
+    console.log("chartHeadings",chartHeadings)
+
+    var chartDatapara1 = weather_data[0].map(w => w[dataKeys_para1[1]])
+    var chartDatapara2 = weather_data[1].map(w => w[dataKeys_para2[1]])
+
+    var chartDatapara11 = weather_data[2].map(w => w[dataKeys_para3[1]])
+    var chartDatapara22 = weather_data[3].map(w => w[dataKeys_para4[1]])
+    console.log("chartDatapara11",chartDatapara11)
+    
+    var options = {
+          series: [{
+          name: dataKeys_para1[1] + " " + dataval_para1[2] ,
+          data: chartDatapara1 ,
+        },
+        {
+          name: dataKeys_para2[1] + " " + dataval_para2[2],
+          data: chartDatapara2,
+        },
+        {
+          name: dataKeys_para3[1] + " " + dataval_para3[2],
+          data: chartDatapara11,
+        },
+        {
+          name: dataKeys_para4[1] + " " + dataval_para4[2],
+          data: chartDatapara22,
+        }
+      ],
+          chart: {
+          type: "line",
+          height: 200,
+          stacked: false,
+          fillOpacity: .3, 
+        },
+        legend: {
+      show: false,
+      position: 'bottom',
+      horizontalAlign: 'center', 
+      floating: false,
+      fontSize: '14px',
+      fontFamily: 'Helvetica, Arial',
+      fontWeight: 400,
+      formatter: undefined,
+      inverseOrder: false,
+      width: undefined,
+      height: undefined,
+      tooltipHoverFormatter: undefined,
+      customLegendItems: [],
+      offsetX: 0,
+      offsetY: 0,
+      labels: {
+          colors: undefined,
+          useSeriesColors: false
+      },
+        dataLabels: {
+          enabled: false
+        }},
+        stroke: {
+    width: [1.5, 1.5,1.5,1.5]
+  },
+        xaxis: {
+          categories: chartHeadings ,
+          showDuplicates: true,
+          axisTicks: {
+        show: true
+      },
+          labels: {
+    formatter: function (value) {
+        return value ; 
+      }
+    }
+  },
+       
+        yaxis: {
+          axisTicks: {
+        show: true
+      },
+      axisBorder: {
+        show: true,
+        color: "#FF1654"
+      },
+       title: {
+            text: 'temperature'
+          }
+        },
+        fill: {
+          opacity: 1
+        },
+        tooltip: {
+          
+          y: {
+            formatter: function (val) {
+              return "$ " + val + "degrees"
+            }
+          }
+        }
+        };
+
+        var chart = new ApexCharts(document.querySelector("#chartw1"), options);
+        chart.render();
+  
+
+    var modal_weather_optionscity= {
+          series: [{
+          name: dataKeys_para1[1] + " " + dataval_para1[2] ,
+          data: chartDatapara1 ,
+        },
+        {
+          name: dataKeys_para2[1] + " " + dataval_para2[2],
+          data: chartDatapara2,
+        },
+        {
+          name: dataKeys_para3[1] + " " + dataval_para3[2],
+          data: chartDatapara11,
+        },
+        {
+          name: dataKeys_para4[1] + " " + dataval_para4[2],
+          data: chartDatapara22,
+        }
+      ],
+          chart: {
+          type: "line",
+          height: 350,
+          stacked: false,
+          fillOpacity: .3, 
+        },
+        plotOptions: {
+          bar: {
+      columnWidth: "20%"
+    }
+        },
+        dataLabels: {
+          enabled: false
+        },
+        stroke: { width: [1.5, 1.5,1.5,1.5],},
+        xaxis: {
+          categories: chartHeadings ,
+          showDuplicates: true,
+          labels: {
+    formatter: function (value) {
+
+        return value ; 
+      }
+        },},
+
+        yaxis: {
+          axisTicks: {
+        show: true
+      },
+      axisBorder: {
+        show: true,
+        color: "#FF1654"
+      },
+       title: {
+            text: 'temperature'
+          }
+        },
+        fill: {
+          opacity: 1
+        },
+        tooltip: {
+          
+          y: {
+            formatter: function (val) {
+              return "$ " + val + "degrees"
+            }
+          }
+        }
+        };
+
+        // var chart = new ApexCharts(document.querySelector("#chartw1"), options);
+        var chart = new ApexCharts(document.querySelector("#weather1expd"), modal_weather_optionscity);
+        chart.render();
+    
+      
+
+
+
+
+</script>

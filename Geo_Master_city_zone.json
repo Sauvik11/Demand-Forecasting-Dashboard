@@ -1,0 +1,226 @@
+[{
+  "_id": {
+    "$oid": "61443f2df7d2ab7d3a638cb5"
+  },
+  "GeoCode": "23.2599,77.4126",
+  "city": "Bhopal",
+  "ZoneName": "CZ",
+  "State": "Madhya Pradesh",
+  "StateCode": "MP0"
+},{
+  "_id": {
+    "$oid": "61443f2df7d2ab7d3a638cb6"
+  },
+  "GeoCode": "22.0574,78.9382",
+  "city": "Chhindwara",
+  "ZoneName": "EZ",
+  "State": "Madhya Pradesh",
+  "StateCode": "MP0"
+},{
+  "_id": {
+    "$oid": "61443f2df7d2ab7d3a638cb7"
+  },
+  "GeoCode": "22.6013,75.3025",
+  "city": "Dhar",
+  "ZoneName": "WZ",
+  "State": "Madhya Pradesh",
+  "StateCode": "MP0"
+},{
+  "_id": {
+    "$oid": "61443f2df7d2ab7d3a638cb8"
+  },
+  "GeoCode": "26.2183,78.1828",
+  "city": "Gwalior",
+  "ZoneName": "CZ",
+  "State": "Madhya Pradesh",
+  "StateCode": "MP0"
+},{
+  "_id": {
+    "$oid": "61443f2df7d2ab7d3a638cb9"
+  },
+  "GeoCode": "22.7196,75.8577",
+  "city": "Indore",
+  "ZoneName": "WZ",
+  "State": "Madhya Pradesh",
+  "StateCode": "MP0"
+},{
+  "_id": {
+    "$oid": "61443f2df7d2ab7d3a638cba"
+  },
+  "GeoCode": "23.1815,79.9864",
+  "city": "JabalPur",
+  "ZoneName": "EZ",
+  "State": "Madhya Pradesh",
+  "StateCode": "MP0"
+},{
+  "_id": {
+    "$oid": "61443f2df7d2ab7d3a638cbb"
+  },
+  "GeoCode": "24.5362,81.3037",
+  "city": "Rewa",
+  "ZoneName": "EZ",
+  "State": "Madhya Pradesh",
+  "StateCode": "MP0"
+},{
+  "_id": {
+    "$oid": "61443f2df7d2ab7d3a638cbc"
+  },
+  "GeoCode": "23.8388,78.7378",
+  "city": "Sagar",
+  "ZoneName": "EZ",
+  "State": "Madhya Pradesh",
+  "StateCode": "MP0"
+},{
+  "_id": {
+    "$oid": "61443f2df7d2ab7d3a638cbd"
+  },
+  "GeoCode": "24.6005,80.8322",
+  "city": "Satna",
+  "ZoneName": "EZ",
+  "State": "Madhya Pradesh",
+  "StateCode": "MP0"
+},{
+  "_id": {
+    "$oid": "61443f2df7d2ab7d3a638cbe"
+  },
+  "GeoCode": "23.1765,75.7885",
+  "city": "Ujjain",
+  "ZoneName": "WZ",
+  "State": "Madhya Pradesh",
+  "StateCode": "MP0"
+},{
+  "_id": {
+    "$oid": "61443f2df7d2ab7d3a638cf4"
+  },
+  "GeoCode": "23.03,72.4",
+  "city": "Ahmedabad",
+  "ZoneName": "CZ",
+  "State": "Gujarat",
+  "StateCode": "GJ0"
+},{
+  "_id": {
+    "$oid": "61443f2df7d2ab7d3a638cf5"
+  },
+  "GeoCode": "22,73.16",
+  "city": "Vadodara",
+  "ZoneName": "CZ",
+  "State": "Gujarat",
+  "StateCode": "GJ0"
+},{
+  "_id": {
+    "$oid": "61443f2df7d2ab7d3a638cf6"
+  },
+  "GeoCode": "22.8011,73.5594",
+  "city": "Panchmahal",
+  "ZoneName": "CZ",
+  "State": "Gujarat",
+  "StateCode": "GJ0"
+},{
+  "_id": {
+    "$oid": "61443f2df7d2ab7d3a638cf7"
+  },
+  "GeoCode": "22.45,72.45",
+  "city": "Kheda",
+  "ZoneName": "CZ",
+  "State": "Gujarat",
+  "StateCode": "GJ0"
+},{
+  "_id": {
+    "$oid": "61443f2df7d2ab7d3a638cf8"
+  },
+  "GeoCode": "22.53,74.19",
+  "city": "Dahod",
+  "ZoneName": "CZ",
+  "State": "Gujarat",
+  "StateCode": "GJ0"
+},{
+  "_id": {
+    "$oid": "61443f2df7d2ab7d3a638cf9"
+  },
+  "GeoCode": "24.3455,71.7622",
+  "city": "Banaskantha",
+  "ZoneName": "NZ",
+  "State": "Gujarat",
+  "StateCode": "GJ0"
+},{
+  "_id": {
+    "$oid": "61443f2df7d2ab7d3a638cfa"
+  },
+  "GeoCode": "23.42,72.37",
+  "city": "Mehsana",
+  "ZoneName": "NZ",
+  "State": "Gujarat",
+  "StateCode": "GJ0"
+},{
+  "_id": {
+    "$oid": "61443f2df7d2ab7d3a638cfb"
+  },
+  "GeoCode": "23.2156,72.6369",
+  "city": "Gandhinagar",
+  "ZoneName": "NZ",
+  "State": "Gujarat",
+  "StateCode": "GJ0"
+},{
+  "_id": {
+    "$oid": "61443f2df7d2ab7d3a638cfc"
+  },
+  "GeoCode": "21.1702,2.8311",
+  "city": "Surat",
+  "ZoneName": "SZ",
+  "State": "Gujarat",
+  "StateCode": "GJ0"
+},{
+  "_id": {
+    "$oid": "61443f2df7d2ab7d3a638cfd"
+  },
+  "GeoCode": "21.41,73.01",
+  "city": "Bharuch",
+  "ZoneName": "SZ",
+  "State": "Gujarat",
+  "StateCode": "GJ0"
+},{
+  "_id": {
+    "$oid": "61443f2df7d2ab7d3a638cfe"
+  },
+  "GeoCode": "21.07,73.4",
+  "city": "Navsari",
+  "ZoneName": "SZ",
+  "State": "Gujarat",
+  "StateCode": "GJ0"
+},{
+  "_id": {
+    "$oid": "61443f2df7d2ab7d3a638cff"
+  },
+  "GeoCode": "22.18,70.56",
+  "city": "Rajkot",
+  "ZoneName": "WZ",
+  "State": "Gujarat",
+  "StateCode": "GJ0"
+},{
+  "_id": {
+    "$oid": "61443f2df7d2ab7d3a638d00"
+  },
+  "GeoCode": "21.46,72.11",
+  "city": "Bhavnagar",
+  "ZoneName": "WZ",
+  "State": "Gujarat",
+  "StateCode": "GJ0"
+},{
+  "_id": {
+    "$oid": "61443f2df7d2ab7d3a638d01"
+  },
+  "GeoCode": "21.31,70.36",
+  "city": "Junagadh",
+  "ZoneName": "WZ",
+  "State": "Gujarat",
+  "StateCode": "GJ0"
+},{
+  "_id": {
+    "$oid": "61443f2df7d2ab7d3a638d02"
+  },
+  "GeoCode": "22.27,70.07",
+  "city": "Jamnagar",
+  "ZoneName": "WZ",
+  "State": "Gujarat",
+  "StateCode": "GJ0"
+}]

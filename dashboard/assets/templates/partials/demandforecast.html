@@ -1,7 +1,14 @@
 
 <script type="text/javascript">
   datasets = JSON.parse(`{{datasets|escapejs}}`)
-  labels = JSON.parse(`{{labels}}`)
+  console.log ("dataasets", datasets)
+  labels = JSON.parse (`{{labels}}`)
+
+  
+  var demanddata= {
+    labels: labels,
+    datasets:datasets
+  }
   var options = {
   xAxes: [{
     ticks: {
@@ -10,10 +17,7 @@
     }
 }],
   type: 'line',
-  data: {
-    labels: labels,
-    datasets:datasets
-  },
+  data: demanddata ,
   options:{
     maintainAspectRatio: false,
     responsive: true,
@@ -47,7 +51,7 @@
                     var xLabels = data.ticks;
 
                     xLabels.forEach(function (labels, i) {
-                        if (i % 2 == 0){
+                        if (i % 4 == 0){
                             xLabels[i] = '';
                         }
                     });
@@ -58,8 +62,10 @@
   }}
 
 var canvas = document.getElementById('forecast');
+
 var ctx = canvas.getContext('2d');
 var chart = new Chart(ctx, options);
+
 var overlay = document.getElementById('overlay');
 var startIndex = 0;
 overlay.width = canvas.width;
@@ -118,4 +124,11 @@ canvas.addEventListener('pointerup', evt => {
     const myChart = new Chart(
       document.getElementById('forecast'),
     );
+
+
+    document.querySelector('.forecast-card-body').addEventListener('click', e => {
+    e.currentTarget.classList.toggle('modal');
+    chart.reflow();
+});
+
   </script>
