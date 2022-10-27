@@ -90,7 +90,7 @@ DATABASES = {
       'NAME':'forecast_master_1',
       'USER':'postgres',
       'PASSWORD':'1234',
-      'HOST':'localhost',
+      'HOST':'192.168.1.201',
       'PORT':'5432',
    }
 }
