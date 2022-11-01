@@ -29,6 +29,14 @@
     <link href="{% static './apexcharts.css' %}" rel="stylesheet"/>
 
 
+    <!--.............................................................-->
+<script src="http://code.jquery.com/jquery.js"></script>    
+<script type="text/javascript" src="<?php echo base_url('bootstrap/js/bootstrap-multiselect.js'); ?>"></script>
+
+<link href="<?php echo base_url('bootstrap/css/bootstrap-multiselect.css'); ?>" rel="stylesheet" type="text/css">    
+<link href="<?php echo base_url('bootstrap/css/bootstrap.min.css'); ?>" rel="stylesheet" type="text/css">                  
+<script type="text/javascript" src="<?php echo base_url('bootstrap/js/bootstrap.min.js'); ?>"></script>    
+
 
     <style>
 
@@ -129,12 +137,20 @@
                           {% endfor %}
                           </select> -->
 
-                          <select class="form-select form-select-sm" multiple="multiple" aria-label=".form-select-sm example" name="ftype" id="id_ftype" style="width:auto;" >
+                          <!-- <select class="form-select form-select-sm" multiple="multiple" aria-label=".form-select-sm example" name="ftype" id="id_ftype" style="width:auto;" >
                             <option disabled selected>Select Forecast Type</option>
                             {% for f in all_forecasttypes %}
                               <option value="{{f}}" {% if f in forecast_types  %} selected="" {% endif %}>{{f}}</option>
                             {% endfor %}
+                          </select> -->
+
+                          <select class="select_field_class" multiple="multiple" name="ftype" id="id_ftype">
+                            <option value="">Select Forecast</option>
+                            {% for f in fcast_types %}
+                              <option value="{{f}}" {% if f in f_type_selected  %} selected="" {% endif %}>{{f}}</option>
+                            {% endfor %}
                           </select>
+            
 
                     <div class="col" align="center">
                       <button type="submit" class="btn btn-sm btn-primary ">Get Data</button>
@@ -159,13 +175,17 @@
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
-                        <select name="states" id="select" class="form-control"  multiple="multiple" style="display: none;">
-                          <option value="AL">Alabama</option>
-                          <option value="AK">Alaska</option>
-                          <option value="AZ">Arizona</option>
-                          <option value="AR">Arkansas</option>
-                          <option selected value="CA">California</option>
-                        </select>
+                        <div class="btn-group dropup">
+                          <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                            Select ftype
+                          </button>
+                          <ul class="dropdown-menu">
+                            <input type=" checkbox" value="value1">value1 <br/>
+                            <input type=" checkbox" value="value2">value2 <br/>
+                            <input type=" checkbox" value="value3">value3 <br/>
+                            <input type=" checkbox" value="value4">value4 <br/>
+                          </ul>
+                        </div>
                         
                         <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
                                 class="fas fa-download fa-sm text-white-50"></i> Submit Data</a>

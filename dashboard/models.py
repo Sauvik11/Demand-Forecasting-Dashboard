@@ -255,5 +255,12 @@ class Weather24(models.Model):
     def __str__(self):
         return f"{self.geo_code}"
 
+class ensemble(models.Model):
+    Final_forecast= models.FloatField( null=True,blank=True)
+    ID= models.CharField(max_length=25, null=True, blank=True)
+    Type=models.CharField(max_length=25, null=True, blank=True)
+    block= models.IntegerField(null=True, blank=True)
+    date= models.DateField(null=True, blank=True)
+    
 
 

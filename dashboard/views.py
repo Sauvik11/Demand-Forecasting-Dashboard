@@ -261,6 +261,10 @@ class ForecastDashboardView(TemplateView):
         # corr demands
         corr_demands = Forecast_Master.objects.filter( forecast_type__iexact='ITD',date__in= corrdates,loc_ID=getstate[0]).distinct()
         # print("corr_demands....", corr_demands)
+
+        #ensemble demand
+        
+
         i=0
         for demand in corr_demands:
             block_values = attrgetter(*BLOCK_CONSTANTS)(demand)
@@ -324,7 +328,7 @@ class ForecastDashboardView(TemplateView):
                     weather_data_ref = list(weather_qs.filter(geo_code__in=list(get_cities.values())).order_by('city','block').distinct('city','block').values('block',f, 'date',city_name=F('city__name')))   
                     weather_data0_ref.append(weather_data_ref)
             weather_data1= weather_data0 + weather_data0_ref
-        # print("weather_data1", weather_data1)
+        
        
         weather2_data0_ref=[]
         weather2_data0=[]
@@ -368,7 +372,7 @@ class ForecastDashboardView(TemplateView):
       
         if self.request.GET.get('fromBlock') and  self.request.GET.get('fromBlock') is not None :
             forecast_version= self.current_forecast_version()
-            demand_instance= Forecast_Master.objects.filter( forecast_type__iexact='ITD',date=date,loc_ID=getstate[0]).first()
+            demand_instance= Forecast_Master.objects.filter( forecast_type__iexact='TLD_Forecast',date=date,loc_ID=getstate[0]).first()
             print("print demand blocks1",demand_instance)
             
             if 'undo' in self.request.GET:
@@ -488,7 +492,7 @@ class ForecastDashboardView(TemplateView):
         actions = ['Add','Multiply','Average','Shift left','Shift right','Smooth']    
         # weatherlabels=  [[i for i in range(0, 25)] for j in range(0,len(city_labels))]
         # print("weatherlabels", weatherlabels)
-        print("datasets",datasets)
+      
         cityweather_chartdata=[]
         # for f in weather1:
         #     cityweather_chartdata.append(
@@ -500,7 +504,8 @@ class ForecastDashboardView(TemplateView):
 
         #     }
         #     )
-
+        
+        print("weather_data1", weather_data1)
         context['weather_data_one'] =  weather_data1
         context['weather2_data_one']= weather2_data1
         context['weather3_data_one']= weather3_data1
@@ -532,3 +537,5 @@ class ForecastDashboardView(TemplateView):
 
 class LoginView(auth_views.LoginView):
     print("in login view")
+class test(TemplateView):
+    template_name = 'dashboard/assets/templates/test.html' 
