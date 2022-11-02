@@ -328,7 +328,7 @@ class ForecastDashboardView(TemplateView):
                     weather_data_ref = list(weather_qs.filter(geo_code__in=list(get_cities.values())).order_by('city','block').distinct('city','block').values('block',f, 'date',city_name=F('city__name')))   
                     weather_data0_ref.append(weather_data_ref)
             weather_data1= weather_data0 + weather_data0_ref
-        
+        print("weather_data0", weather_data0)
        
         weather2_data0_ref=[]
         weather2_data0=[]
