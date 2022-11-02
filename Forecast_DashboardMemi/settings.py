@@ -84,26 +84,26 @@ WSGI_APPLICATION = 'Forecast_DashboardMemi.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-# DATABASES = {
-#    'default':{
-#       'ENGINE':'django.db.backends.postgresql_psycopg2',
-#       'NAME':'forecast_master_1',
-#       'USER':'postgres',
-#       'PASSWORD':'1234',
-#       'HOST':'192.168.1.201',
-#       'PORT':'5432',
-#    }
-# }
 DATABASES = {
    'default':{
       'ENGINE':'django.db.backends.postgresql_psycopg2',
-      'NAME':'d68ksim8qb38s2',
-      'USER':'krrpafwavbrdew',
-      'PASSWORD':'136e1f549c30831d6224ddb5aca06c41f97fba6f89e50f43339135173f0ced36',
-      'HOST':'ec2-54-165-184-219.compute-1.amazonaws.com',
+      'NAME':'forecast_master_1',
+      'USER':'postgres',
+      'PASSWORD':'1234',
+      'HOST':'192.168.1.201',
       'PORT':'5432',
    }
 }
+# DATABASES = {
+#    'default':{
+#       'ENGINE':'django.db.backends.postgresql_psycopg2',
+#       'NAME':'d68ksim8qb38s2',
+#       'USER':'krrpafwavbrdew',
+#       'PASSWORD':'136e1f549c30831d6224ddb5aca06c41f97fba6f89e50f43339135173f0ced36',
+#       'HOST':'ec2-54-165-184-219.compute-1.amazonaws.com',
+#       'PORT':'5432',
+#    }
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
