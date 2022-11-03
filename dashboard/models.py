@@ -262,6 +262,11 @@ class ensemble(models.Model):
     block= models.IntegerField(null=True, blank=True)
     date= models.DateField(null=True, blank=True)
 
+class Up_scada: 
+    block= models.IntegerField(null=True, blank=True)
+    date= models.DateField(null=True, blank=True)
+    volume= models.FloatField(null=True, blank=True)
 
+    
 
 
