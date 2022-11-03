@@ -138,7 +138,7 @@ class ForecastDashboardView(TemplateView):
 
         if date == '':
             date = datetime.now().date()
-        print("date....",date)
+        print("date....", type(date))
         state_input = self.request.GET.get('state', 1)
         print("state_input....",state_input)
 
@@ -163,21 +163,21 @@ class ForecastDashboardView(TemplateView):
             state_weather= State.objects.get(id=state_input).code
             state= State.objects.get(id=state_input)
             get_cities= dict(state.city_set.values_list('name', 'geocode'))     
-            print("get_cities", get_cities)
+            # print("get_cities", get_cities)
         else:
             get_cities={}
 
         
         all_cities=list(get_cities.keys())
 
-        print("all_citiesnow", all_cities) 
+        # print("all_citiesnow", all_cities) 
         city_labels= []
         for city in all_cities:
             weather_label= [i for i in range(1, 25)]
             label= city + ';' +  str(weather_label)
             city_labels.append(label)
-        print("citylabel", city_labels)
-        print("getstate ...........", getstate)
+        # print("citylabel", city_labels)
+        # print("getstate ...........", getstate)
         weather_date=self.request.GET.get('weather_date', None)
         refdate=self.request.GET.get('refdate', None)
         action = self.request.GET.get('Action', None)
@@ -190,8 +190,8 @@ class ForecastDashboardView(TemplateView):
         else:
             forecast_types=''
         
-        print("forecast_types",forecast_types)
-        print("request.get",self.request.GET )
+        # print("forecast_types",forecast_types)
+        # print("request.get",self.request.GET )
         if 'chart1_weather' in self.request.GET:
             weather1=self.request.GET.getlist('chart1_weather', None)
         elif 'chart1.2_weather' in self.request.GET:
@@ -203,7 +203,7 @@ class ForecastDashboardView(TemplateView):
              weather2=self.request.GET.get('chart2.2_weather', None)
              weather2 = ast.literal_eval(weather2)     
         weather3=self.request.GET.getlist('chart3_weather', None)
-        print("request.get",self.request.GET.get )
+        # print("request.get",self.request.GET.get )
         # print(" weather1", type(weather1))
         # print(" weather2", weather2)
         if len(getstate) != 0 and "MP" not in getstate[0] :
@@ -221,7 +221,7 @@ class ForecastDashboardView(TemplateView):
         n_by_dates= ''
         if date :
             n_date=datetime.strptime(str(date), '%Y-%m-%d')
-            print('n_date',n_date)
+            # print('n_date',n_date)
             n_by_dates= []
             nearby_date_1= n_date -  timedelta(days=1,)
             nearby_date_1= nearby_date_1.strftime('%Y-%m-%d')
@@ -231,17 +231,17 @@ class ForecastDashboardView(TemplateView):
             nearby_date_3= nearby_date_3.strftime('%Y-%m-%d')
             n_by_dates.extend([nearby_date_1,nearby_date_2,nearby_date_3])
             
-            print('n_by_dates',n_by_dates)
+            # print('n_by_dates',n_by_dates)
 
         
         print('date_corr',date,'corr_state',corr_state,'w_correl_type',corr_type )
         w_corr_data= list(corr_dates.objects.filter(Date=date, loc_ID=corr_state,Item_ID=corr_type).values_list('Ref_date').order_by('Rank')[:3])
         w_corr_data=[str(w[0]) for w in w_corr_data]
-        print('w_corr_data',w_corr_data)
+        # print('w_corr_data',w_corr_data)
         
         d_corr_data= list(corr_dates.objects.filter(Date=date,loc_ID=corr_state,Item_ID='Demand_corr').values_list('Ref_date').order_by('Rank')[:3])
         d_corr_data=[str(w[0]) for w in d_corr_data]
-        print('d_corr_data',d_corr_data)
+        # print('d_corr_data',d_corr_data)
         
         
             
@@ -256,14 +256,36 @@ class ForecastDashboardView(TemplateView):
         
         datasets=[]
         demand_datas= Forecast_Master.objects.filter(forecast_type__in=forecast_types,date=date,loc_ID__in=getstate).distinct()
-        print("demanddatass" , demand_datas)
+        
 
         # corr demands
-        corr_demands = Forecast_Master.objects.filter( forecast_type__iexact='ITD',date__in= corrdates,loc_ID=getstate[0]).distinct()
+        corr_demands = Forecast_Master.objects.filter( forecast_type__iexact='ITD',date__in=corrdates,loc_ID=getstate[0]).distinct()
         # print("corr_demands....", corr_demands)
 
+        todays_date= datetime.strptime(str(date), '%Y-%m-%d')
+        ensemble_date_time= todays_date +  timedelta(days=1)
+        ensemble_date= ensemble_date_time.strftime('%Y-%m-%d')
+        print("ensemble_date", ensemble_date)
+        ensemble_demand = ensemble.objects.filter(ID=corr_state,date=ensemble_date,Type="Type_1" )
+        # scada_demand =  
+        print("ensemble_demand",ensemble_demand)
+        print("demanddatass" , demand_datas)
+
         #ensemble demand
-        
+        ensemble_blockvalues= []
+        for demand in  ensemble_demand:
+            block_value= demand.Final_forecast
+            ensemble_blockvalues.append(block_value)
+        print("ensemble block", ensemble_blockvalues )
+        datasets.append({
+                'name': 'Ensemble',
+                # 'borderColor': color,
+                # 'borderWidth': 2, 
+                'data': ensemble_blockvalues,
+                # 'fill': False,
+                # 'borderDash': [5,2.5]
+            })
+
 
         i=0
         for demand in corr_demands:
@@ -282,7 +304,7 @@ class ForecastDashboardView(TemplateView):
             block_values = attrgetter(*BLOCK_CONSTANTS)(demand_data)
             print("block_values_demand",block_values)
             color = random.choice(border_colors)
-            print(block_values)
+            # print(block_values)
             # if f=='ITD':
             #     dataset1.append(block_values)
             datasets.append({
@@ -293,7 +315,11 @@ class ForecastDashboardView(TemplateView):
                 # 'fill': False,
                 # 'borderDash': [5,2.5]
             })
-      
+        
+           
+
+
+
         print ("datasets",datasets)
         #DW chart ==>
         dw_weather= ['temperature', 'temperature_feels_like','wind_speed', 'cloud_cover', 'precip_chance', 'wind_gust']
@@ -312,7 +338,7 @@ class ForecastDashboardView(TemplateView):
                     'fill': False
                 })
               
-        print("DW_datasets",DW_datasets)
+        # print("DW_datasets",DW_datasets)
         weather_data0_ref=[]
         weather_data0=[]
         weather_data1=[]
@@ -328,12 +354,12 @@ class ForecastDashboardView(TemplateView):
                     weather_data_ref = list(weather_qs.filter(geo_code__in=list(get_cities.values())).order_by('city','block').distinct('city','block').values('block',f, 'date',city_name=F('city__name')))   
                     weather_data0_ref.append(weather_data_ref)
             weather_data1= weather_data0 + weather_data0_ref
-        print("weather_data0", weather_data0)
+        # print("weather_data0", weather_data0)
        
         weather2_data0_ref=[]
         weather2_data0=[]
         weather2_data1=[]
-        print("weather2####", weather2, "refdate", refdate)
+        # print("weather2####", weather2, "refdate", refdate)
         if weather2 is not None:
             for f in weather2:
                 if f != '':
@@ -341,7 +367,7 @@ class ForecastDashboardView(TemplateView):
                     weather_data_date = list(weather_qs.filter(geo_code__in=list(get_cities.values())).order_by('city','block').distinct('city','block').values('block',f,'date',city_name=F('city__name'),)) 
                     weather2_data0.append(weather_data_date)
                 if refdate is not None:
-                        print("refdate printed", refdate)
+                        # print("refdate printed", refdate)
                         weather_qs_ref = Weather.objects.filter(date=refdate, geo_code__in=get_cities.values())
                         weather_data_ref = list(weather_qs_ref.filter(geo_code__in=list(get_cities.values())).order_by('city','block').distinct('city','block').values('block',f, 'date',city_name=F('city__name')))    
                         # print("weatherdata", len(list(weatherdata)))
@@ -373,7 +399,7 @@ class ForecastDashboardView(TemplateView):
         if self.request.GET.get('fromBlock') and  self.request.GET.get('fromBlock') is not None :
             forecast_version= self.current_forecast_version()
             demand_instance= Forecast_Master.objects.filter( forecast_type__iexact='TLD_Forecast',date=date,loc_ID=getstate[0]).first()
-            print("print demand blocks1",demand_instance)
+            # print("print demand blocks1",demand_instance)
             
             if 'undo' in self.request.GET:
                 forecast_version-= 1 
@@ -407,7 +433,7 @@ class ForecastDashboardView(TemplateView):
                 # print("print demand blocks",demand.block1,demand.block2)
                     block_values = attrgetter(*BLOCK_CONSTANTS)(demand)
                     block_values_dict= dict(zip(BLOCK_CONSTANTS,block_values))
-                    print("block_values_dict",block_values_dict)
+                    # print("block_values_dict",block_values_dict)
                     from_block = int(self.request.GET.get('fromBlock'))
                     to_block= int(self.request.GET.get('toBlock'))
                     color = random.choice(border_colors)
@@ -417,7 +443,7 @@ class ForecastDashboardView(TemplateView):
                         added_demand= add_action(demand, from_block, to_block, from_value, to_value)
                         block_values_dict.update(**added_demand)
                         self.update_forecast_demand(demand,block_values_dict,version=forecast_version)
-                        print("block_values_dictupdated",block_values_dict)
+                        # print("block_values_dictupdated",block_values_dict)
                         forecast_dataset= tuple(block_values_dict.values())
                         
                         datasets.append({
@@ -427,7 +453,7 @@ class ForecastDashboardView(TemplateView):
                             'data': forecast_dataset,
                             # 'fill': False
                         })
-                        print("added_demand", added_demand)
+                        # print("added_demand", added_demand)
                     if action == "Multiply": 
                         multipled_demand= multiply_action(demand, from_block, to_block, from_value, to_value)
                         block_values_dict.update(**multipled_demand)
@@ -505,7 +531,7 @@ class ForecastDashboardView(TemplateView):
         #     }
         #     )
         
-        print("weather_data1", weather_data1)
+        # print("weather_data1", weather_data1)
         context['weather_data_one'] =  weather_data1
         context['weather2_data_one']= weather2_data1
         context['weather3_data_one']= weather3_data1
@@ -533,9 +559,8 @@ class ForecastDashboardView(TemplateView):
         context['formz']= formz
         return context
     
-     
-
 class LoginView(auth_views.LoginView):
     print("in login view")
+
 class test(TemplateView):
     template_name = 'dashboard/assets/templates/test.html' 
