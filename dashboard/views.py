@@ -140,7 +140,7 @@ class ForecastDashboardView(TemplateView):
             date = datetime.now().date()
         print("date....", type(date))
         state_input = self.request.GET.get('state', 1)
-        print("state_input....",state_input)
+        print("state_input....",type(state_input))
 
         if state_input == "3":
             if self.request.GET.get('zones'):
@@ -261,30 +261,46 @@ class ForecastDashboardView(TemplateView):
         # corr demands
         corr_demands = Forecast_Master.objects.filter( forecast_type__iexact='ITD',date__in=corrdates,loc_ID=getstate[0]).distinct()
         # print("corr_demands....", corr_demands)
+        if date:
+            todays_date= datetime.strptime(str(date), '%Y-%m-%d')
+            ensemble_date_time= todays_date +  timedelta(days=1)
+            ensemble_date= ensemble_date_time.strftime('%Y-%m-%d')
+            print("ensemble_date", ensemble_date)
+            ensemble_demand = ensemble.objects.filter(ID=corr_state,date=ensemble_date,Type="Type_1" )
+            print("ensemble_demand",ensemble_demand)
+        
+            if state_input== "1":
+                scada_demand =  Up_scada.objects.filter(date='2022-11-03')
 
-        todays_date= datetime.strptime(str(date), '%Y-%m-%d')
-        ensemble_date_time= todays_date +  timedelta(days=1)
-        ensemble_date= ensemble_date_time.strftime('%Y-%m-%d')
-        print("ensemble_date", ensemble_date)
-        ensemble_demand = ensemble.objects.filter(ID=corr_state,date=ensemble_date,Type="Type_1" )
-        # scada_demand =  
-        print("ensemble_demand",ensemble_demand)
-        print("demanddatass" , demand_datas)
+            if scada_demand:    
+                scada_blockvalues= []
+                for demand in  scada_demand:
+                    block_value= demand.volume
+                    scada_blockvalues.append(block_value)
+                print("ensemble block", scada_blockvalues )
+                datasets.append({
+                        'name': 'Scada',
+                        # 'borderColor': color,
+                        # 'borderWidth': 2, 
+                        'data':scada_blockvalues,
+                        # 'fill': False,
+                        # 'borderDash': [5,2.5]
+                })
 
-        #ensemble demand
-        ensemble_blockvalues= []
-        for demand in  ensemble_demand:
-            block_value= demand.Final_forecast
-            ensemble_blockvalues.append(block_value)
-        print("ensemble block", ensemble_blockvalues )
-        datasets.append({
-                'name': 'Ensemble',
-                # 'borderColor': color,
-                # 'borderWidth': 2, 
-                'data': ensemble_blockvalues,
-                # 'fill': False,
-                # 'borderDash': [5,2.5]
-            })
+            #ensemble demand
+                ensemble_blockvalues= []
+                for demand in  ensemble_demand:
+                    block_value= demand.Final_forecast
+                    ensemble_blockvalues.append(block_value)
+                print("ensemble block", ensemble_blockvalues )
+                datasets.append({
+                        'name': 'Ensemble',
+                        # 'borderColor': color,
+                        # 'borderWidth': 2, 
+                        'data': ensemble_blockvalues,
+                        # 'fill': False,
+                        # 'borderDash': [5,2.5]
+                    })
 
 
         i=0
