@@ -163,7 +163,7 @@ class ForecastDashboardView(TemplateView):
             state_weather= State.objects.get(id=state_input).code
             state= State.objects.get(id=state_input)
             get_cities= dict(state.city_set.values_list('name', 'geocode'))     
-            # print("get_cities", get_cities)
+            print("get_cities", get_cities)
         else:
             get_cities={}
 
@@ -176,7 +176,7 @@ class ForecastDashboardView(TemplateView):
             weather_label= [i for i in range(1, 25)]
             label= city + ';' +  str(weather_label)
             city_labels.append(label)
-        # print("citylabel", city_labels)
+        print("citylabel", city_labels)
         # print("getstate ...........", getstate)
         weather_date=self.request.GET.get('weather_date', None)
         refdate=self.request.GET.get('refdate', None)
@@ -268,10 +268,11 @@ class ForecastDashboardView(TemplateView):
             print("ensemble_date", ensemble_date)
             ensemble_demand = ensemble.objects.filter(ID=corr_state,date=ensemble_date,Type="Type_1" )
             print("ensemble_demand",ensemble_demand)
-        
+            
+            scada_demand= None
             if state_input== "1":
                 scada_demand =  Up_scada.objects.filter(date='2022-11-03')
-
+            
             if scada_demand:    
                 scada_blockvalues= []
                 for demand in  scada_demand:
