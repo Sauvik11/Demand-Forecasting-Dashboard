@@ -24,6 +24,7 @@ from datetime import timedelta
 from django.utils.dateformat import DateFormat
 from django.utils.formats import get_format
 from django.contrib.auth import login, logout, authenticate
+import operator
 
 BLOCK_CONSTANTS = [
      'block1', 'block2', 'block3', 'block4', 'block5', 'block6', 'block7', 'block8', 'block9', 'block10', 'block11',
@@ -126,7 +127,8 @@ class ForecastDashboardView(TemplateView):
         w_corr_date= self.request.GET.get('w_row', None)
         d_corr_date= self.request.GET.get('d_row', None)
         n_corr_date= self.request.GET.get('n_row', None)
-
+        w1selected_cities =self.request.GET.getlist('w1city_selected', None)
+        print("w1selected_cities", w1selected_cities)
         if w_corr_date  :
             corrdates.append(w_corr_date)
         if d_corr_date :
@@ -163,14 +165,24 @@ class ForecastDashboardView(TemplateView):
             state_weather= State.objects.get(id=state_input).code
             state= State.objects.get(id=state_input)
             get_cities= dict(state.city_set.values_list('name', 'geocode'))     
-            print("get_cities", get_cities)
+            print("get_cities_initial", get_cities)
         else:
             get_cities={}
 
-        
-        all_cities=list(get_cities.keys())
+       
 
-        # print("all_citiesnow", all_cities) 
+        all_cities=list(get_cities.keys())
+        
+       
+        print("get_cities", get_cities)   
+        print("allselected_cities",all_cities)
+        selected_cities = {}
+        #for selected cities dictionary
+        for city in w1selected_cities: 
+            selected_cities[city]= get_cities[city]
+        
+        print("selected cities",selected_cities, "len(w1selected_cities)", len(w1selected_cities) )
+            
         city_labels= []
         for city in all_cities:
             weather_label= [i for i in range(1, 25)]
@@ -362,17 +374,27 @@ class ForecastDashboardView(TemplateView):
         if weather1:
             for f in weather1: 
                 if weather_date is not '' and weather_date is not None : 
-                    weather_qs = Weather.objects.filter(date=weather_date, geo_code__in=get_cities.values())
-                    weather_data_date = list(weather_qs.filter(geo_code__in=list(get_cities.values())).order_by('city','block').distinct('city','block').values('block',f,'date',city_name=F('city__name'),)) 
+                    if len(w1selected_cities)> 0 :
+                       weather_qs = Weather.objects.filter(date=weather_date, geo_code__in=selected_cities.values())
+                       weather_data_date = list(weather_qs.filter(geo_code__in=list(selected_cities.values())).order_by('city','block').distinct('city','block').values('block',f,'date',city_name=F('city__name'),))
+                       print("weather_data_date", weather_data_date )
+                    else:
+                        weather_qs = Weather.objects.filter(date=weather_date, geo_code__in=get_cities.values())
+                        weather_data_date = list(weather_qs.filter(geo_code__in=list(get_cities.values())).order_by('city','block').distinct('city','block').values('block',f,'date',city_name=F('city__name'),)) 
                     weather_data0.append(weather_data_date)
+                    # print("weather_data0", weather_data0)
                 if refdate is not '' and refdate is not  None:
                     # print("refdate", refdate)
-                    weather_qs = Weather.objects.filter(date=refdate, geo_code__in=get_cities.values())
-                    weather_data_ref = list(weather_qs.filter(geo_code__in=list(get_cities.values())).order_by('city','block').distinct('city','block').values('block',f, 'date',city_name=F('city__name')))   
+                    if len(w1selected_cities)> 0 :
+                        weather_qs = Weather.objects.filter(date=refdate, geo_code__in=selected_cities.values())
+                        weather_data_ref = list(weather_qs.filter(geo_code__in=list(selected_cities.values())).order_by('city','block').distinct('city','block').values('block',f, 'date',city_name=F('city__name'))) 
+                    else: 
+                        weather_qs = Weather.objects.filter(date=refdate, geo_code__in=get_cities.values())
+                        weather_data_ref = list(weather_qs.filter(geo_code__in=list(get_cities.values())).order_by('city','block').distinct('city','block').values('block',f, 'date',city_name=F('city__name')))   
                     weather_data0_ref.append(weather_data_ref)
             weather_data1= weather_data0 + weather_data0_ref
-        # print("weather_data0", weather_data0)
-       
+        
+        # print("weather_data1", weather_data1)
         weather2_data0_ref=[]
         weather2_data0=[]
         weather2_data1=[]
@@ -380,18 +402,23 @@ class ForecastDashboardView(TemplateView):
         if weather2 is not None:
             for f in weather2:
                 if f != '':
-                    weather_qs = Weather.objects.filter(date=weather_date, geo_code__in=get_cities.values())
-                    weather_data_date = list(weather_qs.filter(geo_code__in=list(get_cities.values())).order_by('city','block').distinct('city','block').values('block',f,'date',city_name=F('city__name'),)) 
-                    weather2_data0.append(weather_data_date)
+                     if len(w1selected_cities)> 0 :
+                        weather_qs = Weather.objects.filter(date=weather_date, geo_code__in=selected_cities.values())
+                        weather_data_date = list(weather_qs.filter(geo_code__in=list(selected_cities.values())).order_by('city','block').distinct('city','block').values('block',f,'date',city_name=F('city__name'),)) 
+                     else:
+                        weather_qs = Weather.objects.filter(date=weather_date, geo_code__in=get_cities.values())
+                        weather_data_date = list(weather_qs.filter(geo_code__in=list(get_cities.values())).order_by('city','block').distinct('city','block').values('block',f,'date',city_name=F('city__name'),))                       
+                     weather2_data0.append(weather_data_date)
                 if refdate is not None:
-                        # print("refdate printed", refdate)
+                    if len(w1selected_cities)> 0 :
+                        weather_qs_ref = Weather.objects.filter(date=refdate, geo_code__in=selected_cities.values())
+                        weather_data_ref = list(weather_qs_ref.filter(geo_code__in=list(selected_cities.values())).order_by('city','block').distinct('city','block').values('block',f, 'date',city_name=F('city__name'))) 
+                    else:
                         weather_qs_ref = Weather.objects.filter(date=refdate, geo_code__in=get_cities.values())
                         weather_data_ref = list(weather_qs_ref.filter(geo_code__in=list(get_cities.values())).order_by('city','block').distinct('city','block').values('block',f, 'date',city_name=F('city__name')))    
-                        # print("weatherdata", len(list(weatherdata)))
-                        weather2_data0_ref.append(weather_data_ref)
+                    weather2_data0_ref.append(weather_data_ref)
             
         weather2_data1= weather2_data0 + weather2_data0_ref
-        # print("weather2_data0_ref",  weather2_data0_ref)
            
         
         weather3_data0_ref=[]
@@ -400,18 +427,26 @@ class ForecastDashboardView(TemplateView):
         if weather3:
             for f in weather3:
                 if f is not '':
-                    weather_qs = Weather.objects.filter(date=weather_date, geo_code__in=get_cities.values())
-                    weather_data_date = list(weather_qs.filter(geo_code__in=list(get_cities.values())).order_by('city','block').distinct('city','block').values('block',f,'date',city_name=F('city__name'),)) 
+                    if len(w1selected_cities)> 0 :
+                        weather_qs = Weather.objects.filter(date=weather_date, geo_code__in=selected_cities.values())
+                        weather_data_date = list(weather_qs.filter(geo_code__in=list(selected_cities.values())).order_by('city','block').distinct('city','block').values('block',f,'date',city_name=F('city__name'),))
+                    else:
+                        weather_qs = Weather.objects.filter(date=weather_date, geo_code__in=get_cities.values())
+                        weather_data_date = list(weather_qs.filter(geo_code__in=list(get_cities.values())).order_by('city','block').distinct('city','block').values('block',f,'date',city_name=F('city__name'),)) 
                     weather3_data0.append(weather_data_date)
                 if refdate is not None:
+                    if len(w1selected_cities)> 0 :
+                        weather_qs_ref = Weather.objects.filter(date=refdate, geo_code__in=selected_cities.values())
+                        weather_data_ref = list(weather_qs_ref.filter(geo_code__in=list(selected_cities.values())).order_by('city','block').distinct('city','block').values('block',f, 'date',city_name=F('city__name')))     
+                    else:
                         weather_qs_ref = Weather.objects.filter(date=refdate, geo_code__in=get_cities.values())
                         weather_data_ref = list(weather_qs_ref.filter(geo_code__in=list(get_cities.values())).order_by('city','block').distinct('city','block').values('block',f, 'date',city_name=F('city__name')))
-                        weather3_data0_ref.append(weather_data_ref) 
+                    weather3_data0_ref.append(weather_data_ref) 
                     # print("weatherdata", len(list(weatherdata)))
             weather3_data1= weather3_data0 + weather3_data0_ref
                     # weather3_data1.append(weather_data_ref)
                 
-        # print("weather3_data1", weather3_data1[3])
+        print("weather3_data1", weather3_data1[3])
       
         if self.request.GET.get('fromBlock') and  self.request.GET.get('fromBlock') is not None :
             forecast_version= self.current_forecast_version()
@@ -549,11 +584,13 @@ class ForecastDashboardView(TemplateView):
         #     )
         
         # print("weather_data1", weather_data1)
+        print("get_citieskeys", all_cities)
         context['weather_data_one'] =  weather_data1
         context['weather2_data_one']= weather2_data1
         context['weather3_data_one']= weather3_data1
         # context['cityweather_data'] = json.dumps(cityweather_data)
-        context['citylabels'] = get_cities.keys()
+        context['all_cities'] = all_cities
+        context['weather_data_one'] =  weather_data1
         context['datasets'] = json.dumps(datasets)
         context['labels'] = json.dumps([i for i in range(1, 97)])
         context['whther_labels'] = json.dumps([i for i in range(0, 25)])
