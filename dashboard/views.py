@@ -446,7 +446,7 @@ class ForecastDashboardView(TemplateView):
             weather3_data1= weather3_data0 + weather3_data0_ref
                     # weather3_data1.append(weather_data_ref)
                 
-        print("weather3_data1", weather3_data1[3])
+        # print("weather3_data1", weather3_data1[3])
       
         if self.request.GET.get('fromBlock') and  self.request.GET.get('fromBlock') is not None :
             forecast_version= self.current_forecast_version()
