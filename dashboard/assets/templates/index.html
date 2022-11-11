@@ -57,7 +57,7 @@
 
 
     <!-- offcanvas -->
-<form>
+
     <div class="offcanvas offcanvas-bottom" tabindex="-1" id="offcanvasBottom" aria-labelledby="offcanvasBottomLabel">
       <div class="offcanvas-header">
         <h5 class="offcanvas-title" id="offcanvasBottomLabel">Dates</h5>
@@ -249,26 +249,38 @@
                                                   <div id="chartw1"></div> 
                                                 </div>
                                                 <div class="row">
+                                                  {% if request.GET|get_list:'chart1_weather'  %} 
+                                                  {% for type in request.GET|get_list:'chart1_weather' %} 
                                                     <div class="col">
+                                                    
                                                   <select class="form-select form-select-sm" aria-label=".form-select-lg example" name="chart1_weather" id="id_weather1" >
                                                     
                                                     <option disabled selected>weather 1</option>
                                                     
                                                     {% for w in weather_parameters %}
-                                                    <option value="{{w}}" {% if w in request.GET.chart1_weather %} selected="" {% endif %}>{{w}}</option>
+                                                    <option value="{{w}}" {% if w in type %} selected="" {% endif %}>{{w}}</option>
                                                       {% endfor %}
-                                                   
                                                   </select>
                                                   </div>
+                                                  {% endfor %}
+                                                  {% else %}
                                                   <div class="col">
-                                                  <select class="form-select form-select-sm" aria-label=".form-select-sm example" name="chart1_weather" id="id_weather2" >
+                                                    <select class="form-select form-select-sm" aria-label=".form-select-sm example" name="chart1_weather" id="id_weather1" >
+                                                      <option disabled selected>weather 1</option>
+                                                      {% for w in weather_parameters %}
+                                                      <option value="{{w}}" {% if w in request.GET|get_list:'chart1_weather'  %} selected="" {% endif %}>{{w}}</option>
+                                                      {% endfor %}
+                                                    </select>
+                                                    </div> 
+                                                   <div class="col">
+                                                  <select class="form-select form-select-sm" aria-label=".form-select-sm example" name="chart1_weather" id="id_weather1" >
                                                     <option disabled selected>weather 2</option>
                                                     {% for w in weather_parameters %}
-                                                    <option value="{{w}}" {% if w in request.GET.chart1_weather  %} selected="" {% endif %}>{{w}}</option>
+                                                    <option value="{{w}}" {% if w in request.GET|get_list:'chart1_weather'  %} selected="" {% endif %}>{{w}}</option>
                                                     {% endfor %}
                                                   </select>
-                                                  </div>
-                                                  
+                                                  </div> 
+                                                  {% endif %}
                                                   <div class="col">
                                                     <button type="submit" class="btn btn-sm btn-secondary ">Apply</button>
                                                   </div>
@@ -287,24 +299,38 @@
                                                   <div id="chartw2"></div> 
                                                 </div>
                                                 <div class="row">
+                                                  {% if request.GET|get_list:'chart2_weather'  %} 
+                                                  {% for type in request.GET|get_list:'chart2_weather' %} 
                                                     <div class="col">
                                                   <select class="form-select form-select-sm" aria-label=".form-select-lg example" name="chart2_weather" id="id_weather2" >
-                                                    <option disabled selected>weather 1</option>
+                                                    <option disabled selected>weather para</option>
                                                     
                                                     {% for w in weather_parameters %}
-                                                    <option value="{{w}}" {% if w in request.GET.chart2_weather %} selected="" {% endif %}>{{w}}</option>
+                                                    <option value="{{w}}" {% if w in type %} selected="" {% endif %}>{{w}}</option>
                                                       {% endfor %}
                                                    
                                                   </select>
                                                   </div>
+                                                  {% endfor %}
+                                                  {% else %}
                                                   <div class="col">
+                                                    <select class="form-select form-select-sm" aria-label=".form-select-sm example" name="chart2_weather" id="id_weather2" >
+                                                      <option disabled selected>weather 1</option>
+                                                      {% for w in weather_parameters %}
+                                                      <option value="{{w}}" {% if w in request.GET|get_list:'chart2_weather'  %} selected="" {% endif %}>{{w}}</option>
+                                                      {% endfor %}
+                                                    </select>
+                                                    </div> 
+                                                   <div class="col">
                                                   <select class="form-select form-select-sm" aria-label=".form-select-sm example" name="chart2_weather" id="id_weather2" >
                                                     <option disabled selected>weather 2</option>
                                                     {% for w in weather_parameters %}
-                                                    <option value="{{w}}" {% if w in request.GET.chart2_weather  %} selected="" {% endif %}>{{w}}</option>
+                                                    <option value="{{w}}" {% if w in request.GET|get_list:'chart2_weather'  %} selected="" {% endif %}>{{w}}</option>
                                                     {% endfor %}
                                                   </select>
-                                                  </div>
+                                                  </div> 
+                                                  {% endif %}
+                                            
                                                   
                                                   <div class="col">
                                                     <button type="submit" class="btn btn-sm btn-secondary ">Apply</button>
@@ -325,25 +351,39 @@
                                                   <div id="chartw3"></div> 
                                                 </div>
                                                 <div class="row">
+                                                  {% if request.GET|get_list:'chart3_weather'  %} 
+                                                  {% for type in request.GET|get_list:'chart3_weather' %} 
                                                     <div class="col">
                                                   <select class="form-select form-select-sm" aria-label=".form-select-lg example" name="chart3_weather" id="id_weather3" >
 
                                                     <option disabled selected>weather 1</option>
                                                     
                                                     {% for w in weather_parameters %}
-                                                    <option value="{{w}}" {% if w in request.GET.chart1_weather %} selected="" {% endif %}>{{w}}</option>
+                                                    <option value="{{w}}" {% if w in type %} selected="" {% endif %}>{{w}}</option>
                                                       {% endfor %}
                                                    
                                                   </select>
                                                   </div>
+                                                  {% endfor %}
+                                                  {% else %}
                                                   <div class="col">
+                                                    <select class="form-select form-select-sm" aria-label=".form-select-sm example" name="chart3_weather" id="id_weather3" >
+                                                      <option disabled selected>weather 1</option>
+                                                      {% for w in weather_parameters %}
+                                                      <option value="{{w}}" {% if w in request.GET|get_list:'chart3_weather'  %} selected="" {% endif %}>{{w}}</option>
+                                                      {% endfor %}
+                                                    </select>
+                                                    </div> 
+                                                   <div class="col">
                                                   <select class="form-select form-select-sm" aria-label=".form-select-sm example" name="chart3_weather" id="id_weather3" >
                                                     <option disabled selected>weather 2</option>
                                                     {% for w in weather_parameters %}
-                                                    <option value="{{w}}" {% if w in request.GET.chart1_weather  %} selected="" {% endif %}>{{w}}</option>
+                                                    <option value="{{w}}" {% if w in request.GET|get_list:'chart3_weather'  %} selected="" {% endif %}>{{w}}</option>
                                                     {% endfor %}
                                                   </select>
-                                                  </div>
+                                                  </div> 
+                                                  {% endif %}
+                                                 
                                                   <div class="col">
                                                     <button type="submit" class="btn btn-sm btn-secondary ">Apply</button>
                                                   </div>
@@ -663,95 +703,6 @@
     </div>
 <!-- expand modals -->
 
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-xl">
-          <div class="modal-content">
-            <div class="modal-header">
-              <!-- <h5 class="modal-title" id="exampleModalLabel">Modal title</h5> -->
-             
-              <div class="input-group mb-3">
-                <select class="selectpicker"  multiple aria-label="size 0 select example" name="w1city_selected">
-                  {% for city in all_cities %}
-                  <option value="{{city}}" {% if city in request.GET|get_list:'w1city_selected'  %} selected="" {% endif %}>{{city}}</option>
-                  {% endfor %}
-                </select>
-                <button type="submit" class="btn btn-outline-secondary">Action</button>
-              </div>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                
-            </div>
-            <div class="modal-body">
-              <div class="container-fluid">
-                <div class="row h-100">
-                  <div class="col h-100">
-                    <div id="weather1expd"></div> 
-                  <!-- <canvas id="#weather1expd" class="forecastchart" width="1000" height="450"></canvas> -->
-                </div>
-                </div>
-              </div>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary">Save changes</button>
-            </div>
-          </div>
-        </div>
-      </div>
- 
-
-      
-<div class="modal fade" id="exampleModal0" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-xl">
-      <div class="modal-content">
-        <div class="modal-header">
-          <!-- <h5 class="modal-title" id="exampleModalLabel0">Modal title</h5> -->
-          <select class="selectpicker"  multiple aria-label="size 0 select example" name="w1city_selected">
-            {% for city in all_cities %}
-            <option value="{{city}}" {% if city in request.GET|get_list:'w1city_selected'  %} selected="" {% endif %}>{{city}}</option>
-            {% endfor %}
-          </select>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-
-        </div>
-        <div class="modal-body">
-          <div class="container-fluid">
-            <div class="row h-100">
-              <div class="col h-100">
-                <div id="weather2expd"></div>
-            </div>
-            </div>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary">Save changes</button>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="modal fade" id="exampleModal1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-xl">
-      <div class="modal-content">
-        <div class="modal-header">
-          <!-- <h5 class="modal-title" id="exampleModalLabel2">Modal title</h5> -->
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <div class="container-fluid">
-            <div class="row h-100">
-              <div class="col h-100">
-                <div id="weather3expd"></div> 
-            </div>
-            </div>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary">Save changes</button>
-        </div>
-      </div>
-    </div>
-  </div>
 </div>
 </div>
 </form>

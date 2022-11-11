@@ -124,19 +124,23 @@ class ForecastDashboardView(TemplateView):
         corr_type= self.request.GET.get('w_correl_type', None)
         date = self.request.GET.get('date', None)
         corrdates =[]
-        w_corr_date= self.request.GET.get('w_row', None)
-        d_corr_date= self.request.GET.get('d_row', None)
-        n_corr_date= self.request.GET.get('n_row', None)
+        t_corr_date= self.request.GET.getlist('t_correl_date', None)
+        tf_corr_date= self.request.GET.getlist('tf_correl_date', None)
+        d_corr_date= self.request.GET.getlist('d_row', None)
+        n_corr_date= self.request.GET.getlist('n_row', None)
         w1selected_cities =self.request.GET.getlist('w1city_selected', None)
         print("w1selected_cities", w1selected_cities)
-        if w_corr_date  :
-            corrdates.append(w_corr_date)
+        if tf_corr_date  :
+            corrdates.extend(tf_corr_date)
+        if t_corr_date  :
+            corrdates.extend(t_corr_date)
         if d_corr_date :
-            corrdates.append(d_corr_date)
+            corrdates.extend(d_corr_date)
         if n_corr_date :
-            corrdates.append(n_corr_date)
+            corrdates.extend(n_corr_date)
 
         print("corr_dates", corrdates )
+        print("t_corr_date", t_corr_date )
 
         if date == '':
             date = datetime.now().date()
@@ -216,7 +220,7 @@ class ForecastDashboardView(TemplateView):
              weather2 = ast.literal_eval(weather2)     
         weather3=self.request.GET.getlist('chart3_weather', None)
         # print("request.get",self.request.GET.get )
-        # print(" weather1", type(weather1))
+        print(" weather1", weather1)
         # print(" weather2", weather2)
         if len(getstate) != 0 and "MP" not in getstate[0] :
              print("in 5 slice")
@@ -247,9 +251,11 @@ class ForecastDashboardView(TemplateView):
 
         
         print('date_corr',date,'corr_state',corr_state,'w_correl_type',corr_type )
-        w_corr_data= list(corr_dates.objects.filter(Date=date, loc_ID=corr_state,Item_ID=corr_type).values_list('Ref_date').order_by('Rank')[:3])
-        w_corr_data=[str(w[0]) for w in w_corr_data]
-        # print('w_corr_data',w_corr_data)
+        temp_corr_data= list(corr_dates.objects.filter(Date=date, loc_ID=corr_state,Item_ID="temp_Corr").values_list('Ref_date').order_by('Rank')[:3])
+        tempf_corr_data= list(corr_dates.objects.filter(Date=date, loc_ID=corr_state,Item_ID="tempf_Corr").values_list('Ref_date').order_by('Rank')[:3])
+        temp_corr_data=[str(w[0]) for w in temp_corr_data]
+        tempf_corr_data=[str(w[0]) for w in tempf_corr_data]
+        print('temp_corr_data',temp_corr_data, 'tempf_corr_data',tempf_corr_data)
         
         d_corr_data= list(corr_dates.objects.filter(Date=date,loc_ID=corr_state,Item_ID='Demand_corr').values_list('Ref_date').order_by('Rank')[:3])
         d_corr_data=[str(w[0]) for w in d_corr_data]
@@ -377,7 +383,7 @@ class ForecastDashboardView(TemplateView):
                     if len(w1selected_cities)> 0 :
                        weather_qs = Weather.objects.filter(date=weather_date, geo_code__in=selected_cities.values())
                        weather_data_date = list(weather_qs.filter(geo_code__in=list(selected_cities.values())).order_by('city','block').distinct('city','block').values('block',f,'date',city_name=F('city__name'),))
-                       print("weather_data_date", weather_data_date )
+                    #    print("weather_data_date", weather_data_date )
                     else:
                         weather_qs = Weather.objects.filter(date=weather_date, geo_code__in=get_cities.values())
                         weather_data_date = list(weather_qs.filter(geo_code__in=list(get_cities.values())).order_by('city','block').distinct('city','block').values('block',f,'date',city_name=F('city__name'),)) 
@@ -598,7 +604,9 @@ class ForecastDashboardView(TemplateView):
         context['forecast_types'] = forecast_types
         context['date_choices'] = date_choices
         context['n_by_dates'] = n_by_dates
-        context['w_corr_data'] = w_corr_data
+        context['temp_corr_data'] = temp_corr_data
+        context['tempf_corr_data'] = tempf_corr_data
+        # context['w_corr_data'] = w_corr_data
         context['d_corr_data'] = d_corr_data
         context['zones'] = zones
         context['weather1']= weather1

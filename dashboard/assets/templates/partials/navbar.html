@@ -1,12 +1,38 @@
 
 {% load static %}
+{% load getlist %}
 
 <style>
-    #corrdate {
  
-        color: black;
- 
+.bootstrap-select {
+  width: 100px !important;
 }
+.bootstrap-select .btn-custom {
+  color: rgb(255, 0, 0);
+  background-color: #86d6f3;
+  border-color: #0b0807;
+  display: inline-block;
+  font-size: 11px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 4px;
+  
+}
+.btn-info {
+  color: #86d6f3!important;
+  background-color: #072baf !important;
+  border-color: #0b0807;
+  display: inline-block !important;
+  font-size: 11px!important;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 4px;
+  position: relative!important;
+  text-align: center;
+  
+
+}
+
 </style>
 <!-- Page Wrapper -->
 <form>
@@ -106,30 +132,71 @@
         <table>
          
           <tr>
-              <td><span style="color: #000000;">Nearby Dates</span></td>
-              {% for w in n_by_dates %}
+              <td><span style="color: #000000; font-size: 12px;"><b>Nearby Dates :</b></span>
+              <select class="selectpicker"  multiple aria-label="size 0 select example" name="n_row" data-style="btn-custom">
+                {% for w in n_by_dates %}
+                <option value="{{w}}" {% if w in request.GET|get_list:'n_row' %} selected="" {% endif %}>{{w}}</option>
+                {% endfor %}
+              </select>
+            </td>
+              <!-- {% for w in n_by_dates %}
               <td><input type="radio"   name="n_row" data-col="{{forloop.counter}}"  value="{{w}}" {% if w == request.GET.d_row %} checked {% endif %}><span style="color: #000000;"><span style="color: #000000;">{{w}}</span> </td>
-              {% endfor %}
+              {% endfor %} -->
           </tr>
           <tr>
               <td>
-              <div>
-                <select class="form-select form-select-sm" aria-label="Default select example" name="w_correl_type">
+              
+                
+                  <span style="color: #000000; font-size: 12px;"><b>Temperature Corr :</b></span>
+              
+              <select class="selectpicker"  multiple aria-label="size 0 select example" name="t_correl_date" data-style="btn-custom">
+
+                {% for w in temp_corr_data %}
+                
+                <option value="{{w}}" {% if w in request.GET|get_list:'t_correl_date' %} selected="" {% endif %}>{{w}}</option>
+                {% endfor %}
+              </select>
+            
+      
+                <!-- <select class="selectpicker"  multiple aria-label="size 0 select example" name="w_correl_type" data-style="btn-custom">
                   <option value="temp_Corr" {% if  request.GET.w_correl_type == 'temp_Corr' %} selected {% endif %}><span style="color: #000000;">temperature</span></option>
                   <option value="tempf_Corr" {% if  request.GET.w_correl_type == 'tempf_Corr' %} selected {% endif %}><span style="color: #000000;">temperature feelslike</span></option>
-                </select>
+                  
+                </select> -->
+                <!-- <select class="form-select form-select-sm" aria-label="Default select example" name="w_correl_type">
+                  <option value="temp_Corr" {% if  request.GET.w_correl_type == 'temp_Corr' %} selected {% endif %}><span style="color: #000000;">temperature</span></option>
+                  <option value="tempf_Corr" {% if  request.GET.w_correl_type == 'tempf_Corr' %} selected {% endif %}><span style="color: #000000;">temperature feelslike</span></option>
+                </select> -->
                 
-                </div>
+                
               </td>
-              {% for w in w_corr_data %}
+              <!-- {% for w in w_corr_data %}
               <td><input type="radio"   name="w_row" data-col="{{forloop.counter}}"  value="{{w}}" {% if w == request.GET.w_row %} checked {% endif %}><span style="color: #000000;"> {{w}}</span></td>
-                {% endfor %}
+                {% endfor %} -->
           </tr>
           <tr>
-              <td><span style="color: #000000;">Corr. Demand</span></td>
-                {% for w in d_corr_data %}
-                <td><input type="radio"   name="d_row" data-col="{{forloop.counter}}"  value="{{w}}" {% if w == request.GET.d_row %} checked {% endif %}><span style="color: #000000;"><span style="color: #000000;">{{w}}</span> </td>
+            <td>
+              <span style="color: #000000; font-size: 12px;"><b>Temperature-F Corr :</b></span>
+              
+              <select class="selectpicker"  multiple aria-label="size 0 select example" name="tf_correl_date" data-style="btn-custom">
+                {% for w in tempf_corr_data %}
+                <option value="{{w}}" {% if w in request.GET|get_list:'tf_correl_date' %} selected="" {% endif %}>{{w}}</option>
                 {% endfor %}
+              </select>
+              </td>
+        </tr>
+          <tr>
+              <td><span style="color: #000000; font-size: 12px;"><b>Demand Corr :</b></span>
+                
+              <select class="selectpicker"  multiple aria-label="size 0 select example" name="d_row" data-style="btn-custom">
+                {% for w in d_corr_data %}
+                <option value="{{w}}" {% if w in request.GET|get_list:'d_row' %} selected="" {% endif %}>{{w}}</option>
+                {% endfor %}
+              </select>
+            </td>
+              <!-- {% for w in d_corr_data %}
+                <td><input type="radio"   name="d_row" data-col="{{forloop.counter}}"  value="{{w}}" {% if w == request.GET.d_row %} checked {% endif %}><span style="color: #000000;"><span style="color: #000000;">{{w}}</span> </td>
+                {% endfor %} -->
           </tr>
           
           </table>
@@ -260,6 +327,102 @@
 
           </nav>
 
+    <!-- Below Code is of Modals for expanding weather graphs -->      
+
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content">
+          <div class="modal-header">
+            <div class="input-group mb-3">
+              <select class="selectpicker"   multiple aria-label="size 0 select example" name="w1city_selected">
+                {% for city in all_cities %}
+                <option value="{{city}}" {% if city in request.GET|get_list:'w1city_selected'  %} selected="" {% endif %}>{{city}}</option>
+                {% endfor %}
+              </select>
+              <button type="submit" class="btn btn-outline-secondary">Filter</button>
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              
+          </div>
+          <div class="modal-body">
+            <div class="container-fluid">
+              <div class="row h-100">
+                <div class="col h-100">
+                  <div id="weather1expd"></div> 
+                <!-- <canvas id="#weather1expd" class="forecastchart" width="1000" height="450"></canvas> -->
+              </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    
+<div class="modal fade" id="exampleModal0" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <!-- <h5 class="modal-title" id="exampleModalLabel0">Modal title</h5> -->
+        <select class="selectpicker"  multiple aria-label="size 0 select example" name="w1city_selected">
+          {% for city in all_cities %}
+          <option value="{{city}}" {% if city in request.GET|get_list:'w1city_selected'  %} selected="" {% endif %}>{{city}}</option>
+          {% endfor %}
+        </select>
+        <button type="submit" class="btn btn-outline-secondary">Filter</button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+
+      </div>
+      <div class="modal-body">
+        <div class="container-fluid">
+          <div class="row h-100">
+            <div class="col h-100">
+              <div id="weather2expd"></div>
+          </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="exampleModal1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <select class="selectpicker"  multiple aria-label="size 0 select example" name="w1city_selected">
+          {% for city in all_cities %}
+          <option value="{{city}}" {% if city in request.GET|get_list:'w1city_selected'  %} selected="" {% endif %}>{{city}}</option>
+          {% endfor %}
+        </select>
+        <button type="submit" class="btn btn-outline-secondary">Filter</button>
+        <!-- <h5 class="modal-title" id="exampleModalLabel2">Modal title</h5> -->
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="container-fluid">
+          <div class="row h-100">
+            <div class="col h-100">
+              <div id="weather3expd"></div> 
+          </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+      </div>
+    </div>
+  </div>
+</div>
 
           
            
