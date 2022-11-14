@@ -129,7 +129,11 @@ class ForecastDashboardView(TemplateView):
         d_corr_date= self.request.GET.getlist('d_row', None)
         n_corr_date= self.request.GET.getlist('n_row', None)
         w1selected_cities =self.request.GET.getlist('w1city_selected', None)
-        print("w1selected_cities", w1selected_cities)
+        scada_flag = self.request.GET.get('enable_scada',None)
+        ensemble_flag= self.request.GET.get('enable_ensemble',None)
+        # print("w1selected_cities", w1selected_cities)
+        print("scada_flag...", scada_flag)
+        print("ensemble_flag...", ensemble_flag)
         if tf_corr_date  :
             corrdates.extend(tf_corr_date)
         if t_corr_date  :
@@ -279,34 +283,36 @@ class ForecastDashboardView(TemplateView):
         # corr demands
         corr_demands = Forecast_Master.objects.filter( forecast_type__iexact='ITD',date__in=corrdates,loc_ID=getstate[0]).distinct()
         # print("corr_demands....", corr_demands)
-        if date:
+        if date :
             todays_date= datetime.strptime(str(date), '%Y-%m-%d')
+
             ensemble_date_time= todays_date +  timedelta(days=1)
             ensemble_date= ensemble_date_time.strftime('%Y-%m-%d')
             print("ensemble_date", ensemble_date)
             ensemble_demand = ensemble.objects.filter(ID=corr_state,date=ensemble_date,Type="Type_1" )
-            print("ensemble_demand",ensemble_demand)
+            # print("ensemble_demand",ensemble_demand)
+            if scada_flag == "on":
+                scada_demand= None
+                if state_input== "1":
+                    scada_demand =  Up_scada.objects.filter(date='2022-11-03')
             
-            scada_demand= None
-            if state_input== "1":
-                scada_demand =  Up_scada.objects.filter(date='2022-11-03')
-            
-            if scada_demand:    
-                scada_blockvalues= []
-                for demand in  scada_demand:
-                    block_value= demand.volume
-                    scada_blockvalues.append(block_value)
-                print("ensemble block", scada_blockvalues )
-                datasets.append({
-                        'name': 'Scada',
-                        # 'borderColor': color,
-                        # 'borderWidth': 2, 
-                        'data':scada_blockvalues,
-                        # 'fill': False,
-                        # 'borderDash': [5,2.5]
-                })
+                if scada_demand:    
+                    scada_blockvalues= []
+                    for demand in  scada_demand:
+                        block_value= demand.volume
+                        scada_blockvalues.append(block_value)
+                    print("ensemble block", scada_blockvalues )
+                    datasets.append({
+                            'name': 'Scada',
+                            # 'borderColor': color,
+                            # 'borderWidth': 2, 
+                            'data':scada_blockvalues,
+                            # 'fill': False,
+                            # 'borderDash': [5,2.5]
+                    })
 
             #ensemble demand
+            if ensemble_flag == "on":
                 ensemble_blockvalues= []
                 for demand in  ensemble_demand:
                     block_value= demand.Final_forecast
@@ -591,6 +597,8 @@ class ForecastDashboardView(TemplateView):
         
         # print("weather_data1", weather_data1)
         print("get_citieskeys", all_cities)
+        context['scada_flag'] = scada_flag
+        context['ensemble_flag'] = ensemble_flag
         context['weather_data_one'] =  weather_data1
         context['weather2_data_one']= weather2_data1
         context['weather3_data_one']= weather3_data1
