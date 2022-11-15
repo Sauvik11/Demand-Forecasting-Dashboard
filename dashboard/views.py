@@ -388,8 +388,9 @@ class ForecastDashboardView(TemplateView):
                 if weather_date is not '' and weather_date is not None : 
                     if len(w1selected_cities)> 0 :
                        weather_qs = Weather.objects.filter(date=weather_date, geo_code__in=selected_cities.values())
+                       print("weatherqs", weather_qs )
                        weather_data_date = list(weather_qs.filter(geo_code__in=list(selected_cities.values())).order_by('city','block').distinct('city','block').values('block',f,'date',city_name=F('city__name'),))
-                    #    print("weather_data_date", weather_data_date )
+                       print("weather_data_date", weather_data_date )
                     else:
                         weather_qs = Weather.objects.filter(date=weather_date, geo_code__in=get_cities.values())
                         weather_data_date = list(weather_qs.filter(geo_code__in=list(get_cities.values())).order_by('city','block').distinct('city','block').values('block',f,'date',city_name=F('city__name'),)) 

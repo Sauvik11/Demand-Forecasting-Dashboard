@@ -7,24 +7,23 @@
     var dataKeys_para1 = Object.keys(weather_data[0][0])
     var dataval_para1 = Object.values(weather_data[0][0])
     console.log("dataKeys_para1",dataKeys_para1)
-    console.log("dataval_para1",dataval_para1)
+    //console.log("dataval_para1",dataval_para1)
     var dataKeys_para2 = Object.keys(weather_data[1][0])
     var dataval_para2 = Object.values(weather_data[1][0])
 
     var dataKeys_para3 = Object.keys(weather_data[2][0])
     var dataval_para3 = Object.values(weather_data[2][0])
-    console.log("dataKeys_para3",dataKeys_para3)
-    console.log("dataval_para3",dataval_para3)
+    //console.log("dataKeys_para3",dataKeys_para3)
+    //console.log("dataval_para3",dataval_para3)
     var dataKeys_para4 = Object.keys(weather_data[3][0])
     var dataval_para4 = Object.values(weather_data[3][0])
 
-    console.log("dataKeys",dataKeys_para4)
-    console.log("datavalues",dataval_para4)
+    //console.log("dataKeys",dataKeys_para4)
+    //console.log("datavalues",dataval_para4)
    
 
     var chartHeadings = weather_data[0].map(w => `${w.city_name}_${w.block}`)
-    console.log("chartHeadings",chartHeadings)
-
+    console.log(" weather_data[0]here", weather_data[0])
     var chartDatapara1 = weather_data[0].map(w => w[dataKeys_para1[1]])
     var chartDatapara2 = weather_data[1].map(w => w[dataKeys_para2[1]])
 
@@ -114,7 +113,7 @@
           
           y: {
             formatter: function (val) {
-              return "$ " + val + "degrees"
+              return val +" "+ "degrees"
             }
           }
         }
@@ -186,7 +185,7 @@
           
           y: {
             formatter: function (val) {
-              return "$ " + val + "degrees"
+              return val +" "+ "degrees"
             }
           }
         }

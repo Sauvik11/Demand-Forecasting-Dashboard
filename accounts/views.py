@@ -62,13 +62,15 @@ def logoutPage(request):
 def register(request):
     print("in register view")
     if request.method == 'POST':
+        print("in post")
         form = UserRegistrationForm(request.POST)
         if form.is_valid():
             form.save()
 
             messages.success(request, f'Your account has been created. You can log in now!')    
-            return redirect('login/')
+            return redirect('login')
     else:
         form = UserRegistrationForm()
+        print("in get")
     context = {'form': form}
     return render(request, 'accounts/assets/templates/register.html', context)
