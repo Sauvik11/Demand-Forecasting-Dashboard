@@ -267,6 +267,14 @@ class Up_scada(models.Model):
     date= models.DateField(null=True, blank=True)
     volume= models.FloatField(null=True, blank=True)
 
+
+class Actual_demands(models.Model): 
+    date= models.DateField(null=True, blank=True)
+    block= models.IntegerField(null=True, blank=True)
+    demand= models.FloatField(null=True, blank=True)
+    state= models.CharField(max_length=25, null=True, blank=True)
+    
+
     
 
 

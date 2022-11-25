@@ -15,8 +15,23 @@
   font-size: 11px;
   margin: 4px 2px;
   cursor: pointer;
-  border-radius: 4px;
+  border-radius: 0px;
   
+}
+.bootstrap-select .btn-custom1 {
+  color: rgb(0, 30, 255);
+  background-color: #ffffff;
+  border-color: #0b0807;
+  font-size: 13px;
+  border-radius: 0px;
+  width: 100%;
+  display:block!important;
+  
+}
+#inputGroup-sizing-sm {
+  display:block!important;
+  font-size: 13px;
+  border-radius: 0px;
 }
 .btn-info {
   color: #86d6f3!important;
@@ -32,10 +47,18 @@
   
 
 }
+#randomdate{
+  width: 152px !important;
+  border-radius: 4px !important;
+  height: 35px;
+
+}
+
+
 
 </style>
 <!-- Page Wrapper -->
-<form>
+<form id="form">
 <div id="wrapper">
   <!-- Sidebar -->
 
@@ -65,9 +88,49 @@
         <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities"
             data-parent="#accordionSidebar">
             <div class="card-body">
+
+              <div class="row">
+                <div class="col">
+                  <div class="input-group mb-3">
+                    <div class="input-group-prepend"> 
+                    <span class="input-group-text" id="inputGroup-sizing-sm" data-inline="true">Base</span>
+                    <select class="selectpicker d-inline-block"  data-inline="true" aria-describedby="inputGroup-sizing-sm" data-style="btn-custom1"  id="baseDem" data-live-search="true" title="Select Base" size="auto" name="base" onchange="form.submit()">
+                      <optgroup  label="Nearby Dates">
+                        {% for w in n_by_dates %}
+                        <option value="{{w}}" {% if w in request.GET.base %} selected="" {% endif %}>{{w}}</option>
+                        {% endfor %}
+                      </optgroup>
+
+                      <optgroup  label="models">
+                        {% for f in all_forecasttypes %}
+                        <option value="{{f}}" {% if f == request.GET.base  %} selected="" {% endif %}>{{f}}</option>
+                       {% endfor %}
+                      </optgroup>
+
+                      <optgroup  label="All Dates">
+                        {% for d in date_choices %}
+                        <option value="{{d}}" {% if d == request.GET.base   %} selected="" {% endif %}>{{d}}</option>
+                       {% endfor %}
+                      </optgroup>
+                      
+                    </select>
+                    
+                    
+                
+                    
+
+                  </div>
+                </div>
+                </div>
+              </div>
                 <div class="row">
+                  
                   <div class="col">
+                    
+                  
+                    
                 <div class="input-group input-group-sm mb-3">
+                
                   <span class="input-group-text" id="inputGroup-sizing-sm">From Block</span>
                   <script type="text/javascript"> 
                     document.getElementById("fromblock").placeholder='{{request.GET.fromBlock}}' ;
@@ -80,6 +143,8 @@
                    </div>
               </div>
             </div>
+        
+
                   <div class="row">
                   <div class="col">
                     <div class="input-group input-group-sm mb-3">
@@ -254,18 +319,7 @@
               </button>
 
               <!-- Topbar Search -->
-              <form
-                  class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
-                  <!-- <div class="input-group">
-                      <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
-                          aria-label="Search" aria-describedby="basic-addon2">
-                      <div class="input-group-append">
-                          <button class="btn btn-primary" type="button">
-                              <i class="fas fa-search fa-sm"></i>
-                          </button>
-                      </div>
-                  </div> -->
-              </form>
+             
 
               <!-- Topbar Navbar -->
               <ul class="navbar-nav ml-auto">

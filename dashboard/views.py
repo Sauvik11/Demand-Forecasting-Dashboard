@@ -25,6 +25,7 @@ from django.utils.dateformat import DateFormat
 from django.utils.formats import get_format
 from django.contrib.auth import login, logout, authenticate
 import operator
+from dateutil.parser import parse
 
 BLOCK_CONSTANTS = [
      'block1', 'block2', 'block3', 'block4', 'block5', 'block6', 'block7', 'block8', 'block9', 'block10', 'block11',
@@ -62,12 +63,12 @@ weather_parameters= ['cloud_cover','precip_chance','pressure_mean_sea_level','qp
                         'wind_gust','wind_speed','wx_severity']
 zones= {'Central':'CZ','East':'EZ','West': 'WZ','South':'SZ','North': 'NZ'}
 discoms={'Madhya Pradesh': 'MP'}
- 
+
+
+
 
 class ForecastDashboardView(TemplateView):
     template_name = 'dashboard/assets/templates/index.html' 
-
-
     def get_forecast_demand(self, demand,version=1):
         # Set user's pk as the key for the forecast dataset.
         
@@ -90,6 +91,14 @@ class ForecastDashboardView(TemplateView):
                 
         
             return  demand_data.get('data')
+
+    def is_date(self,string, fuzzy=False):
+        try: 
+            parse(string, fuzzy=fuzzy)
+            return True
+
+        except ValueError:
+            return False 
         
 
     def current_forecast_version(self):
@@ -121,6 +130,9 @@ class ForecastDashboardView(TemplateView):
         context = super().get_context_data(**kwargs)
         form= StateForm()
         formz=DiscomForm()
+        base_demand= self.request.GET.get('base', None)
+        # print("base_demand fron",self.is_date(base_demand))
+        
         corr_type= self.request.GET.get('w_correl_type', None)
         date = self.request.GET.get('date', None)
         corrdates =[]
@@ -251,7 +263,7 @@ class ForecastDashboardView(TemplateView):
             nearby_date_3= nearby_date_3.strftime('%Y-%m-%d')
             n_by_dates.extend([nearby_date_1,nearby_date_2,nearby_date_3])
             
-            # print('n_by_dates',n_by_dates)
+        print('n_by_dates',n_by_dates)
 
         
         print('date_corr',date,'corr_state',corr_state,'w_correl_type',corr_type )
@@ -276,16 +288,59 @@ class ForecastDashboardView(TemplateView):
 
 
         
+
+
+        
         datasets=[]
+        print("demand line date", date)
+        print("demand line forecast_types", forecast_types)
+        print("demand line sate", getstate)
         demand_datas= Forecast_Master.objects.filter(forecast_type__in=forecast_types,date=date,loc_ID__in=getstate).distinct()
         
+
+         # fetching correct base demand
+        if base_demand:
+
+            if self.is_date(base_demand):
+                    print("dateis",base_demand)
+                    try : 
+                        date =  datetime.strptime(base_demand, '%b. %d, %Y').strftime('%Y-%m-%d')
+                    except: 
+                        date =  datetime.strptime(base_demand, '%b %d, %Y').strftime('%Y-%m-%d')
+                    print("dateNOw",date)
+                    demand_instance= Forecast_Master.objects.filter( forecast_type__iexact='TLD_Forecast',date=date,loc_ID=getstate[0]).first()       
+            else: 
+                    print("in else baseee",base_demand)
+                    print("baseline date",date)
+                    print("baseline loc",getstate[0])
+                    demand_instance= Forecast_Master.objects.filter( forecast_type__iexact=base_demand,date=date,loc_ID=getstate[0]).first()
+        else: 
+            demand_instance= Forecast_Master.objects.filter( forecast_type__iexact='TLD_Forecast',date=date,loc_ID=getstate[0]).first()
+        print("demand_instance",demand_instance)
+        if demand_instance: 
+            block_values = attrgetter(*BLOCK_CONSTANTS)(demand_instance)
+            print("block_values_demand",block_values)
+            color = random.choice(border_colors)
+            # print(block_values)
+            # if f=='ITD':
+            #     dataset1.append(block_values)
+            datasets.append({
+                'name': "Baseline : " + demand_instance.forecast_type,
+                # 'borderColor': color,
+                # 'borderWidth': 2, 
+                'data': block_values,
+                # 'fill': False,
+                # 'borderDash': [5,2.5]
+            })
+            
+            
+
 
         # corr demands
         corr_demands = Forecast_Master.objects.filter( forecast_type__iexact='ITD',date__in=corrdates,loc_ID=getstate[0]).distinct()
         # print("corr_demands....", corr_demands)
         if date :
             todays_date= datetime.strptime(str(date), '%Y-%m-%d')
-
             ensemble_date_time= todays_date +  timedelta(days=1)
             ensemble_date= ensemble_date_time.strftime('%Y-%m-%d')
             print("ensemble_date", ensemble_date)
@@ -460,10 +515,13 @@ class ForecastDashboardView(TemplateView):
                     # weather3_data1.append(weather_data_ref)
                 
         # print("weather3_data1", weather3_data1[3])
+
+        
+       
       
         if self.request.GET.get('fromBlock') and  self.request.GET.get('fromBlock') is not None :
             forecast_version= self.current_forecast_version()
-            demand_instance= Forecast_Master.objects.filter( forecast_type__iexact='TLD_Forecast',date=date,loc_ID=getstate[0]).first()
+            
             # print("print demand blocks1",demand_instance)
             
             if 'undo' in self.request.GET:
@@ -583,20 +641,9 @@ class ForecastDashboardView(TemplateView):
         actions = ['Add','Multiply','Average','Shift left','Shift right','Smooth']    
         # weatherlabels=  [[i for i in range(0, 25)] for j in range(0,len(city_labels))]
         # print("weatherlabels", weatherlabels)
-      
-        cityweather_chartdata=[]
-        # for f in weather1:
-        #     cityweather_chartdata.append(
-        #         {
-        #         'label': f,
-        #         'borderColor': 'red' ,
-        #         'borderWidth': 2, 
-        #         'data': [] ,
-
-        #     }
-        #     )
+       
         
-        # print("weather_data1", weather_data1)
+        print("all_dates", date_choices)
         print("get_citieskeys", all_cities)
         context['scada_flag'] = scada_flag
         context['ensemble_flag'] = ensemble_flag
