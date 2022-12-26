@@ -45,12 +45,13 @@ def multiply_action(demand, from_block, to_block, from_value, to_value):
 def average_action(demand, from_block, to_block, from_value, to_value):
     calculated = []
     block_ranges = dict([(f"block{i}", i) for i in range(from_block, to_block + 1)])
+    print("block_ranges_average", block_ranges)
     for block, current_block in block_ranges.items():
         current_block_value = getattr(demand, block)
         current_value = calculate_current_value(current_block, from_block, to_block, from_value, to_value)
         
         block_value = (current_block_value * current_value) + (current_block_value * (1 - current_value))
-        print("block_value",block_value)
+        # print("block_value avg",block_value)
         calculated.append((block, block_value))
     return dict(calculated)
 

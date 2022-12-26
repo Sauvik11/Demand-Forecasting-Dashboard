@@ -142,6 +142,7 @@
                             {% for f in all_forecasttypes %}
                               <option value="{{f}}" {% if f in forecast_types  %} selected="" {% endif %}>{{f}}</option>
                             {% endfor %}
+                            <option value="" {% if None in forecast_types  %} selected="" {% endif %}>None</option>
                           </select>
 
                          
@@ -220,6 +221,7 @@
                         </div>
 
                         <!-- Pie Chart -->
+                        
                         <div class="col-xl-4 col-lg-5">
                             <div class="card shadow mb-4">
                                 <!-- Card Header - Dropdown -->
@@ -231,14 +233,14 @@
                                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                             <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
                                         </a>
-                                        <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+                                        <!-- <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
                                             aria-labelledby="dropdownMenuLink">
                                             <div class="dropdown-header">Dropdown Header:</div>
                                             <a class="dropdown-item" href="#">Action</a>
                                             <a class="dropdown-item" href="#">Another action</a>
                                             <div class="dropdown-divider"></div>
                                             <a class="dropdown-item" href="#">Something else here</a>
-                                        </div>
+                                        </div> -->
                                     </div>
                                 </div>
                                 <!-- Card Body -->
@@ -296,7 +298,7 @@
                                                 
                                               </div>
                                         </div>
-                                        <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                                        <!-- <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
                                             <div class="card"><button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#exampleModal0"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
                                                 <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
                                                 <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
@@ -345,9 +347,9 @@
                                                   </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </div> -->
 
-                                        <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
+                                        <!-- <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
                                             <div class="card"><button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#exampleModal1"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
                                                 <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
                                                 <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
@@ -397,22 +399,22 @@
                                                   </div>
                                                 </div>
                                               </div>
-                                        </div>
+                                        </div> -->
                                       </div>
-                                     
-                                        </div>
+
+                                    </div>
                                       
                                     <div class="mt-4 text-center small">
-                                        <ul class="nav nav-tabs" id="myTab" role="tablist">
+                                        <!-- <ul class="nav nav-tabs" id="myTab" role="tablist">
                                             <li class="nav-item" role="presentation">
                                               <button class="nav-link active" id="home" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">weather1</button>
-                                            </li>
-                                            <li class="nav-item" role="presentation">
+                                            </li> -->
+                                            <!-- <li class="nav-item" role="presentation">
                                               <button class="nav-link" id="profile" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">weather2</button>
                                             </li>
                                             <li class="nav-item" role="presentation">
                                               <button class="nav-link" id="contact" data-bs-toggle="tab" data-bs-target="#contact" type="button" role="tab" aria-controls="contact" aria-selected="false">weather3</button>
-                                            </li>
+                                            </li> -->
                                           </ul>
                                           <!-- Pills navs -->
                                           

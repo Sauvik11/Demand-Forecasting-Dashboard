@@ -68,10 +68,17 @@
           
           y: {
             formatter: function (val) {
-              return  val + "degrees"
+              return  val + " KW"
+            }
+          },
+          x: {
+            formatter: function (val) {
+              return "Block " + val 
             }
           }
         }
+        
+        
         }
 
 var chart = new ApexCharts(document.querySelector("#chart"), options);

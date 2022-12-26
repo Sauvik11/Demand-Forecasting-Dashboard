@@ -84,12 +84,23 @@ WSGI_APPLICATION = 'Forecast_DashboardMemi.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
+# DATABASES = {
+#    'default':{
+#       'ENGINE':'django.db.backends.postgresql_psycopg2',
+#       'NAME':'forecast_master_1',
+#       'USER':'postgres',
+#       'PASSWORD':'1234',
+#       'HOST':'localhost',
+#       'PORT':'5432',
+#    }
+# }
+
 DATABASES = {
    'default':{
       'ENGINE':'django.db.backends.postgresql_psycopg2',
-      'NAME':'forecast_master_1',
-      'USER':'postgres',
-      'PASSWORD':'1234',
+      'NAME':'forecast_master',
+      'USER':'mercados',
+      'PASSWORD':'Passw0rd',
       'HOST':'192.168.1.201',
       'PORT':'5432',
    }

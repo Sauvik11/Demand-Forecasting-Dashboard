@@ -1,32 +1,24 @@
-{% load static %}
-{% block content %}
-
-<script src="{% static 'js/selectField.js' %}"></script>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-
-<!-- JavaScript Bundle with Popper -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
-
-<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/css/select2.min.css" rel="stylesheet"/>
-
-<!-- style -->
-<link rel="stylesheet" href="{% static 'css/styles.css' %}">
-
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js" integrity="sha512-2ImtlRlf2VVmiGZsjm9bEyhjGW4dU7B6TNwh/hx/iSByxNENtj3WVE6o/9Lj4TJeVXPi4bnOIMXFIJJAeufa0A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-
-<script>
-    $(document).ready(function () {
-      $('#id_ftype').select2();
-    });
-</script>
-
-<select class="select_field_class" multiple="multiple" name="ftype" id="id_ftype">
-    <option value="">Select Forecast</option>
-    {% for f in fcast_types %}
-      <option value="{{f}}" {% if f in f_type_selected  %} selected="" {% endif %}>{{f}}</option>
-    {% endfor %}
-</select>
-{% endblock %}
+<div class="container-fluid">
+  <div class="row">
+      <div class="col-lg-12">
+          <div class="accordion-wrapper">
+              <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                  <div class="panel panel-default">
+                      <div class="panel-heading" role="tab" id="headingOne">
+                          <h4 class="panel-title">
+                  <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">Featured Story
+                  </a>
+              </h4>
+                      </div>
+                      <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+                          <div class="panel-body">
+                              <h4>Slide Title</h4>
+                          </div>
+                      </div>
+                  </div>
+               
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>

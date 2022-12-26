@@ -131,8 +131,9 @@ class ForecastDashboardView(TemplateView):
         form= StateForm()
         formz=DiscomForm()
         base_demand= self.request.GET.get('base', None)
-        # print("base_demand fron",self.is_date(base_demand))
-        
+        avg_ref_demand=self.request.GET.get('avgRef', None)
+        print("avg_ref_demand",avg_ref_demand)
+        Actual_date= self.request.GET.getlist('Actual', None)
         corr_type= self.request.GET.get('w_correl_type', None)
         date = self.request.GET.get('date', None)
         corrdates =[]
@@ -285,8 +286,11 @@ class ForecastDashboardView(TemplateView):
         date_choices = Forecast_Master.objects.all().exclude(
             date__isnull=True
         ).values_list('date', flat=True).order_by('-date').distinct()
+        actual_date_choices=  Actual_demands.objects.all().exclude(
+            date__isnull=True
+        ).values_list('date', flat=True).order_by('-date').distinct()
 
-
+        print("actual_date_choices",actual_date_choices)
         
 
 
@@ -294,47 +298,177 @@ class ForecastDashboardView(TemplateView):
         datasets=[]
         print("demand line date", date)
         print("demand line forecast_types", forecast_types)
-        print("demand line sate", getstate)
+        print("demand line state", getstate)
         demand_datas= Forecast_Master.objects.filter(forecast_type__in=forecast_types,date=date,loc_ID__in=getstate).distinct()
+        print("Actual_date",Actual_date)
+        # fetching Actual demand
+        if Actual_date:
+            Actual_date_conv=[] 
+            for d in Actual_date:
+                 try : 
+                        Actual_date =  datetime.strptime(d, '%b. %d, %Y').strftime('%Y-%m-%d')
+                        Actual_date_conv.append(Actual_date)
+                        print("Actual_date converted",Actual_date)
+                 except: 
+                        Actual_date =  datetime.strptime(d, '%b %d, %Y').strftime('%Y-%m-%d')
+                        Actual_date_conv.append(Actual_date)
+            print("Actual_date converted",Actual_date_conv)
+            if state_input == '1':
+                        state= 'Uttar Pradesh'
+            elif state_input == '2':
+                        state= 'bihar'
+            elif state_input == '3':
+                        state= 'Madhya Pradesh'
+            elif state_input == '4':
+                        state= 'West Bengal' 
+            print("state is ",state)
+            demand_instance_actual= Actual_demands.objects.filter( state__iexact=state,date__in=Actual_date_conv)
+            
+            for date in Actual_date_conv:
+                actual_demand_blockValues= []
+                for demand in demand_instance_actual: 
+                    if demand.date == date:
+                        block_values = demand.demand
+                        actual_demand_blockValues.append(block_values)
+                        print("block_values_demand actual",block_values)
+                        color = random.choice(border_colors)
+                    # print(block_values)
+                    # if f=='ITD':
+                    #     dataset1.append(block_values)
+                datasets.append({
+                        'name': 'Actual'+ str(date) ,
+                        # 'borderColor': color,
+                        # 'borderWidth': 2, 
+                        'data': actual_demand_blockValues,
+                        # 'fill': False,
+                        # 'borderDash': [5,2.5]
+                    })
         
 
          # fetching correct base demand
+
         if base_demand:
 
-            if self.is_date(base_demand):
+            if self.is_date(base_demand) and state_input is not None :
                     print("dateis",base_demand)
+                    print("state_inputis ",state_input)
                     try : 
                         date =  datetime.strptime(base_demand, '%b. %d, %Y').strftime('%Y-%m-%d')
                     except: 
                         date =  datetime.strptime(base_demand, '%b %d, %Y').strftime('%Y-%m-%d')
                     print("dateNOw",date)
-                    demand_instance= Forecast_Master.objects.filter( forecast_type__iexact='TLD_Forecast',date=date,loc_ID=getstate[0]).first()       
-            else: 
+                    if state_input == '1':
+                        state= 'Uttar Pradesh'
+                    elif state_input == '2':
+                        state= 'bihar'
+                    elif state_input == '3':
+                        state= 'Madhya Pradesh'
+                    elif state_input == '4':
+                        state= 'West Bengal' 
+                    print("state is ",state)
+                    demand_instance= Actual_demands.objects.filter( state__iexact=state,date=date)
+                    
+
+                    base_demand_blockValues=[]
+                    print("demand_instance actual",demand_instance)
+                    for demand in demand_instance: 
+                        block_values = demand.demand
+                        base_demand_blockValues.append(block_values)
+                        # print("block_values_demand actual",block_values)
+                        color = random.choice(border_colors)
+                        # print(block_values)
+                        # if f=='ITD':
+                        #     dataset1.append(block_values)
+                    datasets.append({
+                        'name': "Baseline : " + date ,
+                        # 'borderColor': color,
+                        # 'borderWidth': 2, 
+                        'data': base_demand_blockValues,
+                        # 'fill': False,
+                        # 'borderDash': [5,2.5]
+                    })
+            elif self.is_date(base_demand)== False and date is not None : 
                     print("in else baseee",base_demand)
                     print("baseline date",date)
                     print("baseline loc",getstate[0])
+                    base_demand_blockValues=[]
                     demand_instance= Forecast_Master.objects.filter( forecast_type__iexact=base_demand,date=date,loc_ID=getstate[0]).first()
-        else: 
-            demand_instance= Forecast_Master.objects.filter( forecast_type__iexact='TLD_Forecast',date=date,loc_ID=getstate[0]).first()
-        print("demand_instance",demand_instance)
-        if demand_instance: 
-            block_values = attrgetter(*BLOCK_CONSTANTS)(demand_instance)
-            print("block_values_demand",block_values)
-            color = random.choice(border_colors)
-            # print(block_values)
-            # if f=='ITD':
-            #     dataset1.append(block_values)
-            datasets.append({
-                'name': "Baseline : " + demand_instance.forecast_type,
-                # 'borderColor': color,
-                # 'borderWidth': 2, 
-                'data': block_values,
-                # 'fill': False,
-                # 'borderDash': [5,2.5]
-            })
+                    if demand_instance != None: 
+                        block_values = attrgetter(*BLOCK_CONSTANTS)(demand_instance)
+                        base_demand_blockValues.append(block_values)
+                        print("block_values_demand",block_values)
+                        color = random.choice(border_colors)
+                            # print(block_values)
+                            # if f=='ITD':
+                            #     dataset1.append(block_values)
+                        datasets.append({
+                            'name': "Baseline : " + demand_instance.forecast_type,
+                            # 'borderColor': color,
+                            # 'borderWidth': 2, 
+                            'data': block_values,
+                            # 'fill': False,
+                            # 'borderDash': [5,2.5]
+                        })
+            else:
+                demand_instance= Forecast_Master.objects.filter( forecast_type__iexact='TLD_Forecast',date=date,loc_ID=getstate[0]).first()
+                print("date here now",date)
+                block_values = attrgetter(*BLOCK_CONSTANTS)(demand_instance)
+                base_demand_blockValues.append(block_values)
+                print("block_values_demand",block_values)
+                color = random.choice(border_colors)
+                # print(block_values)
+                # if f=='ITD':
+                #     dataset1.append(block_values)
+                datasets.append({
+                    'name': "Baseline : " + demand_instance.forecast_type,
+                    # 'borderColor': color,
+                    # 'borderWidth': 2, 
+                    'data': block_values,
+                    # 'fill': False,
+                    # 'borderDash': [5,2.5]
+                })
+            
+        # print("demand_instance",demand_instance)
+        
+        # if demand_instance:
+            # for demand in demand_instance: 
+            #     block_values = demand.demand
+            #     base_demand_blockValues.append(block_values)
+            #     print("block_values_demand",block_values)
+            #     color = random.choice(border_colors)
+            #     # print(block_values)
+            #     # if f=='ITD':
+            #     #     dataset1.append(block_values)
+            #     datasets.append({
+            #         'name': "Baseline : " + demand_instance.forecast_type,
+            #         # 'borderColor': color,
+            #         # 'borderWidth': 2, 
+            #         'data': block_values,
+            #         # 'fill': False,
+            #         # 'borderDash': [5,2.5]
+            #     })
             
             
-
+        #reference demand for average
+        if avg_ref_demand: 
+            if self.is_date(avg_ref_demand) and state_input is not None :
+                try : 
+                        date =  datetime.strptime(avg_ref_demand, '%b. %d, %Y').strftime('%Y-%m-%d')
+                except: 
+                        date =  datetime.strptime(avg_ref_demand, '%b %d, %Y').strftime('%Y-%m-%d')
+                print("dateNOw",date)
+                if state_input == '1':
+                    state= 'Uttar Pradesh'
+                elif state_input == '2':
+                    state= 'bihar'
+                elif state_input == '3':
+                    state= 'Madhya Pradesh'
+                elif state_input == '4':
+                    state= 'West Bengal' 
+                print("state is ",state)
+                demand_instanceAvg_ref= Actual_demands.objects.filter( state__iexact=state,date=date)
+            elif self.is_date(avg_ref_demand)== False and date is not None : 
+                demand_instanceAvg_ref= Forecast_Master.objects.filter( forecast_type__iexact=base_demand,date=date,loc_ID=getstate[0]).first()
 
         # corr demands
         corr_demands = Forecast_Master.objects.filter( forecast_type__iexact='ITD',date__in=corrdates,loc_ID=getstate[0]).distinct()
@@ -416,7 +550,7 @@ class ForecastDashboardView(TemplateView):
 
 
 
-        print ("datasets",datasets)
+        print ("datasets main",datasets)
         #DW chart ==>
         dw_weather= ['temperature', 'temperature_feels_like','wind_speed', 'cloud_cover', 'precip_chance', 'wind_gust']
         DW_datasets=[]
@@ -520,9 +654,10 @@ class ForecastDashboardView(TemplateView):
        
       
         if self.request.GET.get('fromBlock') and  self.request.GET.get('fromBlock') is not None :
+
             forecast_version= self.current_forecast_version()
             
-            # print("print demand blocks1",demand_instance)
+            print("print demand blocks1",demand_instance)
             
             if 'undo' in self.request.GET:
                 forecast_version-= 1 
@@ -645,6 +780,7 @@ class ForecastDashboardView(TemplateView):
         
         print("all_dates", date_choices)
         print("get_citieskeys", all_cities)
+        context['actual_date_choices'] = actual_date_choices
         context['scada_flag'] = scada_flag
         context['ensemble_flag'] = ensemble_flag
         context['weather_data_one'] =  weather_data1
