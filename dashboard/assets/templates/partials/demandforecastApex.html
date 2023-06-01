@@ -1,7 +1,10 @@
 
 <script>
+ 
+  // sessionStorage.setItem("chartdata",  datasets)
+  datasetssession = JSON.parse(`{{datasets|safe}}`)
+  sessionStorage.setItem("chartdata", JSON.stringify(datasetssession));
   datasets = JSON.parse(`{{datasets|escapejs}}`)
-  
   labels = JSON.parse (`{{labels}}`)
     
   var options = {
@@ -79,10 +82,43 @@
         }
         
         
+        
         }
+  options.series.forEach(function(series) {
+  series.stroke = series.stroke || {};
+});
+  options.series.forEach(function(series) {
+  if (series.name === 'MEMI') {
+    series.stroke.dashArray = [5, 3]; 
+  }
+});
 
-var chart = new ApexCharts(document.querySelector("#chart"), options);
+var chartdem = new ApexCharts(document.querySelector("#chart"), options);
 
-chart.render();
+chartdem.render();
+var lineStates = {
+  "Actual": true,
+  "Scada": true,
+  "MEMI": true,
+  "Ensemble": true,
+  "forecast": true,
+  "Scada": true,
+};
+chart.legend.onItemClick = function(seriesName) {
+  lineStates[seriesName] = !lineStates[seriesName];
+  updateChart();
+};
+function updateChart() {
+  var updatedSeries = [];
+  
+  chartOptions.series.forEach(function(series) {
+    // Check the state of the line
+    if (lineStates[series.name]) {
+      updatedSeries.push(series);
+    }
+  });
+  
+  chart.updateSeries(updatedSeries);
+}
 
 </script>

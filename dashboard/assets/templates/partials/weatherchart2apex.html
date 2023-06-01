@@ -1,9 +1,17 @@
 
 {{ weather2_data_one|json_script:"weather2_data_one" }}
 <script>
-  
-    const weather2_data = JSON.parse(document.getElementById('weather2_data_one').textContent);
-    console.log("weather2_data[0]",weather2_data)
+  const weather2_data = JSON.parse(document.getElementById('weather2_data_one').textContent);
+console.log("weather2_data",weather2_data)
+    $(document).ready(function(){
+      weatherChart2(weather2_data)
+});
+
+
+
+function weatherChart2(weather2_data){
+    
+    console.log("weather2_data[0]abcd",weather2_data)
     
     var dataKeys2_para1 = Object.keys(weather2_data[0][0])
     var dataval2_para1 = Object.values(weather2_data[0][0])
@@ -31,7 +39,7 @@
 
     var chart2Datapara11 = weather2_data[2].map(w => w[dataKeys2_para3[1]])
     var chart2Datapara22 = weather2_data[3].map(w => w[dataKeys2_para4[1]])
-    console.log("chartDatapara11",chartDatapara22)
+    
     
     
     var options = {
@@ -54,18 +62,24 @@
       ],
           chart: {
           type: "line",
-          height: 200,
+          height: 140,
           stacked: false,
-          fillOpacity: .3, 
+          fillOpacity: .3,
+          toolbar: {
+    show: false
+  },
+  zoom: {
+    enabled: false,
+  } 
         },
         legend: {
       show: false,
       position: 'bottom',
       horizontalAlign: 'center', 
       floating: false,
-      fontSize: '14px',
+      fontSize: '8px',
       fontFamily: 'Helvetica, Arial',
-      fontWeight: 400,
+      fontWeight: 100,
       formatter: undefined,
       inverseOrder: false,
       width: undefined,
@@ -76,13 +90,14 @@
       offsetY: 0,
       labels: {
           colors: undefined,
-          useSeriesColors: false
+          useSeriesColors: false,
+          fontSize: '8px'
       },
         dataLabels: {
           enabled: false
         }},
         stroke: {
-    width: [1.5, 1.5,1.5,1.5]
+    width: [1, 1,1,1]
   },
         xaxis: {
           categories: chart2Headings ,
@@ -93,6 +108,9 @@
           labels: {
     formatter: function (value) {
         return value ; 
+      },
+      style: {
+        fontSize: '10px'
       }
     }
   },
@@ -106,7 +124,10 @@
         color: "#FF1654"
       },
        title: {
-            text: 'temperature'
+            text: 'temperature',
+            style: {
+        fontSize: '8px'
+      }
           }
         },
         fill: {
@@ -176,7 +197,10 @@
         color: "#FF1654"
       },
        title: {
-            text: 'temperature'
+            text: 'temperature',
+            style: {
+        fontSize: '8px'
+      }
           }
         },
         fill: {
@@ -195,10 +219,10 @@
         // var chart = new ApexCharts(document.querySelector("#chartw2"), options);
         var chart = new ApexCharts(document.querySelector("#weather2expd"), modal2_weather_optionscity);
         chart.render();
-    
+      }
       
 
 
 
 
-</script> -->
+</script> 

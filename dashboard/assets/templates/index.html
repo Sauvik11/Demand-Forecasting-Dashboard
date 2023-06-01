@@ -1,746 +1,1397 @@
-<!DOCTYPE html>
 {% extends './base/base.html' %}
 {% load static %}
 {% block title %}
   Forecast Dashboard
 {% endblock %}
 {% load getlist %}
+
 {% block content %}
-<head>
-    
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
-
-    <title>SB Admin 2 - Dashboard</title>
-
-    <!-- Custom fonts for this template-->
-    <link href="{% static 'vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
-    <link
-        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
-        rel="stylesheet">
-
-    <!-- Custom styles for this template-->
-    <link href="{% static 'css/sb-admin-2.min.css' %}" rel="stylesheet">
-     <!-- APEX CHART CSS-->
-    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-    <link href="{% static './apexcharts.css' %}" rel="stylesheet"/>
-
-
-    <!--.............................................................-->
-<script src="http://code.jquery.com/jquery.js"></script>    
-<script type="text/javascript" src="<?php echo base_url('bootstrap/js/bootstrap-multiselect.js'); ?>"></script>
-
-<link href="<?php echo base_url('bootstrap/css/bootstrap-multiselect.css'); ?>" rel="stylesheet" type="text/css">    
-<link href="<?php echo base_url('bootstrap/css/bootstrap.min.css'); ?>" rel="stylesheet" type="text/css">                  
-<script type="text/javascript" src="<?php echo base_url('bootstrap/js/bootstrap.min.js'); ?>"></script>    
-
-
-    <style>
-
-   
-#ex3-tab-1 {
-   width: 90px;
-}
-#ex3-tab-2 {
-   width: 90px;
-}
-#ex3-tab-3 {
-   width: 90px;
-}
-      
-        </style>
-
-</head>
-
-
-    <!-- offcanvas -->
-
-    <div class="offcanvas offcanvas-bottom" tabindex="-1" id="offcanvasBottom" aria-labelledby="offcanvasBottomLabel">
-      <div class="offcanvas-header">
-        <h5 class="offcanvas-title" id="offcanvasBottomLabel">Dates</h5>
-        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-      </div>
-      <div class="offcanvas-body small">
-          <div class="row">
-              <div class="col-sm-4"> Weather
-                      <div class="input-group">
-                          <input id="startDate" name="weather_date" class="form-control form-control-sm" type="date" value="{{request.GET.weather_date}}"/>
-                          <span id="startDateSelected"></span>
-                          <input id="endDate" name="refdate" class="form-control form-control-sm" type="date" value="{{request.GET.refdate}}"/>
-                          <span id="endDateSelected"></span>
-            <select class="form-select form-select-sm " aria-label=".form-select-sm example" name="correl_date" id="id_date" style="width:90px;" >
-                  <option disabled selected>Date</option>
-                  {% for d in date_choices %}
-                  {% if request.GET.date and request.GET.date == d|date:'Y-m-d' %}
-                  <option value="{{d|date:'Y-m-d'}}" selected="">{{d}}</option>
-                   {% else %}
-                  <option value="{{d|date:'Y-m-d'}}">{{d}}</option>
-                   {% endif %}
-                   {% endfor %}
-                </select> 
-                <button type="submit" class="btn btn-sm btn-secondary ">Apply</button>
-            </div>
-          </div>
-          
+<style>
+.col {
+ 
+  white-space: nowrap;
   
-              <div class="col-sm-8">
-                  <div class="input-group">
-                  <select class="form-select form-select-sm " aria-label=".form-select-sm example"  name="state" id="id_state" style="width:90px;" >
-                      <option disabled selected>States</option>
-                      {% for k, v in form.state.field.choices %} 
-                      <!-- using forms to populate data -->
-                      <!-- form.state.field.choices -->
-                      <option value="{{k}}"  {% if request.GET.state ==  k|slugify %} selected{% endif %}>{{v}} </option>
-                      
-                      {% endfor %}
-                    </select>
-                    
-                    
-            
-                      
-                    <select class="form-select form-select-sm" aria-label=".form-select-sm example" name="zones" id="id_zones" style="width:90px;">
-                      <option disabled selected>Zones</option>
-                      {% for k, v in zones.items %}
-                      <option value="{{v}}" {% if v == request.GET.zones %} selected="{{v}}" {% endif %}>{{k}} </option>
-                      {% endfor %}
-                    </select>
-                    
-                  
-                  
-                    
-                      <input id="startDate" style="width:100px;" name="date" id="id_date" class="form-control" type="date" value="{{request.GET.date}}"/>
-                      <span id="startDateSelected"></span>
-                  </div>
+}
+.input-group-append {
+  cursor: pointer;
 
 
-                  <!-- data-mdb-clear-button="true" -->
-                    <!-- <div class="col">
-                      <div class="input-group">
-                        <select class="form-control selectpicker" multiple >
-                          <option value="1">One</option>
-                          <option value="2">Two</option>
-                          <option value="3">Three</option>
-                          <option value="4">Four</option>
-                          <option value="5">Five</option>
-                        </select>
-                        </div> -->
-                        
-                    
-                        
-                          <!-- <select class="selectpicker" multiple aria-label="size 3 select example">
-                            <option disabled selected>Select Forecast Type</option>
-                          {% for f in all_forecasttypes %}
-                            <option value="{{f}}" {% if f in forecast_types  %} selected="" {% endif %}>{{f}}</option>
-                          {% endfor %}
-                          </select> -->
+}
+.dropdown-menu li {
+  position: relative;
+}
+.dropdown-menu .dropdown-submenu {
+  display: none;
+  position: absolute;
+  left: 100%;
+  top: -7px;
+}
+.dropdown-menu .dropdown-submenu-left {
+  right: 100%;
+  left: auto;
+}
+.dropdown-menu > li:hover > .dropdown-submenu {
+  display: block;
+}
 
-                          <select class="form-select form-select-sm" multiple="multiple" aria-label=".form-select-sm example" name="ftype" id="id_ftype" style="width:auto;" >
-                            <option disabled selected>Select Forecast Type</option>
-                            {% for f in all_forecasttypes %}
-                              <option value="{{f}}" {% if f in forecast_types  %} selected="" {% endif %}>{{f}}</option>
-                            {% endfor %}
-                            <option value="" {% if None in forecast_types  %} selected="" {% endif %}>None</option>
-                          </select>
 
-                         
-            
+table {
+          border-collapse: collapse;    
+      }
+      td, th {
+          border: 1px solid #ccc;
+          padding: 10px;
+      }
+      th:empty {
+          border: 0;
+      }
+      .card-body > .d-flex > * {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+}
 
-                    <div class="col" align="center">
-                      <button type="submit" class="btn btn-sm btn-primary ">Get Data</button>
-                    </div>
-                  </div>
-                  </div>   
+.card-body > .d-flex > select, 
+.card-body > .d-flex > .input-group, 
+.card-body > .d-flex > .selectpicker {
+    margin-right: 5px;
+}
+
+.card-body > .d-flex > select:last-child, 
+.card-body > .d-flex > .input-group:last-child, 
+.card-body > .d-flex > .selectpicker:last-child {
+    margin-right: 0;
+}
+
+
+.table-condensed {
+  width: 130px;
+  height:30px;
+}
+.dropdown {
+  width: 100px;
+}
+
+select {
+  height: 28px;
+}
+
+.bootstrap-select {
+  width: 100px !important;
+}
+.dropdown-menu {
+  max-width: 200px;
+  min-width: 200px;
+}
+
+
+#top {
+  height: 60px;
+}
+.card #chartw1 {
+  margin: 0;
+}
+.card #chartw2 {
+  margin: 0;
+}
+.card #chartw3 {
+  margin: 0;
+}
+.apexcharts-container {
+  display: inline-block;
+  width: 100%;
+}
+
+#top {
+  margin: 0;
+}
+
+.card-body {
+  margin: 0;
+  padding: 0;
+}
+
+.input-group,
+.input-group-append {
+  margin: 0;
+}
+
+.selectpicker {
+  font-size: 10px !important;
+  height: 18px!important;
+  max-width: 20px!important;
+}
+#startDateweather {
+  width: 10px !important; /* set the desired width */
+  height: 20px; /* set the desired height */
+  font-size: 14px; /* set the desired font size */
+}
+#endDate 
+{
+  width: 10px !important; /* set the desired width */
+  height: 20px; /* set the desired height */
+  font-size: 14px; /* set the desired font size */
+}
+
+/* Decrease font size of labels */
+label {
+  font-size: 14px;
+}
+
+/* Decrease height of selectpicker */
+.bootstrap-select.btn-group > .dropdown-toggle:not([disabled]) {
+  height: 10px;
+  width: 10px;
+  line-height: 18px;
+}
+
+/* Decrease font size of select options */
+.dropdown-menu li a {
+  font-size: 14px;
+}
+label {
+    font-size: 10px;
+}
+
+
+
+.form-group {
+    margin-bottom: 2px;
+    border: solid;
+    border-width: 1px;
+    border-radius: 6px;
+    padding-left: 10px;
+}
+
+.form-switch {
+    padding-left: 2.5em;
+    font-size: 10px;
+}
+.form-control {
+  
+    height: 21px !important;
+    font-size: 9px!important;
+
+}
+element.style {
+    font-size: 9px;
+}
+
+.form-select-sm {
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+    padding-left: 0.5rem;
+    font-size: 9px;
+    height: fit-content;
+    width: 78%
+}
+#chart1_p2 {
+  margin-left: -20px;
+}
+#id_weather2_2 {
+  margin-left: 2px;
+}
+
+#id_weather3_2 {
+  margin-left: 2px;
+}
+#id_zones {
+  width:80px;
+  margin-left: -6px !important;
+
+
+}
+.card-logo {
+  width: 100px; /* Adjust the width as needed */
+  height: auto; /* Maintain aspect ratio */
+  margin-bottom: 10px; /* Optional: Add spacing between the logo and card content */
+  margin-left: 225px;
+}
+.nav-link{
+  font-size: 11px;
+  font-weight: 500;
+
+}
+#inputGroup-sizing-sm{
+  font-size: 10px;
+  border-radius: 5px;
+  height: 20px;
+}
+#button-addon1 {
+  font-size: 11px;
+  margin-left: 2px;
+  border-radius: 5px;
+}
+#Action {
+  width: 70px;
+  font-size: 9px;
+  height: 21px;
+  border-radius: 5px;
+  margin-left: 2px;
+}
+#preview {
+  width: 50px;
+  font-size: 9px;
+  height: 21px;
+  border-radius: 5px;
+ 
+}
+#undo{
+  width: 50px;
+  font-size: 9px;
+  height: 21px;
+  border-radius: 5px;
+  margin-left: 1px;
+
+}
+#clearall{
+  width: 50px;
+  font-size: 9px;
+  height: 21px;
+  border-radius: 5px;
+  margin-left: 1px;
+}
+#corrdata {
+  width: fit-content;
+  font-size: 9px;
+  height: 21px;
+  border-radius: 5px;
+  margin-left: 9px;
+}
+#corrdata_clr{
+
+  width: fit-content;
+  font-size: 9px;
+  height: 21px;
+  border-radius: 5px;
+  margin-left: 21px;
+}
+.apexcharts-text tspan {
+    font-family: inherit;
+    font-size: 8px;
+}
+apexcharts-yaxis-title {
+ 
+  font-size: 8px;
+}
+#wdates {
+  margin-left: 2px;
+}
+.btn{
+  background-color: #7bbbff;
+  color:#ffffff
+}
+
+.expand {
+    background-color: #ffffff00!important;
+    color: #010101!important;
+}
+#w1_para {
+margin-left: 2px;
+}
+#w2_para {
+  margin-left: 2px;
+}
+#w3_para{
+  margin-left: 2px;
+}
+.bs-placeholder {
+  background-color: transparent;
+}
+
+</style>
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+<link href="{% static './apexcharts.css' %}" rel="stylesheet"/>
+ 
+
+<div class="row">
+
+    <div class="col-md-3"  style="display: flex; flex-direction: column;">
+      <form>
+       
+        
+        
+        
+
+
+
+      <div class="row mb-3">
+      <div class="card">
+        <div class="row no-gutters">
+          <div class="col-sm-3">
+            <div class="input-group">
+              <input id="startDateweather" name="weather_date" class="form-control form-control-sm datepicker" type="date" value="{{weather_date}}" placeholder="Start Date"/>
+              <div class="input-group-append">
+               
               </div>
             </div>
+          </div>
+          <div class="col-sm-3">
+            <div class="input-group">
+              <input id="endDate" name="refdate" class="form-control form-control-sm datepicker" type="date" value="{{refdate}}" placeholder="End Date"/>
+              
+            </div>
+          </div>
+          <div class="col-sm-3">
+            <div class="input-group">
+
+
+
+              <select class="form-control selectpicker"    multiple data-live-search="true" id="w1city_selected" name="w1city_selected" >
+                <option value="" selected disabled>Filter Cities</option> <!-- Default text option -->
+                {% for city in all_cities %}
+                <option value="{{city}}" {% if city in request.GET|get_list:'w1city_selected'  %} selected="" {% endif %} >{{city}}</option>
+                {% endfor %}
+              </select>
+          </div>
+          </div>
+          <div class="col-sm-2">
+            <div class="input-group">
+            <button type="submit" class="btn btn-sm btn-secondary" id="wdates">Apply</button>
+          </div>
+          </div>
+        </div>
+        <button type="button" class="btn expand" data-bs-toggle="modal" data-bs-target="#exampleModal1" style="height: 12px; font-size: 10px;"><svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
+          <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+          <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+        </svg>
+          Expand Chart
+        </button> 
+       
+          <div id="chartw1"></div> 
+          <div class="row no-gutters"   style="margin-top: -16px;"  >
+            <div class="col">
+              <div class="input-group">
+          <select class="form-select form-select-sm" aria-label=".form-select-lg example" name="chart1_p1" id="id_weather1" >
+            
+            <option disabled selected>weather 1</option>
+            
+            {% for w in weather_parameters %}
+            <option value="{{w}}" {% if w in request.GET.chart1_weather %} selected="" {% endif %}>{{w}}</option>
+              {% endfor %}
+           
+          </select>
+        </div>
+          </div>
+          <div class="col">
+            <div class="input-group">
+          <select class="form-select form-select-sm" aria-label=".form-select-sm example" name="chart1_p2" id="id_weather2" style="
+          margin-left: 1px;" >
+            <option disabled selected>weather 2</option>
+            {% for w in weather_parameters %}
+            <option value="{{w}}" {% if w in request.GET.chart1_weather  %} selected="" {% endif %}>{{w}}</option>
+            {% endfor %}
+          </select>
+        </div>
+          
+        </div>
+          
+          <div class="col">
+            <div class="input-group">
+            <button type="submit" class="btn btn-sm btn-secondary " id="w1_para">Apply</button>
+          </div>
+          </div>
+        </div>
+        
       </div>
     </div>
     
+    
+  
+    <div class="row mb-3">
+      <div class="card" style="margin-top: -16px";>
+        <button type="button" class="btn expand" data-bs-toggle="modal" data-bs-target="#exampleModal1" style="height: 12px; font-size: 10px;"><svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
+          <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+          <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+        </svg>
+        Expand Chart
+      </button> 
+       
+          <div id="chartw2"></div> 
 
 
-<!-- Begin Page Content -->
-<!-- Operations  -->
-                
-                <div class="container-fluid">
-
-                    <!-- Page Heading -->
-                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
-                        <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
-                                class="fas fa-download fa-sm text-white-50"></i> Submit Data</a>
-                    </div>
-
-                    <!-- Content Row -->
-                   
-
-                    <!-- Content Row -->
-
-                    <div class="row">
-
-                        <!-- Area Chart -->
-                        <div class="col-xl-8 col-lg-7">
-                            <div class="card shadow mb-4">
-                                <!-- Card Header - Dropdown -->
-                                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="m-0 font-weight-bold text-primary">Demand</h6>
-                                    <div class="form-check form-switch">
-                                        <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" {% if scada_flag == "on" %} checked {% endif %}  onclick="clickFn(event)" name="enable_scada">
-                                        <label class="form-check-label" for="flexSwitchCheckChecked">Scada</label>
-                                      </div>
-                                      <div class="form-check form-switch">
-                                        <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" {% if ensemble_flag == "on" %} checked {% endif %} onclick="clickFn(event)" name="enable_ensemble">
-                                        <label class="form-check-label" for="flexSwitchCheckChecked">Ensemble</label>
-                                      </div>
-                                    <button class="btn btn-light btn-sm" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasBottom" aria-controls="offcanvasBottom">Change Parameters</button>
-                                    <div class="dropdown no-arrow">
-                                        <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
-                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                                        </a>
-                                        <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                                            aria-labelledby="dropdownMenuLink">
-                                            <div class="dropdown-header">Dropdown Header:</div>
-                                            <a class="dropdown-item" href="#">Action</a>
-                                            <a class="dropdown-item" href="#">Another action</a>
-                                            <div class="dropdown-divider"></div>
-                                            <a class="dropdown-item" href="#">Something else here</a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- Card Body -->
-                                <div class="card-body">
-                                    
-                                        <!-- <canvas id="overlay" width="1000" height="450" style="position:absolute;pointer-events:none;"></canvas> -->
-                                        
-                                        <div id="chart"></div> 
-                                    
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Pie Chart -->
-                        
-                        <div class="col-xl-4 col-lg-5">
-                            <div class="card shadow mb-4">
-                                <!-- Card Header - Dropdown -->
-                                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="m-0 font-weight-bold text-primary">Weather</h6>
-                                    <button class="btn btn-light btn-sm" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasBottom" aria-controls="offcanvasBottom">Change Parameters</button>
-                                    <div class="dropdown no-arrow">
-                                        <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
-                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                                        </a>
-                                        <!-- <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                                            aria-labelledby="dropdownMenuLink">
-                                            <div class="dropdown-header">Dropdown Header:</div>
-                                            <a class="dropdown-item" href="#">Action</a>
-                                            <a class="dropdown-item" href="#">Another action</a>
-                                            <div class="dropdown-divider"></div>
-                                            <a class="dropdown-item" href="#">Something else here</a>
-                                        </div> -->
-                                    </div>
-                                </div>
-                                <!-- Card Body -->
-                                <div class="card-body">
-                                    <div class="tab-content" id="myTabContent">
-                                        <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-                                            <div class="card">
-                                                <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#exampleModal"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
-                                                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-                                                <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
-                                              </svg>
-                                                Expand Chart
-                                              </button> 
-                                                
-                                                <div class="card-body">
-                                                  <div id="chartw1"></div> 
-                                                </div>
-                                                <div class="row">
-                                                  {% if request.GET|get_list:'chart1_weather'  %} 
-                                                  {% for type in request.GET|get_list:'chart1_weather' %} 
-                                                    <div class="col">
-                                                    
-                                                  <select class="form-select form-select-sm" aria-label=".form-select-lg example" name="chart1_weather" id="id_weather1" >
-                                                    
-                                                    <option disabled selected>weather 1</option>
-                                                    
-                                                    {% for w in weather_parameters %}
-                                                    <option value="{{w}}" {% if w in type %} selected="" {% endif %}>{{w}}</option>
-                                                      {% endfor %}
-                                                  </select>
-                                                  </div>
-                                                  {% endfor %}
-                                                  {% else %}
-                                                  <div class="col">
-                                                    <select class="form-select form-select-sm" aria-label=".form-select-sm example" name="chart1_weather" id="id_weather1" >
-                                                      <option disabled selected>weather 1</option>
-                                                      {% for w in weather_parameters %}
-                                                      <option value="{{w}}" {% if w in request.GET|get_list:'chart1_weather'  %} selected="" {% endif %}>{{w}}</option>
-                                                      {% endfor %}
-                                                    </select>
-                                                    </div> 
-                                                   <div class="col">
-                                                  <select class="form-select form-select-sm" aria-label=".form-select-sm example" name="chart1_weather" id="id_weather1" >
-                                                    <option disabled selected>weather 2</option>
-                                                    {% for w in weather_parameters %}
-                                                    <option value="{{w}}" {% if w in request.GET|get_list:'chart1_weather'  %} selected="" {% endif %}>{{w}}</option>
-                                                    {% endfor %}
-                                                  </select>
-                                                  </div> 
-                                                  {% endif %}
-                                                  <div class="col">
-                                                    <button type="submit" class="btn btn-sm btn-secondary ">Apply</button>
-                                                  </div>
-                                                </div>
-                                                
-                                              </div>
-                                        </div>
-                                        <!-- <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-                                            <div class="card"><button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#exampleModal0"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
-                                                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-                                                <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
-                                              </svg>
-                                                Expand Chart
-                                              </button> 
-                                                <div class="card-body">
-                                                  <div id="chartw2"></div> 
-                                                </div>
-                                                <div class="row">
-                                                  {% if request.GET|get_list:'chart2_weather'  %} 
-                                                  {% for type in request.GET|get_list:'chart2_weather' %} 
-                                                    <div class="col">
-                                                  <select class="form-select form-select-sm" aria-label=".form-select-lg example" name="chart2_weather" id="id_weather2" >
-                                                    <option disabled selected>weather para</option>
-                                                    
-                                                    {% for w in weather_parameters %}
-                                                    <option value="{{w}}" {% if w in type %} selected="" {% endif %}>{{w}}</option>
-                                                      {% endfor %}
-                                                   
-                                                  </select>
-                                                  </div>
-                                                  {% endfor %}
-                                                  {% else %}
-                                                  <div class="col">
-                                                    <select class="form-select form-select-sm" aria-label=".form-select-sm example" name="chart2_weather" id="id_weather2" >
-                                                      <option disabled selected>weather 1</option>
-                                                      {% for w in weather_parameters %}
-                                                      <option value="{{w}}" {% if w in request.GET|get_list:'chart2_weather'  %} selected="" {% endif %}>{{w}}</option>
-                                                      {% endfor %}
-                                                    </select>
-                                                    </div> 
-                                                   <div class="col">
-                                                  <select class="form-select form-select-sm" aria-label=".form-select-sm example" name="chart2_weather" id="id_weather2" >
-                                                    <option disabled selected>weather 2</option>
-                                                    {% for w in weather_parameters %}
-                                                    <option value="{{w}}" {% if w in request.GET|get_list:'chart2_weather'  %} selected="" {% endif %}>{{w}}</option>
-                                                    {% endfor %}
-                                                  </select>
-                                                  </div> 
-                                                  {% endif %}
-                                            
-                                                  
-                                                  <div class="col">
-                                                    <button type="submit" class="btn btn-sm btn-secondary ">Apply</button>
-                                                  </div>
-                                                </div>
-                                            </div>
-                                        </div> -->
-
-                                        <!-- <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
-                                            <div class="card"><button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#exampleModal1"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
-                                                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-                                                <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
-                                              </svg>
-                                                Expand Chart
-                                              </button> 
-                                                
-                                                <div class="card-body">
-                                                  <div id="chartw3"></div> 
-                                                </div>
-                                                <div class="row">
-                                                  {% if request.GET|get_list:'chart3_weather'  %} 
-                                                  {% for type in request.GET|get_list:'chart3_weather' %} 
-                                                    <div class="col">
-                                                  <select class="form-select form-select-sm" aria-label=".form-select-lg example" name="chart3_weather" id="id_weather3" >
-
-                                                    <option disabled selected>weather 1</option>
-                                                    
-                                                    {% for w in weather_parameters %}
-                                                    <option value="{{w}}" {% if w in type %} selected="" {% endif %}>{{w}}</option>
-                                                      {% endfor %}
-                                                   
-                                                  </select>
-                                                  </div>
-                                                  {% endfor %}
-                                                  {% else %}
-                                                  <div class="col">
-                                                    <select class="form-select form-select-sm" aria-label=".form-select-sm example" name="chart3_weather" id="id_weather3" >
-                                                      <option disabled selected>weather 1</option>
-                                                      {% for w in weather_parameters %}
-                                                      <option value="{{w}}" {% if w in request.GET|get_list:'chart3_weather'  %} selected="" {% endif %}>{{w}}</option>
-                                                      {% endfor %}
-                                                    </select>
-                                                    </div> 
-                                                   <div class="col">
-                                                  <select class="form-select form-select-sm" aria-label=".form-select-sm example" name="chart3_weather" id="id_weather3" >
-                                                    <option disabled selected>weather 2</option>
-                                                    {% for w in weather_parameters %}
-                                                    <option value="{{w}}" {% if w in request.GET|get_list:'chart3_weather'  %} selected="" {% endif %}>{{w}}</option>
-                                                    {% endfor %}
-                                                  </select>
-                                                  </div> 
-                                                  {% endif %}
-                                                 
-                                                  <div class="col">
-                                                    <button type="submit" class="btn btn-sm btn-secondary ">Apply</button>
-                                                  </div>
-                                                </div>
-                                              </div>
-                                        </div> -->
-                                      </div>
-
-                                    </div>
-                                      
-                                    <div class="mt-4 text-center small">
-                                        <!-- <ul class="nav nav-tabs" id="myTab" role="tablist">
-                                            <li class="nav-item" role="presentation">
-                                              <button class="nav-link active" id="home" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">weather1</button>
-                                            </li> -->
-                                            <!-- <li class="nav-item" role="presentation">
-                                              <button class="nav-link" id="profile" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">weather2</button>
-                                            </li>
-                                            <li class="nav-item" role="presentation">
-                                              <button class="nav-link" id="contact" data-bs-toggle="tab" data-bs-target="#contact" type="button" role="tab" aria-controls="contact" aria-selected="false">weather3</button>
-                                            </li> -->
-                                          </ul>
-                                          <!-- Pills navs -->
-                                          
-                                          <!-- Pills content -->
-                                          
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-
-                    <div class="row">
-
-                        <!-- Earnings (Monthly) Card Example -->
-                        <div class="col-xl-3 col-md-6 mb-4">
-                            <div class="card border-left-primary shadow h-100 py-2">
-                                <div class="card-body">
-                                    <div class="row no-gutters align-items-center">
-                                        <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                                MAPE</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">5%</div>
-                                        </div>
-                                        <div class="col-auto">
-                                            <i class="fas fa-calendar fa-2x text-gray-300"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Earnings (Monthly) Card Example -->
-                        <div class="col-xl-3 col-md-6 mb-4">
-                            <div class="card border-left-success shadow h-100 py-2">
-                                <div class="card-body">
-                                    <div class="row no-gutters align-items-center">
-                                        <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                                Earnings (Annual)</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">$215,000</div>
-                                        </div>
-                                        <div class="col-auto">
-                                            <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Earnings (Monthly) Card Example -->
-                        <div class="col-xl-3 col-md-6 mb-4">
-                            <div class="card border-left-info shadow h-100 py-2">
-                                <div class="card-body">
-                                    <div class="row no-gutters align-items-center">
-                                        <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Tasks
-                                            </div>
-                                            <div class="row no-gutters align-items-center">
-                                                <div class="col-auto">
-                                                    <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">50%</div>
-                                                </div>
-                                                <div class="col">
-                                                    <div class="progress progress-sm mr-2">
-                                                        <div class="progress-bar bg-info" role= "progressbar"
-                                                            style="width: 50%" aria-valuenow="50" aria-valuemin="0"
-                                                            aria-valuemax="100"></div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-auto">
-                                            <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Pending Requests Card Example -->
-                        <div class="col-xl-3 col-md-6 mb-4">
-                            <div class="card border-left-warning shadow h-100 py-2">
-                                <div class="card-body">
-                                    <div class="row no-gutters align-items-center">
-                                        <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                                Pending Requests</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">18</div>
-                                        </div>
-                                        <div class="col-auto">
-                                            <i class="fas fa-comments fa-2x text-gray-300"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Content Row -->
-                    <!-- <div class="row">
-
-                        <!-- Content Column -->
-                        <!-- <div class="col-lg-6 mb-4"> -->
-
-                            <!-- Project Card Example -->
-                            <!-- <div class="card shadow mb-4">
-                                <div class="card-header py-3">
-                                    <h6 class="m-0 font-weight-bold text-primary">Projects</h6>
-                                </div>
-                                <div class="card-body">
-                                    <h4 class="small font-weight-bold">Server Migration <span
-                                            class="float-right">20%</span></h4>
-                                    <div class="progress mb-4">
-                                        <div class="progress-bar bg-danger" role="progressbar" style="width: 20%"
-                                            aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
-                                    </div>
-                                    <h4 class="small font-weight-bold">Sales Tracking <span
-                                            class="float-right">40%</span></h4>
-                                    <div class="progress mb-4">
-                                        <div class="progress-bar bg-warning" role="progressbar" style="width: 40%"
-                                            aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
-                                    </div>
-                                    <h4 class="small font-weight-bold">Customer Database <span
-                                            class="float-right">60%</span></h4>
-                                    <div class="progress mb-4">
-                                        <div class="progress-bar" role="progressbar" style="width: 60%"
-                                            aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
-                                    </div>
-                                    <h4 class="small font-weight-bold">Payout Details <span
-                                            class="float-right">80%</span></h4>
-                                    <div class="progress mb-4">
-                                        <div class="progress-bar bg-info" role="progressbar" style="width: 80%"
-                                            aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
-                                    </div>
-                                    <h4 class="small font-weight-bold">Account Setup <span
-                                            class="float-right">Complete!</span></h4>
-                                    <div class="progress">
-                                        <div class="progress-bar bg-success" role="progressbar" style="width: 100%"
-                                            aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Color System -->
-                            <!-- <div class="row">
-                                <div class="col-lg-6 mb-4">
-                                    <div class="card bg-primary text-white shadow">
-                                        <div class="card-body">
-                                            Primary
-                                            <div class="text-white-50 small">#4e73df</div>
-                                        </div>
-                                    </div>
-                                </div> -->
-                                <!-- <div class="col-lg-6 mb-4">
-                                    <div class="card bg-success text-white shadow">
-                                        <div class="card-body">
-                                            Success
-                                            <div class="text-white-50 small">#1cc88a</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6 mb-4">
-                                    <div class="card bg-info text-white shadow">
-                                        <div class="card-body">
-                                            Info
-                                            <div class="text-white-50 small">#36b9cc</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6 mb-4">
-                                    <div class="card bg-warning text-white shadow">
-                                        <div class="card-body">
-                                            Warning
-                                            <div class="text-white-50 small">#f6c23e</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6 mb-4">
-                                    <div class="card bg-danger text-white shadow">
-                                        <div class="card-body">
-                                            Danger
-                                            <div class="text-white-50 small">#e74a3b</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6 mb-4">
-                                    <div class="card bg-secondary text-white shadow">
-                                        <div class="card-body">
-                                            Secondary
-                                            <div class="text-white-50 small">#858796</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6 mb-4">
-                                    <div class="card bg-light text-black shadow">
-                                        <div class="card-body">
-                                            Light
-                                            <div class="text-black-50 small">#f8f9fc</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6 mb-4">
-                                    <div class="card bg-dark text-white shadow">
-                                        <div class="card-body">
-                                            Dark
-                                            <div class="text-white-50 small">#5a5c69</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-
-                        <div class="col-lg-6 mb-4"> -->
-
-                            <!-- Illustrations -->
-                            <!-- <div class="card shadow mb-4">
-                                <div class="card-header py-3">
-                                    <h6 class="m-0 font-weight-bold text-primary">Illustrations</h6>
-                                </div>
-                                <div class="card-body">
-                                    <div class="text-center">
-                                        <img class="img-fluid px-3 px-sm-4 mt-3 mb-4" style="width: 25rem;"
-                                            src="img/undraw_posting_photo.svg" alt="...">
-                                    </div>
-                                    <p>Add some quality, svg illustrations to your project courtesy of <a
-                                            target="_blank" rel="nofollow" href="https://undraw.co/">unDraw</a>, a
-                                        constantly updated collection of beautiful svg images that you can use
-                                        completely free and without attribution!</p>
-                                    <a target="_blank" rel="nofollow" href="https://undraw.co/">Browse Illustrations on
-                                        unDraw &rarr;</a>
-                                </div>
-                            </div> -->
-
-                            <!-- Approach -->
-                            <!-- <div class="card shadow mb-4">
-                                <div class="card-header py-3">
-                                    <h6 class="m-0 font-weight-bold text-primary">Development Approach</h6>
-                                </div>
-                                <div class="card-body">
-                                    <p>SB Admin 2 makes extensive use of Bootstrap 4 utility classes in order to reduce
-                                        CSS bloat and poor page performance. Custom CSS classes are used to create
-                                        custom components and custom utility classes.</p>
-                                    <p class="mb-0">Before working with this theme, you should become familiar with the
-                                        Bootstrap framework, especially the utility classes.</p>
-                                </div>
-                            </div> -->
-
-                        </div>
-                    </div> 
-
-                </div> 
-                <!-- /.container-fluid -->
-
-            </div>
-            <!-- End of Main Content -->
-
-            <!-- Footer -->
-            <footer class="sticky-footer bg-white">
-                <div class="container my-auto">
-                    <div class="copyright text-center my-auto">
-                        <span>Copyright &copy; Your Website 2021</span>
-                    </div>
-                </div>
-            </footer>
-            <!-- End of Footer -->
-
+          <div class="row no-gutters" style="margin-top: -16px;">
+            <div class="col">
+              <div class="input-group">
+          <select class="form-select form-select-sm" aria-label=".form-select-lg example" name="chart2_weather" id="id_weather2_1" >
+            <option disabled selected>weather 1</option>
+            {% for w in weather_parameters %}
+            <option value="{{w}}" {% if w in request.GET.chart2_weather %} selected="" {% endif %}>{{w}}</option>
+              {% endfor %}
+          </select>
+          </div>
         </div>
-        <!-- End of Content Wrapper -->
-
-    </div>
-    <!-- End of Page Wrapper -->
-
-    <!-- Scroll to Top Button-->
-    <a class="scroll-to-top rounded" href="#page-top">
-        <i class="fas fa-angle-up"></i>
-    </a>
-
-    <!-- Logout Modal-->
-    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <a class="btn btn-primary" href="login.html">Logout</a>
-                </div>
-            </div>
+          <div class="col">
+            <div class="input-group">
+          <select class="form-select form-select-sm" aria-label=".form-select-sm example" name="chart2_weather" id="id_weather2_2" >
+            <option disabled selected>weather 2</option>
+            {% for w in weather_parameters %}
+            <option value="{{w}}" {% if w in request.GET.chart2_weather  %} selected="" {% endif %}>{{w}}</option>
+            {% endfor %}
+          </select>
+          </div>
         </div>
+          <div class="col">
+            <div class="input-group">
+            <button type="submit" class="btn btn-sm btn-secondary " id="w2_para">Apply</button>
+          </div>
+          </div>
+        </div>
+        
+      </div>
     </div>
-<!-- expand modals -->
-
-</div>
-</div>
+    
+    
+  
+    <div class="row mb-3">
+      <div class="card" style="margin-top: -15px;">
+        <button type="button" class="btn expand" data-bs-toggle="modal" data-bs-target="#exampleModal1" style="height: 12px; font-size: 10px;"><svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
+        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+        <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+      </svg>
+        Expand Chart
+      </button> 
+          <div id="chartw3"></div>
+          
+          <div class="row no-gutters" style="margin-top: -16px;">
+            <div class="col">
+              <div class="input-group">
+          <select class="form-select form-select-sm" aria-label=".form-select-lg example" name="chart3_weather" id="id_weather3_1" >
+            
+            <option disabled selected>weather 1</option>
+            
+            {% for w in weather_parameters %}
+            <option value="{{w}}" {% if w in request.GET.chart3_weather %} selected="" {% endif %}>{{w}}</option>
+              {% endfor %}
+           
+          </select>
+        </div>
+          </div>
+          <div class="col">
+            <div class="input-group">
+          <select class="form-select form-select-sm" aria-label=".form-select-sm example" name="chart3_weather" id="id_weather3_2" >
+            <option disabled selected>weather 2</option>
+            {% for w in weather_parameters %}
+            <option value="{{w}}" {% if w in request.GET.chart3_weather  %} selected="" {% endif %}>{{w}}</option>
+            {% endfor %}
+          </select>
+          </div>
+        </div>
+          <div class="col">
+            <div class="input-group">
+            <button type="submit" class="btn btn-sm btn-secondary " id="w3_para">Apply</button>
+          </div>
+        </div>
+        </div>
+      </div>
+      
+    </div>
+     
+    
 </form>
-    <!-- Bootstrap core JavaScript-->
-    <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
-    <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+  </div>
+  
 
-    <!-- Core plugin JavaScript-->
-    <script src="{% static 'vendor/jquery-easing/jquery.easing.min.js' %}"></script>
+    <div class="col-md-6">
+      <form > 
+        {% csrf_token %} 
+        <div class="row mb-3">
+          <div class="card" style="background-color:#ffffff;" id="top">
+            <div class="card-body">
+              <img src="https://mercadosemi.in/memi2023/wp-content/uploads/2023/05/memi-logo.jpg" alt="Logo" class="card-logo">
+            </div>
+          </div>
+        </div>
+        
+        
+        
+        
+        
+        
+       <div class="row mb-3" >
+      <div class="card">
+        
+        <div class="forecast-card-body">
+          <div class="d-flex align-items-center">
+            <select class="form-select form-select-sm me-2" aria-label=".form-select-lg example" name="state" id="id_state" style="width:75px;">
+              <option disabled selected>States</option>
+              {% for k, v in form.state.field.choices %}
+              <option value="{{k}}" {% if k|slugify in request.GET.state and state_input %} selected{% endif %}>{{v}} </option>
+              {% endfor %}
+            </select>
+            <select class="form-select form-select-sm me-2" aria-label=".form-select-sm example" name="zones" id="id_zones" style="width:80px;">
+              <option value="" {% if not request.GET.zones %} selected {% endif %} selected>No Zone</option>
+              {% for k, v in zones.items %}
+              <option value="{{v}}" {% if v == request.GET.zones %} selected="{{v}}" {% endif %}>{{v}} </option>
+              {% endfor %}
+            </select>
+            <div class="input-group me-2" style="width: 70px; display: flex; justify-content: center;">
+              <input id="startDate" name="date" id="id_date" class="form-control" type="date" value="{{date}}" style="width: 80%;font-size: 8px;font-weight: 500;margin-left: -6px;"/>
+              <span id="startDateSelected"></span>
+            </div>
+            <div class="col me-0">
+              <div class="input-group"style="margin-left: -26px;">
+                <select class="selectpicker form-select-sm" multiple aria-label=".form-select-sm example" name="ftype" id="id_ftype" data-style="small" >
+                  <option disabled>Select Forecast Type</option>
+                  {% for f in all_forecasttypes %}
+                  <option value="{{f}}" {% if f in forecast_types  %} selected="" {% endif %}>{{f}}</option>
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+            <button type="submit" id="getdata" class="btn btn-sm btn-primary" style="padding-top: .2rem; padding-bottom: .2rem;">Get Data</button>
+          </div>
+          <canvas id="overlay" width="1000" height="450" style="position:absolute;pointer-events:none;"></canvas>
+          <div id="chart"></div> 
+        </div>
+      </div>
+    </div>
+</form>
+</div>
 
-    <!-- Custom scripts for all pages-->
-    <script src="{% static 'js/sb-admin-2.min.js' %}"></script>
+    
+    <div class="col-md-3">
+      
+      <div class="row mb-3">
+        <div class="card" style="background-color:#ffffff;" id="top">
+      <div class="card-body">
+        <div class="row">
+         
+        <div class="col">
+          <button type="submit" class="btn btn-sm btn-success">Submit Forecast</button>
+        </div>
+        <div class="col">
+            <a class="nav-link" href="#" style="margin-left: 91px;">Logout</a>
+      </div>
+      </div>
+    </div>
+    </div>
+  </div>
+  <form>
+      <div class="row mb-3">
+      <div class="card">
+        <div class="card-body">
+          <div class="row">
+            <div class="col">
+          <div class="input-group input-group-sm mb-3" style="margin-top: 5px;
+      ">
+            <span class="input-group-text" id="inputGroup-sizing-sm">From Block</span>
+            <script type="text/javascript"> 
+              document.getElementById("fromBlock").placeholder='{{request.GET.fromBlock}}' ;
+            </script>
+            <input type="text" class="form-control" id="fromBlock" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm"  name="fromBlock" value="{{request.GET.fromBlock|default_if_none:''}}" style=" border-radius: 5px;margin-left: 1px; margin-right: 4px;">
+            <span class="input-group-text" id="inputGroup-sizing-sm">To Block</span>
+            <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" id="toBlock" name="toBlock" value="{{request.GET.toBlock|default_if_none:''}}"  style=" border-radius: 5px;margin-left: 1px;">
+            <!-- <button class="btn btn-outline-info" type="submit"   id="button-addon1">Filter</button> -->
+             </div>
+        </div>
+      </div>
+            <div class="row">
+            <div class="col">
+              <div class="input-group input-group-sm mb-3">
+                
+                
+               
+                <span class="input-group-text" id="inputGroup-sizing-sm">From value</span>
+                <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" id="fromVal" name="fromVal" style=" border-radius: 5px;margin-left: 1px; margin-right: 4px; width:22px;" value="{{request.GET.fromVal|default_if_none:''}}">
 
-    <!-- Page level plugins -->
-    <script src="vendor/chart.js/Chart.min.js"></script>
+                
+                <span class="input-group-text" id="inputGroup-sizing-sm">To value </span>
+                <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" id="toVal" name="toVal" style=" border-radius: 5px;margin-left: 1px; width:22px;" value="{{request.GET.toVal|default_if_none:''}}">
+                <!-- <button class="btn btn-outline-info"   id="button-addon2"></button> -->
+                <select class="form-select" aria-label="Default select example" id="Action" name="Action" >
+                {% for action in actions %}
+                  <option value="{{action}}" {% if d in request.GET.Action   %} selected="" {% endif %} >{{action}}</option>
+                {% endfor %}
+                </select>
+                <div id="averageSelect" style="display: none;">
+                  <select class="form-control selectpicker" data-live-search="true" id="selectavgdate">
+                    {% for d in actual_date_choices %}
+                    <option value="{{ d|date:'Y-m-d' }}" {% if d in request.GET.Actual   %} selected="" {% endif %}>{{ d|date:'Y-m-d' }}</option>
+                   {% endfor %}
+                  </select>
+                </div>
+              
+                 </div>
+          </div>
+        </div>
+        <div class="row">
+            <div class="col">
+              <div class="input-group input-group-sm mb-3">
+                <button class="btn btn-outline-success" id="preview" type="submit" >Preview</button>
+                <button type="submit" class="btn btn-info btn-sm" id="undo" name="undo"><i class="fa fa-undo" aria-hidden="true"></i> Undo</button>
+                <button type="submit" class="btn btn-outline-danger btn-sm" id="clearall" name="clearall">Clear all</button>
+              </div>
+          </div>
+        </div>
+      </div>
 
-    <!-- Page level custom scripts -->
-    <script src="js/demo/chart-area-demo.js"></script>
-    <script src="js/demo/chart-pie-demo.js"></script>
 
-    <!--Apex chart js -->
-    <script src="{% static './base/apexcharts.js'%}"></script>
+      
+      <div class="card-body">
+        <div class="container mt-5">
+          <div class="row">
+            <div class="col-3">
+          <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" id="togglescada" checked>
+            <label class="form-check-label" for="toggleSwitch">Scada</label>
+          </div>
+        </div>
+        <div class="col-3">
+          <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" id="toggleactual" checked>
+            <label class="form-check-label" for="toggleSwitch2">Actual</label>
+          </div>
+        </div>
+        <div class="col-3">
+          <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" id="togglememi" checked>
+            <label class="form-check-label" for="toggleSwitch3">MEMI</label>
+          </div>
+        </div>
+        <div class="col-3">
+          <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" id="togglensembl" checked>
+            <label class="form-check-label" for="toggleSwitch4">Ensemble</label>
+          </div>
+        </div>
 
-{% include './partials/demandforecast.html' %}
-{% include './partials/weatherchart1apex.html' %}
+
+
+
+        
+      </div>
+          
+          
+          <div class="form-group">
+            <label for="select1">Nearby Dates Actual</label>
+            <select class="form-control selectpicker" multiple data-live-search="true" id="selectactdate" >
+              {% for d in actual_date_choices %}
+              <option value="{{ d|date:'Y-m-d' }}" {% if d in request.GET.Actual   %} selected="" {% endif %}>{{ d|date:'Y-m-d' }}</option>
+             {% endfor %}
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="select2">Temperature Corr </label>
+            <select class="form-control selectpicker" multiple data-live-search="true" id="temp_corrdate">
+              {% for w in temp_corr_data %}
+              <option value="{{w}}" {% if w in request.GET|get_list:'t_correl_date' %} selected="" {% endif %}>{{w}}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="select3">Temperature-F Corr</label>
+            <select class="form-control selectpicker" multiple data-live-search="true" id="tempf_corrdate">
+              {% for w in tempf_corr_data %}
+                <option value="{{w}}" {% if w in request.GET|get_list:'tf_correl_date' %} selected="" {% endif %}>{{w}}</option>
+                {% endfor %}
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="select3">Demand Corr :</label>
+            <select class="form-control selectpicker" multiple data-live-search="true" id="demand_corrdate">
+              {% for w in d_corr_data %}
+              <option value="{{w}}" {% if w in request.GET|get_list:'d_row' %} selected="" {% endif %}>{{w}}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+        
+          <div class="row">
+            <div class="input-group input-group-sm mb-3">
+            <div class="col">
+              
+          <button type="submit" class="btn btn-info btn-sm" id="corrdata" >Get Corr Data</button>
+        </div>
+          <div class="col">
+          <button type="submit" class="btn btn-outline-danger btn-sm" id="corrdata_clr" >Clear Corr Data</button>
+        </div>
+      </div>
+        </div>
+      </div>
+    </div>
+      </div>
+    </div>
+    </div>
+  </form>
+</div>  
+</div>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <!-- <h5 class="modal-title" id="exampleModalLabel">Modal title</h5> -->
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="container-fluid">
+          <div class="row h-100">
+            <div class="col h-100">
+              <div id="weather1expd"></div> 
+            <!-- <canvas id="#weather1expd" class="forecastchart" width="1000" height="450"></canvas> -->
+          </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade" id="exampleModal0" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <!-- <h5 class="modal-title" id="exampleModalLabel0">Modal title</h5> -->
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="container-fluid">
+          <div class="row h-100">
+            <div class="col h-100">
+              <div id="weather2expd"></div>
+          </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="exampleModal1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <!-- <h5 class="modal-title" id="exampleModalLabel2">Modal title</h5> -->
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="container-fluid">
+          <div class="row h-100">
+            <div class="col h-100">
+              <div id="weather3expd"></div> 
+          </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+{{ datasets|json_script:"datasets" }}
+{{ weather2_data_one|json_script:"weather2_data_one" }}
+{% now "Y-m-d" as today %}
+<script>
+
+ 
+
+ sessionStorage.clear()
+
+ $(document).ready(function() {
+  $('#togglescada').on('change', function() {
+    if ($(this).is(':checked')) {
+      scada="scadaon"
+      chartdata = sessionStorage.getItem("chartdata");
+      var csrfmiddlewaretoken = $('input[name="csrfmiddlewaretoken"]').val();
+
+      $.ajax({
+      url: '/',
+      type: 'POST',
+      data: {
+        scada: scada,
+        chartdata:chartdata,
+        csrfmiddlewaretoken:csrfmiddlewaretoken
+
+      },
+      
+      success: function(data) {
+        sessionStorage.setItem("chartdata", data);
+  
+        // sessionStorage.setItem("chartdata", data)
+
+        updateChartdemWithData(data)
+        // Code to receive and display the fetched data
+      },
+      error: function(xhr, status, error) {
+        console.log(xhr.responseText);
+      }
+    });
+      
+    }
+    
+    else {
+      var scada = "scada";
+      var chartdata = sessionStorage.getItem("chartdata");
+      var csrfmiddlewaretoken = $('input[name="csrfmiddlewaretoken"]').val();
+    $.ajax({
+      url: '/',
+      type: 'POST',
+      data: {
+        scada: scada,
+        chartdata:chartdata,
+        csrfmiddlewaretoken:csrfmiddlewaretoken
+
+      },
+      
+      success: function(data) {
+        sessionStorage.setItem("chartdata", data);
+  
+        // sessionStorage.setItem("chartdata", data)
+
+        updateChartdemWithData(data)
+        // Code to receive and display the fetched data
+      },
+      error: function(xhr, status, error) {
+        console.log(xhr.responseText);
+      }
+    });
+      
+    }
+  });
+
+
+ $('#toggleactual').on('change', function() {
+    if ($(this).is(':checked')) {
+      actual="actualon"
+      chartdata = sessionStorage.getItem("chartdata");
+      var csrfmiddlewaretoken = $('input[name="csrfmiddlewaretoken"]').val();
+
+      $.ajax({
+      url: '/',
+      type: 'POST',
+      data: {
+        actual: actual,
+        chartdata:chartdata,
+        csrfmiddlewaretoken:csrfmiddlewaretoken
+
+      },
+      
+      success: function(data) {
+        sessionStorage.setItem("chartdata", data);
+  
+        // sessionStorage.setItem("chartdata", data)
+
+        updateChartdemWithData(data)
+        // Code to receive and display the fetched data
+      },
+      error: function(xhr, status, error) {
+        console.log(xhr.responseText);
+      }
+    });
+      
+    }
+    
+    else {
+      var actual = "actual";
+      var chartdata = sessionStorage.getItem("chartdata");
+      var csrfmiddlewaretoken = $('input[name="csrfmiddlewaretoken"]').val();
+    $.ajax({
+      url: '/',
+      type: 'POST',
+      data: {
+        actual: actual,
+        chartdata:chartdata,
+        csrfmiddlewaretoken:csrfmiddlewaretoken
+
+      },
+      
+      success: function(data) {
+        sessionStorage.setItem("chartdata", data);
+  
+        // sessionStorage.setItem("chartdata", data)
+
+        updateChartdemWithData(data)
+        // Code to receive and display the fetched data
+      },
+      error: function(xhr, status, error) {
+        console.log(xhr.responseText);
+      }
+    });
+      
+    }
+  });
+
+  $('#togglememi').on('change', function() {
+    if ($(this).is(':checked')) {
+      memi="memion"
+      chartdata = sessionStorage.getItem("chartdata");
+      var csrfmiddlewaretoken = $('input[name="csrfmiddlewaretoken"]').val();
+
+      $.ajax({
+      url: '/',
+      type: 'POST',
+      data: {
+        memi: memi,
+        chartdata:chartdata,
+        csrfmiddlewaretoken:csrfmiddlewaretoken
+
+      },
+      
+      success: function(data) {
+        sessionStorage.setItem("chartdata", data);
+  
+        // sessionStorage.setItem("chartdata", data)
+
+        updateChartdemWithData(data)
+        // Code to receive and display the fetched data
+      },
+      error: function(xhr, status, error) {
+        console.log(xhr.responseText);
+      }
+    });
+      
+    }
+    
+    else {
+      var memi = "memi";
+      var chartdata = sessionStorage.getItem("chartdata");
+      var csrfmiddlewaretoken = $('input[name="csrfmiddlewaretoken"]').val();
+    $.ajax({
+      url: '/',
+      type: 'POST',
+      data: {
+        memi: memi,
+        chartdata:chartdata,
+        csrfmiddlewaretoken:csrfmiddlewaretoken
+
+      },
+      
+      success: function(data) {
+        sessionStorage.setItem("chartdata", data);
+  
+        // sessionStorage.setItem("chartdata", data)
+
+        updateChartdemWithData(data)
+        // Code to receive and display the fetched data
+      },
+      error: function(xhr, status, error) {
+        console.log(xhr.responseText);
+      }
+    });
+      
+    }
+  });
+
+  $('#togglensembl').on('change', function() {
+    if ($(this).is(':checked')) {
+      ensmbl="ensmblon"
+      chartdata = sessionStorage.getItem("chartdata");
+      var csrfmiddlewaretoken = $('input[name="csrfmiddlewaretoken"]').val();
+
+      $.ajax({
+      url: '/',
+      type: 'POST',
+      data: {
+        ensmbl: ensmbl,
+        chartdata:chartdata,
+        csrfmiddlewaretoken:csrfmiddlewaretoken
+
+      },
+      
+      success: function(data) {
+        sessionStorage.setItem("chartdata", data);
+  
+        // sessionStorage.setItem("chartdata", data)
+
+        updateChartdemWithData(data)
+        // Code to receive and display the fetched data
+      },
+      error: function(xhr, status, error) {
+        console.log(xhr.responseText);
+      }
+    });
+      
+    }
+    
+    else {
+      var  ensmbl="ensmbl";
+      var chartdata = sessionStorage.getItem("chartdata");
+      var csrfmiddlewaretoken = $('input[name="csrfmiddlewaretoken"]').val();
+    $.ajax({
+      url: '/',
+      type: 'POST',
+      data: {
+        ensmbl:  ensmbl,
+        chartdata:chartdata,
+        csrfmiddlewaretoken:csrfmiddlewaretoken
+
+      },
+      
+      success: function(data) {
+        sessionStorage.setItem("chartdata", data);
+  
+        // sessionStorage.setItem("chartdata", data)
+
+        updateChartdemWithData(data)
+        // Code to receive and display the fetched data
+      },
+      error: function(xhr, status, error) {
+        console.log(xhr.responseText);
+      }
+    });
+      
+    }
+  });
+
+
+}
+
+
+
+
+);
+  $('#getdata').on('click', function(event) {
+    event.preventDefault();
+    var state = $('#id_state').val();
+    var zones = $('#id_zones').val();
+    var date = $('#startDate').val();
+    var ftype = $('#id_ftype').val();
+    var ftype_string = JSON.stringify(ftype);
+    var chartdata = sessionStorage.getItem("chartdata");
+    
+    var csrfmiddlewaretoken = $('input[name="csrfmiddlewaretoken"]').val();
+    
+    $.ajax({
+      url: '/',
+      type: 'POST',
+      data: {
+        state: state,
+        zones: zones,
+        date: date,
+        ftype: ftype_string,
+        chartdata:chartdata,
+        csrfmiddlewaretoken: csrfmiddlewaretoken
+
+      },
+      
+      success: function(data) {
+        sessionStorage.setItem("chartdata", data);
+        console.log( 'getdata: ',data)
+        // sessionStorage.setItem("chartdata", data)
+
+        updateChartdemWithData(data)
+        // Code to receive and display the fetched data
+      },
+      error: function(xhr, status, error) {
+        console.log(xhr.responseText);
+      }
+    });
+});
+
+
+$('#preview').on('click', function(event) {
+    event.preventDefault();
+    var fromVal= $('#fromVal').val();
+    var toVal = $('#toVal').val();
+    var fromBlock= $('#fromBlock').val();
+    var toBlock= $('#toBlock').val();
+    var Action= $('#Action').val();
+    var avgdate=$('#selectavgdate').val();
+    var Date= $('#startDate').val();
+    var state = $('#id_state').val();
+    var chartdata = sessionStorage.getItem("chartdata");
+    var storedData = sessionStorage.getItem("storedData");
+    var historicalData = storedData ? JSON.parse(storedData) : [];
+    if (historicalData.length === 0) {
+        historicalData.push(chartdata);
+      }
+    console.log("historical1",historicalData )
+    var csrfmiddlewaretoken = $('input[name="csrfmiddlewaretoken"]').val();
+    
+    $.ajax({
+      url: 'preview/',
+      type: 'POST',
+      data: {
+        fromVal: fromVal,
+        toVal:toVal,
+        fromBlock:fromBlock,
+        toBlock: toBlock,
+        Action:Action,
+        Date:Date,
+        state:state,
+        datasets: datasets,
+        chartdata:chartdata,
+        avgdate:avgdate,
+        csrfmiddlewaretoken: csrfmiddlewaretoken
+      },
+      
+      success: function(data) {   
+      // $('#chartw1').empty();
+      sessionStorage.setItem("chartdata", data);
+      
+      historicalData.push(data);
+     
+      sessionStorage.setItem("storedData", JSON.stringify(historicalData));
+      
+
+      updateChartdemWithData(data);
+      
+      // Code to receive and display the fetched data
+      },
+      error: function(xhr, status, error) {
+        // console.log(xhr.responseText);
+      }
+    });
+
+});
+$('#corrdata').on('click', function(event) {
+    event.preventDefault();
+    var corr_data="corr_data";
+    var actDates=$('#selectactdate').val();
+    var tempdate=$('#temp_corrdate').val();
+    var tempfdate=$('#tempf_corrdate').val();
+    var demcorrdate=$('#demand_corrdate').val();
+    var chartdata = sessionStorage.getItem("chartdata");
+    var csrfmiddlewaretoken = $('input[name="csrfmiddlewaretoken"]').val();
+    
+    var csrfmiddlewaretoken = $('input[name="csrfmiddlewaretoken"]').val();
+    console.log()
+    $.ajax({
+      url: '/',
+      type: 'POST',
+      data: {
+        actDates: actDates,
+        tempdate: tempdate,
+        tempfdate: tempfdate,
+        demcorrdate:demcorrdate,
+        chartdata:chartdata,
+        corr_data:corr_data,
+        csrfmiddlewaretoken: csrfmiddlewaretoken
+
+      },
+      
+      success: function(data) {
+        sessionStorage.setItem("chartdata", data);
+        console.log( 'getdata: ',data)
+        // sessionStorage.setItem("chartdata", data)
+
+        updateChartdemWithData(data)
+        // Code to receive and display the fetched data
+      },
+      error: function(xhr, status, error) {
+        console.log(xhr.responseText);
+      }
+    });
+
+});
+
+$('#corrdata_clr').on('click', function(event) {
+    event.preventDefault();
+    var corrdata_clr="corrdata_clr";
+    var chartdata = sessionStorage.getItem("chartdata");
+    var csrfmiddlewaretoken = $('input[name="csrfmiddlewaretoken"]').val();
+    
+    var csrfmiddlewaretoken = $('input[name="csrfmiddlewaretoken"]').val();
+    console.log()
+    $.ajax({
+      url: '/',
+      type: 'POST',
+      data: {
+        chartdata:chartdata,
+        corrdata_clr:corrdata_clr,
+        csrfmiddlewaretoken: csrfmiddlewaretoken
+
+      },
+      
+      success: function(data) {
+        sessionStorage.setItem("chartdata", data);
+        console.log(data,"cahrtdataCOrr")
+        updateChartdemWithData(data)
+        // Code to receive and display the fetched data
+      },
+      error: function(xhr, status, error) {
+        console.log(xhr.responseText);
+      }
+    });
+
+});
+
+$(document).ready(function() {
+  $('#Action').change(function() {
+    var selectedValue = $(this).val();
+    if (selectedValue === 'Average') {
+      $('#averageSelect').show();
+    } else {
+      $('#averageSelect').hide();
+    }
+  });
+});
+
+
+
+$('#wdates, #w1_para').on('click', function(event) {
+    event.preventDefault();
+    var wdate= $('#startDateweather').val();
+    var wdate_ref = $('#endDate').val();
+    var p1 = $('#id_weather1').val();
+    var p2 = $('#id_weather2').val();
+    var w1city_selected=$('#w1city_selected').val();
+    var w1city_selected_string = JSON.stringify(w1city_selected);
+   
+    // console.log("w1city_selected",w1city_selected_string)
+    var csrfmiddlewaretoken = $('input[name="csrfmiddlewaretoken"]').val();
+    
+    $.ajax({
+      url: 'weather/',
+      type: 'POST',
+      data: {
+        wdate: wdate,
+        wdate_ref:wdate_ref,
+        p1: p1,
+        p2: p2,
+        w1city_selected:w1city_selected_string,
+        csrfmiddlewaretoken: csrfmiddlewaretoken
+
+      },
+      
+      success: function(data) {   
+      $('#chartw1').empty();
+      // console.log("weather_data_one",weather_data_one)
+
+      
+      console.log("weather_data_one//",data)
+      weatherChart1(data)
+      // Code to receive and display the fetched data
+      },
+      error: function(xhr, status, error) {
+        // console.log(xhr.responseText);
+      }
+    });
+
+});
+
+
+$('#wdates, #w2_para').on('click', function(event) {
+    event.preventDefault();
+    var wdate= $('#startDateweather').val();
+    var wdate_ref = $('#endDate').val();
+    var p1 = $('#id_weather2_1').val();
+    var p2 = $('#id_weather2_2').val();
+    var w1city_selected=$('#w1city_selected').val();
+    var w1city_selected_string = JSON.stringify(w1city_selected);
+   
+    console.log("w1city_selected22222",w1city_selected_string)
+    var csrfmiddlewaretoken = $('input[name="csrfmiddlewaretoken"]').val();
+    
+    $.ajax({
+      url: 'weather2/',
+      type: 'POST',
+      data: {
+        wdate: wdate,
+        wdate_ref:wdate_ref,
+        p1: p1,
+        p2: p2,
+        w1city_selected: w1city_selected_string,
+        csrfmiddlewaretoken: csrfmiddlewaretoken
+
+      },
+      
+      success: function(data) {   
+      $('#chartw2').empty();
+      // console.log("weather2_data_one",weather2_data_one)
+      // const weather2_data = JSON.parse(document.getElementById('weather2_data_one').textContent);  
+      
+      weatherChart2(data)
+      // Code to receive and display the fetched data
+      },
+      error: function(xhr, status, error) {
+        console.log(xhr.responseText);
+      }
+    });
+
+});
+
+
+$('#wdates, #w3_para').on('click', function(event) {
+    event.preventDefault();
+    var wdate= $('#startDateweather').val();
+    var wdate_ref = $('#endDate').val();
+    var p1 = $('#id_weather3_1').val();
+    var p2 = $('#id_weather3_2').val()
+    var w1city_selected=$('#w1city_selected').val();
+    var w1city_selected_string = JSON.stringify(w1city_selected);
+   
+    console.log("weatherdate3333",w1city_selected_string)
+    var csrfmiddlewaretoken = $('input[name="csrfmiddlewaretoken"]').val();
+    
+    $.ajax({
+      url: 'weather3/',
+      type: 'POST',
+      data: {
+        wdate: wdate,
+        wdate_ref:wdate_ref,
+        p1: p1,
+        p2: p2,
+        w1city_selected:w1city_selected_string,
+        csrfmiddlewaretoken: csrfmiddlewaretoken
+
+      },
+      
+      success: function(data) {   
+      $('#chartw3').empty();
+      console.log("weather3_data_one",weather3_data_one)
+      const weather3_data = JSON.parse(document.getElementById('weather3_data_one').textContent);  
+      
+      weatherChart3(data)
+      // Code to receive and display the fetched data
+      },
+      error: function(xhr, status, error) {
+        console.log(xhr.responseText);
+      }
+    });
+
+});
+
+$('#undo').on('click', function(event) {
+  event.preventDefault();
+  
+  var storedData = sessionStorage.getItem("storedData");
+  var historicalData = storedData ? JSON.parse(storedData) : [];
+  console.log(historicalData,"historicalDataundo")
+  // Retrieve the last stored data from historicalData
+  var lastData = historicalData.pop();
+  sessionStorage.setItem("chartdata",lastData)
+  // Update the chart with the last stored data
+  updateChartdemWithData(lastData);
+  
+  // Store the updated historicalData array in session storage
+  sessionStorage.setItem("storedData", JSON.stringify(historicalData));
+  
+  // console.log("Stored historical data:", historicalData);
+});
+
+
+function updateChartdemWithData(data) {
+  data = JSON.parse(data);
+  chartdem.updateSeries(data);
+}
+
+
+</script>
+
+
+
+<script src="{% static './base/apexcharts.js'%}"></script>
+
+{% include './partials/weatherchart1apex.html' %}  
 {% include './partials/weatherchart2apex.html' %}
-{% include './partials/weatherchart3apex.html' %} 
+{% include './partials/weatherchart3apex.html' %}  
+{% include './partials/weatherchart3.html' %}  
+{% include './partials/demandforecast.html' %}
+{% include './partials/demandweatherchart.html' %}  
 {% include './partials/demandforecastApex.html' %}
 {% endblock %}
-
-

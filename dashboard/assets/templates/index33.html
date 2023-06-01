@@ -1,0 +1,193 @@
+{% extends './base/base.html' %}
+{% load static %}
+{% block title %}
+  Forecast Dashboard
+{% endblock %}
+{% load getlist %}
+{% block content %}
+<head>
+<link href="{% static 'vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
+    <link
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+        rel="stylesheet">
+
+    <!-- Custom styles for this template-->
+    <link href="{% static 'css/sb-admin-2.min.css' %}" rel="stylesheet">
+     <!-- APEX CHART CSS-->
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <link href="{% static './apexcharts.css' %}" rel="stylesheet"/>
+
+    <script src="http://code.jquery.com/jquery.js"></script>    
+    <script type="text/javascript" src="<?php echo base_url('bootstrap/js/bootstrap-multiselect.js'); ?>"></script>
+    
+    <link href="<?php echo base_url('bootstrap/css/bootstrap-multiselect.css'); ?>" rel="stylesheet" type="text/css">    
+    <link href="<?php echo base_url('bootstrap/css/bootstrap.min.css'); ?>" rel="stylesheet" type="text/css">                  
+    <script type="text/javascript" src="<?php echo base_url('bootstrap/js/bootstrap.min.js'); ?>"></script>    
+<style>
+    canvas {
+      border: 1px solid black;
+    }
+    </style>
+    
+    
+    
+</head>
+
+
+<!-- offcanvas -->
+
+<div class="offcanvas offcanvas-bottom" tabindex="-1" id="offcanvasBottom" aria-labelledby="offcanvasBottomLabel">
+    <div class="offcanvas-header">
+      <h5 class="offcanvas-title" id="offcanvasBottomLabel">Dates</h5>
+      <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body small">
+        <div class="row">
+            <div class="col-sm-4"> Weather
+                    <div class="input-group">
+                        <input id="startDate" name="weather_date" class="form-control form-control-sm" type="date" value="{{request.GET.weather_date}}"/>
+                        <span id="startDateSelected"></span>
+                        <input id="endDate" name="refdate" class="form-control form-control-sm" type="date" value="{{request.GET.refdate}}"/>
+                        <span id="endDateSelected"></span>
+          <select class="form-select form-select-sm " aria-label=".form-select-sm example" name="correl_date" id="id_date" style="width:90px;" >
+                <option disabled selected>Date</option>
+                {% for d in date_choices %}
+                {% if request.GET.date and request.GET.date == d|date:'Y-m-d' %}
+                <option value="{{d|date:'Y-m-d'}}" selected="">{{d}}</option>
+                 {% else %}
+                <option value="{{d|date:'Y-m-d'}}">{{d}}</option>
+                 {% endif %}
+                 {% endfor %}
+              </select> 
+              <button type="submit" class="btn btn-sm btn-secondary ">Apply</button>
+          </div>
+        </div>
+        
+
+            <div class="col-sm-8">
+                <div class="input-group">
+                <select class="form-select form-select-sm " aria-label=".form-select-sm example"  name="state" id="id_state" style="width:90px;" >
+                    <option disabled selected>States</option>
+                    {% for k, v in form.state.field.choices %} 
+                    <!-- using forms to populate data -->
+                    <!-- form.state.field.choices -->
+                    <option value="{{k}}"  {% if request.GET.state ==  k|slugify %} selected{% endif %}>{{v}} </option>
+                    
+                    {% endfor %}
+                  </select>
+                  
+                  
+          
+                    
+                  <select class="form-select form-select-sm" aria-label=".form-select-sm example" name="zones" id="id_zones" style="width:90px;">
+                    <option disabled selected>Zones</option>
+                    {% for k, v in zones.items %}
+                    <option value="{{v}}" {% if v == request.GET.zones %} selected="{{v}}" {% endif %}>{{k}} </option>
+                    {% endfor %}
+                  </select>
+                  
+                
+                
+                  
+                    <input id="startDate" style="width:100px;" name="date" id="id_date" class="form-control" type="date" value="{{request.GET.date}}"/>
+                    <span id="startDateSelected"></span>
+                </div>
+                        <select class="form-select form-select-sm" multiple="multiple" aria-label=".form-select-sm example" name="ftype" id="id_ftype" style="width:auto;" >
+                          <option disabled selected>Select Forecast Type</option>
+                          {% for f in all_forecasttypes %}
+                            <option value="{{f}}" {% if f in forecast_types  %} selected="" {% endif %}>{{f}}</option>
+                          {% endfor %}
+                          <option value="" {% if None in forecast_types  %} selected="" {% endif %}>None</option>
+                        </select>
+
+                       
+          
+
+                  <div class="col" align="center">
+                    <button type="submit" class="btn btn-sm btn-primary ">Get Data</button>
+                  </div>
+                </div>
+                </div>   
+            </div>
+          </div>
+          <!-- Begin Page Content -->
+          <div class="container-fluid">
+            
+            <div class="row">
+              <div class="col-md-3">
+                <canvas id="canvas1">
+                  <div class="card-body">
+                    <div class="tab-content" id="myTabContent">
+                        <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                            <div class="card">
+                                <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#exampleModal"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
+                                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+                              </svg>
+                                Expand Chart
+                              </button> 
+                                
+                                <div class="card-body">
+                                  <div id="chartw1"></div> 
+                                </div>
+                                <div class="row">
+                                  {% if request.GET|get_list:'chart1_weather'  %} 
+                                  {% for type in request.GET|get_list:'chart1_weather' %} 
+                                    <div class="col">
+                                    
+                                  <select class="form-select form-select-sm" aria-label=".form-select-lg example" name="chart1_weather" id="id_weather1" >
+                                    
+                                    <option disabled selected>weather 1</option>
+                                    
+                                    {% for w in weather_parameters %}
+                                    <option value="{{w}}" {% if w in type %} selected="" {% endif %}>{{w}}</option>
+                                      {% endfor %}
+                                  </select>
+                                  </div>
+                                  {% endfor %}
+                                  {% else %}
+                                  <div class="col">
+                                    <select class="form-select form-select-sm" aria-label=".form-select-sm example" name="chart1_weather" id="id_weather1" >
+                                      <option disabled selected>weather 1</option>
+                                      {% for w in weather_parameters %}
+                                      <option value="{{w}}" {% if w in request.GET|get_list:'chart1_weather'  %} selected="" {% endif %}>{{w}}</option>
+                                      {% endfor %}
+                                    </select>
+                                    </div> 
+                                   <div class="col">
+                                  <select class="form-select form-select-sm" aria-label=".form-select-sm example" name="chart1_weather" id="id_weather1" >
+                                    <option disabled selected>weather 2</option>
+                                    {% for w in weather_parameters %}
+                                    <option value="{{w}}" {% if w in request.GET|get_list:'chart1_weather'  %} selected="" {% endif %}>{{w}}</option>
+                                    {% endfor %}
+                                  </select>
+                                  </div> 
+                                  {% endif %}
+                                  <div class="col">
+                                    <button type="submit" class="btn btn-sm btn-secondary ">Apply</button>
+                                  </div>
+                                </div> 
+                              </div>
+                </canvas>
+              </div>
+              <div class="col-md-3">
+                <canvas id="canvas2"></canvas>
+              </div>
+              <div class="col-md-3">
+                <canvas id="canvas3"></canvas>
+              </div>
+              <div class="col-md-6">
+                <canvas id="canvas4"></canvas>
+              </div>
+              <div class="col-md-3">
+                <canvas id="canvas5"></canvas>
+              </div>
+            </div>
+          </div>
+          
+          
+          
+          
+          
+
+          {% endblock %}

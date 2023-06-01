@@ -27,7 +27,7 @@ urlpatterns = [
     path('logout/', accounts_views.logoutPage, name='logout'),
     path('register/', accounts_views.register, name='register'),
     #path('register/', RegisterView.as_view(), name='register'),
-   
+   path('onload/',include(('dashboard.urls', 'dashboard'),) , name='onload'),
     path('',include(('dashboard.urls', 'dashboard'), namespace='index')),
     path('__debug__/', include('debug_toolbar.urls'))
 ]

@@ -1,0 +1,586 @@
+
+{% load static %}
+{% load getlist %}
+
+<style>
+ 
+.bootstrap-select {
+  width: 100px !important;
+}
+.bootstrap-select .btn-custom {
+  color: rgb(255, 0, 0);
+  background-color: #86d6f3;
+  border-color: #0b0807;
+  display: inline-block;
+  font-size: 11px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 0px;
+  
+}
+.bootstrap-select .btn-custom1 {
+  color: rgb(0, 30, 255);
+  background-color: #ffffff;
+  border-color: #0b0807;
+  font-size: 13px;
+  border-radius: 0px;
+  width: 100%;
+  display:block!important;
+  
+}
+#inputGroup-sizing-sm {
+  
+  font-size: 13px;
+  border-radius: 0px;
+}
+.btn-info {
+  color: #86d6f3!important;
+  background-color: #072baf !important;
+  border-color: #0b0807;
+  display: inline-block !important;
+  font-size: 11px!important;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 4px;
+  position: relative!important;
+  text-align: center;
+  
+
+}
+#button-addon1{
+  border-radius: 4px!important;
+  position: relative!important;
+  text-align: center;
+  display: inline-block !important;
+  color: #e7f5f5!important;
+}
+#randomdate{
+  width: 152px !important;
+  border-radius: 4px !important;
+  height: 35px;
+
+}
+#avgRef{
+   display: none;
+}
+
+#hideValuesOnSelect {
+      display: none;
+   }
+
+</style>
+<!-- Page Wrapper -->
+<form id="form">
+<div id="wrapper">
+  <!-- Sidebar -->
+
+  <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+
+    <!-- Sidebar - Brand -->
+    
+    <!-- Divider -->
+   
+
+    <!-- Divider -->
+    <hr class="sidebar-divider">
+
+    <!-- Heading -->
+    <div class="sidebar-heading">
+        Interface
+    </div>
+
+    <!-- Nav Item - Pages Collapse Menu -->
+    
+
+    <!-- Nav Item - Utilities Collapse Menu -->
+    <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities"
+            aria-expanded="true" aria-controls="collapseUtilities">
+        </a>
+        <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities"
+            data-parent="#accordionSidebar">
+            <div class="card-body">
+
+              <div class="row">
+                <div class="col">
+                  <div class="input-group mb-3">
+                    <div class="input-group-prepend"> 
+                    <span class="input-group-text" id="inputGroup-sizing-sm" data-inline="true">Base</span>
+                    
+                    <select class="selectpicker d-inline-block"  data-inline="true" aria-describedby="inputGroup-sizing-sm" data-style="btn-custom1"  id="baseDem" data-live-search="true" title="Select Base" size="auto" name="base" onchange="form.submit()">
+                      <optgroup  label="All Dates">
+                       
+                        {% for d in date_choices %}
+                        
+                        <option value="{{ d|date:"Y-m-d" }}" {% if d|date:"Y-m-d" == request.GET.base   %} selected="" {% endif %}>{{d}}</option>
+                       {% endfor %}
+                      </optgroup>
+
+                      <optgroup  label="models">
+                        {% for f in all_forecasttypes %}
+                        <option value="{{f}}" {% if f == request.GET.base  %} selected="" {% endif %}>{{f}}</option>
+                       {% endfor %}
+                      </optgroup>
+                      <optgroup  label="Nearby Dates">
+                        {% for w in n_by_dates %}
+                        <option value="{{w}}" {% if w in request.GET.base %} selected="" {% endif %}>{{w}}</option>
+                        {% endfor %}
+                      </optgroup>
+                    </select>
+                  </div>
+                </div>
+                </div>
+              </div>
+                <div class="row">
+                  
+                  <div class="col">
+                    
+                  
+                    
+                <div class="input-group input-group-sm mb-3">
+                
+                  <span class="input-group-text" id="inputGroup-sizing-sm">From Block</span>
+                  <script type="text/javascript"> 
+                    document.getElementById("fromblock").placeholder='{{request.GET.fromBlock}}' ;
+                  </script>
+                  <input type="text" class="form-control" id="fromblock" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" name="fromBlock" value="{{request.GET.fromBlock|default_if_none:''}}">
+                  <span class="input-group-text" id="inputGroup-sizing-sm">To Block</span>
+                  <input type="text" class="form-control" id="toBlock" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm"  name="toBlock" value="{{request.GET.toBlock|default_if_none:''}}">
+                  <button class="btn btn-outline-info" type="submit"   id="button-addon1">Filter</button>
+                 
+                   </div>
+              </div>
+            </div>
+           
+                  <div class="row">
+                  <div class="col">
+                    <div class="input-group input-group-sm mb-3">
+                      <!-- <input type="hidden" name="chart1.2_weather" value="{{weather1}}">
+                      <input type="hidden" name="chart2.2_weather" value="{{weather2}}"> -->
+                      <span class="input-group-text" id="inputGroup-sizing-sm">From value</span>
+                      <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" id="fromVal" name="fromVal" style="width:35px" value="{{request.GET.fromVal|default_if_none:''}}">
+                      <span class="input-group-text" id="inputGroup-sizing-sm">To value </span>
+                      <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" id="toVal" name="toVal" style="width:35px" value="{{request.GET.toVal|default_if_none:''}}">
+                      <!-- <button class="btn btn-outline-info"   id="button-addon2"></button> -->
+                      <select class="form-select" aria-label="Default select example" id="Action" name="Action" style="width:99px" onchange="displayDivDemo('hideValuesOnSelect', this)">
+                      {% for action in actions %}
+                      {% if request.GET.Action and request.GET.Action == action %}
+                      <option value="{{action}}" selected="" >{{action}}</option>
+                      {% else %}
+                      <option value="{{action}}" >{{action}}</option>
+                      {% endif %}
+                      {% endfor %}
+                      </select>
+                      <div class="input-group mb-3" id="hideValuesOnSelect">
+                        <div class="input-group-prepend" > 
+                      <span class="input-group-text" id="inputGroup-sizing-sm" data-inline="true" style="width: 54px;">Ref</span>
+                      <select class="selectpicker d-inline-block"  data-inline="true" aria-describedby="inputGroup-sizing-sm" data-style="btn-custom1"  id="avgRef" data-live-search="true" title="Select Base" size="auto" name="avgRef">
+                        <optgroup  label="models">
+                          {% for ft in all_forecasttypes %}
+                          <option value="{{ft}}" {% if f == request.GET.avgRef  %} selected="" {% endif %}>{{ft}}</option>
+                         {% endfor %}
+                        </optgroup>
+                        <optgroup  label="All Dates">
+                          {% for dc in date_choices %}
+                          <option value="{{dc}}" {% if d == request.GET.avgRef   %} selected="" {% endif %}>{{dc}}</option>
+                         {% endfor %}
+                        </optgroup>
+                        <optgroup  label="Nearby Dates">
+                          {% for d in n_by_dates %}
+                          <option value="{{d}}" {% if w in request.GET.avgRef  %} selected="" {% endif %}>{{d}}</option>
+                          {% endfor %}
+                        </optgroup>
+  
+                        
+  
+                       
+                        
+                      </select>
+                    </div>
+                  </div>
+                  <div class="input-group mb-3" >
+                        <div class="input-group-prepend" > 
+               <button class="btn btn-outline-success" type="submit" id="button-addon1">Preview</button>
+               <button class="btn btn-outline-success" type="button" onclick="ClearFields();" id="button-addon1">Reset</button>
+               
+              </div>
+            </div>
+              
+            <div class="input-group mb-3" >
+              <div class="row">
+                  <div class="col">
+                    <div class="input-group input-group-sm mb-3">
+                      <button type="submit" class="btn btn-info btn-sm" name="undo"><i class="fa fa-undo" aria-hidden="true"></i> Undo</button>
+                      <button type="submit" class="btn btn-danger  btn-sm" name="clearall">Clear all</button>
+                      
+                    </div>
+                </div>
+              </div>
+              </div>
+            </div>
+        </div>
+    </li>
+<script> 
+    function ClearFields() {
+
+      document.getElementById("fromblock").value = "";
+      document.getElementById("toBlock").value = "";
+      document.getElementById("fromVal").value = "";
+      document.getElementById("toVal").value = "";
+ }</script> 
+    <!-- Divider -->
+    <hr class="sidebar-divider">
+    <!-- Heading -->
+    <div class="sidebar-heading">
+        Correlation Dates
+    </div>
+    <!-- Nav Item - Pages Collapse Menu -->
+    <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
+        aria-expanded="true" aria-controls="collapseUtilities">
+    </a>
+    
+        <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+        
+            <div class="card-body" id="corrdates">
+        <table>
+         
+          <tr>
+              <td><span style="color: #000000; font-size: 12px;"><b>Nearby Dates :</b></span>
+              <select class="selectpicker"  multiple aria-label="size 0 select example" name="n_row" data-style="btn-custom">
+                {% for w in n_by_dates %}
+                <option value="{{w}}" {% if w in request.GET|get_list:'n_row' %} selected="" {% endif %}>{{w}}</option>
+                {% endfor %}
+              </select>
+            </td>
+              <!-- {% for w in n_by_dates %}
+              <td><input type="radio"   name="n_row" data-col="{{forloop.counter}}"  value="{{w}}" {% if w == request.GET.d_row %} checked {% endif %}><span style="color: #000000;"><span style="color: #000000;">{{w}}</span> </td>
+              {% endfor %} -->
+          </tr>
+          <tr>
+              <td>
+              
+                
+                  <span style="color: #000000; font-size: 12px;"><b>Temperature Corr :</b></span>
+              
+              <select class="selectpicker"  multiple aria-label="size 0 select example" name="t_correl_date" data-style="btn-custom">
+
+                {% for w in temp_corr_data %}
+                
+                <option value="{{w}}" {% if w in request.GET|get_list:'t_correl_date' %} selected="" {% endif %}>{{w}}</option>
+                {% endfor %}
+              </select>
+            
+      
+                <!-- <select class="selectpicker"  multiple aria-label="size 0 select example" name="w_correl_type" data-style="btn-custom">
+                  <option value="temp_Corr" {% if  request.GET.w_correl_type == 'temp_Corr' %} selected {% endif %}><span style="color: #000000;">temperature</span></option>
+                  <option value="tempf_Corr" {% if  request.GET.w_correl_type == 'tempf_Corr' %} selected {% endif %}><span style="color: #000000;">temperature feelslike</span></option>
+                  
+                </select> -->
+                <!-- <select class="form-select form-select-sm" aria-label="Default select example" name="w_correl_type">
+                  <option value="temp_Corr" {% if  request.GET.w_correl_type == 'temp_Corr' %} selected {% endif %}><span style="color: #000000;">temperature</span></option>
+                  <option value="tempf_Corr" {% if  request.GET.w_correl_type == 'tempf_Corr' %} selected {% endif %}><span style="color: #000000;">temperature feelslike</span></option>
+                </select> -->
+                
+                
+              </td>
+              <!-- {% for w in w_corr_data %}
+              <td><input type="radio"   name="w_row" data-col="{{forloop.counter}}"  value="{{w}}" {% if w == request.GET.w_row %} checked {% endif %}><span style="color: #000000;"> {{w}}</span></td>
+                {% endfor %} -->
+          </tr>
+          <tr>
+            <td>
+              <span style="color: #000000; font-size: 12px;"><b>Temperature-F Corr :</b></span>
+              
+              <select class="selectpicker"  multiple aria-label="size 0 select example" name="tf_correl_date" data-style="btn-custom">
+                {% for w in tempf_corr_data %}
+                <option value="{{w}}" {% if w in request.GET|get_list:'tf_correl_date' %} selected="" {% endif %}>{{w}}</option>
+                {% endfor %}
+              </select>
+              </td>
+        </tr>
+          <tr>
+              <td><span style="color: #000000; font-size: 12px;"><b>Demand Corr :</b></span>
+                
+              <select class="selectpicker"  multiple aria-label="size 0 select example" name="d_row" data-style="btn-custom">
+                {% for w in d_corr_data %}
+                <option value="{{w}}" {% if w in request.GET|get_list:'d_row' %} selected="" {% endif %}>{{w}}</option>
+                {% endfor %}
+              </select>
+            </td>
+              <!-- {% for w in d_corr_data %}
+                <td><input type="radio"   name="d_row" data-col="{{forloop.counter}}"  value="{{w}}" {% if w == request.GET.d_row %} checked {% endif %}><span style="color: #000000;"><span style="color: #000000;">{{w}}</span> </td>
+                {% endfor %} -->
+          </tr>
+          <tr>
+            <td><span style="color: #000000; font-size: 12px;"><b>Actual Demands :</b></span>
+              
+            <select class="selectpicker"  multiple aria-label="size 0 select example" name="Actual" data-style="btn-custom">
+              {% for d in actual_date_choices %}
+              <option value="{{d}}" {% if d in request.GET.Actual   %} selected="" {% endif %}>{{d}}</option>
+             {% endfor %}
+            </select>
+          </td>
+            <!-- {% for w in d_corr_data %}
+              <td><input type="radio"   name="d_row" data-col="{{forloop.counter}}"  value="{{w}}" {% if w == request.GET.d_row %} checked {% endif %}><span style="color: #000000;"><span style="color: #000000;">{{w}}</span> </td>
+              {% endfor %} -->
+        </tr>
+          
+          </table>
+          <div class="row">
+            <div class="col">
+              <div class="input-group input-group-sm mb-3">
+          <button type="submit" class="btn btn-info btn-sm" >Get Corr Data</button>
+        </div>
+      </div>
+    </div>
+    </div>
+    </div>
+   
+
+    </li>
+    <!-- Divider -->
+    <hr class="sidebar-divider">
+    <!-- Nav Item - Charts -->
+    <li class="nav-item">
+        <a class="nav-link" href="charts.html">
+            <i class="fas fa-fw fa-chart-area"></i>
+            <span>Charts</span></a>
+    </li>
+    <!-- Nav Item - Tables -->
+    <li class="nav-item">
+        <a class="nav-link" href="tables.html">
+            <i class="fas fa-fw fa-table"></i>
+            <span>Tables</span></a>
+    </li>
+    <!-- Divider -->
+    <hr class="sidebar-divider d-none d-md-block">
+
+    <!-- Sidebar Toggler (Sidebar) -->
+    <div class="text-center d-none d-md-inline">
+        <button class="rounded-circle border-0" id="sidebarToggle" form="dummy"></button>
+    </div>
+
+   
+</ul>
+
+  <!-- End of Sidebar -->
+
+  <!-- Content Wrapper -->
+  <div id="content-wrapper" class="d-flex flex-column">
+
+      <!-- Main Content -->
+      <div id="content">
+
+          <!-- Topbar -->
+          <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+
+              <!-- Sidebar Toggle (Topbar) -->
+              <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+                  <i class="fa fa-bars"></i>
+              </button>
+
+              <!-- Topbar Search -->
+             
+
+              <!-- Topbar Navbar -->
+              <ul class="navbar-nav ml-auto">
+
+                
+                  <!-- Nav Item - Alerts -->
+                  <li class="nav-item dropdown no-arrow mx-1">
+                      <!-- <a class="nav-link " href="/lo" id="logoutlink" role="button"
+                           aria-haspopup="true" aria-expanded="false">
+                          logout
+                      </a> -->
+                      <!-- Dropdown - Alerts -->
+                      <a class="nav-link active" aria-current="page" href="logout">Logout</a>   
+                  </li>
+
+                  <!-- Nav Item - Messages -->
+                  <li class="nav-item dropdown no-arrow mx-1">
+                      
+                      <!-- Dropdown - Messages -->
+                      
+                  </li>
+
+                  <div class="topbar-divider d-none d-sm-block"></div>
+
+                  <!-- Nav Item - User Information -->
+                  <li class="nav-item dropdown no-arrow">
+                      <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                          data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          <span class="mr-2 d-none d-lg-inline text-gray-600 small"></span>
+                          <img class="img-profile rounded-circle"
+                              src="http://mercadosemi.in/images/Mercados_Logo.png" style="width: auto; height: 50px;">
+                      </a>
+                      <!-- Dropdown - User Information -->
+                      <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                          aria-labelledby="userDropdown">
+                          <a class="dropdown-item" href="#">
+                              <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                              Profile
+                          </a>
+                          <a class="dropdown-item" href="#">
+                              <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
+                              Settings
+                          </a>
+                          <a class="dropdown-item" href="#">
+                              <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
+                              Activity Log
+                          </a>
+                          <div class="dropdown-divider"></div>
+                          <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+                              <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                              Logout
+                          </a>
+                      </div>
+                  </li>
+
+              </ul>
+
+              
+
+          </nav>
+
+    <!-- Below Code is of Modals for expanding weather graphs -->      
+
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content">
+          <div class="modal-header">
+            <div class="input-group mb-3">
+              <select class="selectpicker"   multiple aria-label="size 0 select example" name="w1city_selected">
+                {% for city in all_cities %}
+                <option value="{{city}}" {% if city in request.GET|get_list:'w1city_selected'  %} selected="" {% endif %}>{{city}}</option>
+                {% endfor %}
+              </select>
+              <button type="submit" class="btn btn-outline-secondary">Filter</button>
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              
+          </div>
+          <div class="modal-body">
+            <div class="container-fluid">
+              <div class="row h-100">
+                <div class="col h-100">
+                  <div id="weather1expd"></div> 
+                <!-- <canvas id="#weather1expd" class="forecastchart" width="1000" height="450"></canvas> -->
+              </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    
+<div class="modal fade" id="exampleModal0" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <!-- <h5 class="modal-title" id="exampleModalLabel0">Modal title</h5> -->
+        <select class="selectpicker"  multiple aria-label="size 0 select example" name="w1city_selected">
+          {% for city in all_cities %}
+          <option value="{{city}}" {% if city in request.GET|get_list:'w1city_selected'  %} selected="" {% endif %}>{{city}}</option>
+          {% endfor %}
+        </select>
+        <button type="submit" class="btn btn-outline-secondary">Filter</button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+
+      </div>
+      <div class="modal-body">
+        <div class="container-fluid">
+          <div class="row h-100">
+            <div class="col h-100">
+              <div id="weather2expd"></div>
+          </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="exampleModal1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <select class="selectpicker"  multiple aria-label="size 0 select example" name="w1city_selected">
+          {% for city in all_cities %}
+          <option value="{{city}}" {% if city in request.GET|get_list:'w1city_selected'  %} selected="" {% endif %}>{{city}}</option>
+          {% endfor %}
+        </select>
+        <button type="submit" class="btn btn-outline-secondary">Filter</button>
+        <!-- <h5 class="modal-title" id="exampleModalLabel2">Modal title</h5> -->
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="container-fluid">
+          <div class="row h-100">
+            <div class="col h-100">
+              <div id="weather3expd"></div> 
+          </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+      </div>
+    </div>
+  </div>
+</div>
+
+          
+           
+          
+          <!-- End of Topbar -->
+
+<!-- ............................... -->
+<!-- <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">
+        <img src="https://mercadosemi.in/images/Mercados_Logo.png" alt="" width="110" height="40" style="background-color:rgb(255, 255, 255);">
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="#">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Link</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Dropdown
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <li><a class="dropdown-item" href="#">Action</a></li>
+              <li><a class="dropdown-item" href="#">Another action</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="#">Something else here</a></li>
+            </ul>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link disabled">Disabled</a>
+          </li>
+        </ul>
+        <form class="d-flex">
+          <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+          <button class="btn btn-outline-success" type="submit">Search</button>
+        </form>
+      </div>
+    </div>
+  </nav> -->

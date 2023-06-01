@@ -54,9 +54,7 @@ class StateZone(BaseModel):
 class CityZone(BaseModel): 
     city =models.CharField(max_length=50, default="00")
     state_zone= models.CharField(max_length=50, default="00")
-    
-    
-    
+
     def __str__(self):
         return f"{self.city}"
 

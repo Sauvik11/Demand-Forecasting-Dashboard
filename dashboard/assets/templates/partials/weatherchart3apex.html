@@ -2,8 +2,17 @@
 {{ weather3_data_one|json_script:"weather3_data_one" }}
 <script>
   
-    const weather3_data = JSON.parse(document.getElementById('weather3_data_one').textContent);
-    console.log("weather3_data",weather3_data)
+
+
+  const weather3_data = JSON.parse(document.getElementById('weather3_data_one').textContent);
+    $(document).ready(function(){
+      weatherChart3(weather3_data)
+});
+
+
+function weatherChart3(weather3_data){
+    
+    // console.log("weather3_data",weather3_data)
     var dataKeys3_para1 = Object.keys(weather3_data[0][0])
     var dataval3_para1 = Object.values(weather3_data[0][0])
 
@@ -16,19 +25,19 @@
     var dataKeys3_para4 = Object.keys(weather3_data[3][0])
     var dataval3_para4 = Object.values(weather3_data[3][0])
 
-    console.log("3dataKeys",dataKeys3_para4)
-    console.log("3datavalues",dataval3_para4)
+    // console.log("3dataKeys",dataKeys3_para4)
+    // console.log("3datavalues",dataval3_para4)
    
 
     var chart3Headings = weather3_data[0].map(w => `${w.city_name}_${w.block}`)
-    console.log("3chartHeadings",chartHeadings)
+    // console.log("3chartHeadings",chartHeadings)
 
     var chart3Datapara1 = weather3_data[0].map(w => w[dataKeys3_para1[1]])
     var chart3Datapara2 = weather3_data[1].map(w => w[dataKeys3_para2[1]])
 
     var chart3Datapara11 = weather3_data[2].map(w => w[dataKeys3_para3[1]])
     var chart3Datapara22 = weather3_data[3].map(w => w[dataKeys3_para4[1]])
-    console.log("chartDatapara11",chart3Datapara11)
+    // console.log("chartDatapara11",chart3Datapara11)
     
     var options = {
           series: [{
@@ -50,9 +59,15 @@
       ],
           chart: {
           type: "line",
-          height: 200,
+          height: 140,
           stacked: false,
-          fillOpacity: .3, 
+          fillOpacity: .3,
+          toolbar: {
+    show: false
+  },
+  zoom: {
+    enabled: false,
+  }
         },
         legend: {
       show: false,
@@ -60,9 +75,9 @@
       position: 'bottom',
       horizontalAlign: 'center', 
       floating: false,
-      fontSize: '14px',
+      fontSize: '8px',
       fontFamily: 'Helvetica, Arial',
-      fontWeight: 400,
+      fontWeight: 100,
       formatter: undefined,
       inverseOrder: false,
       width: undefined,
@@ -85,22 +100,31 @@
           enabled: false
         },
         stroke: {
-    width: [1.5, 1.5,1.5,1.5]
+    width: [1,1,1,1]
   },
         xaxis: {
           categories: chart3Headings ,
           showDuplicates: true,
+          style: {
+        fontSize: '8px'
+      }
         },
         yaxis: {
           axisTicks: {
         show: true
+      },
+      style: {
+        fontSize: '8px'
       },
       axisBorder: {
         show: true,
         color: "#FF1654"
       },
        title: {
-            text: 'temperature'
+            text: 'temperature',
+            style: {
+        fontSize: '8px'
+      }
           }
         },
         fill: {
@@ -152,14 +176,20 @@
         dataLabels: {
           enabled: false
         },
-        stroke: { width: [1.5, 1.5,1.5,1.5],},
+        stroke: { width: [1, 1,1,1],},
         xaxis: {
           categories: chart3Headings ,
           showDuplicates: true,
+          style: {
+        fontSize: '8px'
+      }
         },
         yaxis: {
           axisTicks: {
         show: true
+      },
+      style: {
+        fontSize: '8px'
       },
       axisBorder: {
         show: true,
@@ -185,10 +215,6 @@
         // var chart = new ApexCharts(document.querySelector("#chartw3"), options);
         var chart = new ApexCharts(document.querySelector("#weather3expd"), modal_weather3_optionscity);
         chart.render();
-    
-      
-
-
-
+      }
 
 </script>
