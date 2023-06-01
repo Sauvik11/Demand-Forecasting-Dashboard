@@ -1,1 +1,2 @@
-web: gunicorn Forecast_DashboardMemi.wsgi
+web: gunicorn Demand-Forecasting-Dashboard
+.wsgi
