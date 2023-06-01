@@ -1,2 +1,1 @@
-web: gunicorn Demand-Forecasting-Dashboard
-.wsgi
+web: gunicorn 'Demand-Forecasting-Dashboard.wsgi'
